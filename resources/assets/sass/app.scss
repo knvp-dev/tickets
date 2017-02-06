@@ -1,0 +1,35 @@
+
+// Fonts
+@import url(https://fonts.googleapis.com/css?family=Quicksand);
+
+// Variables
+@import "variables";
+@import "format";
+
+// Font Awesome
+@import "node_modules/font-awesome/css/font-awesome";
+
+// Animate
+@import "node_modules/animate.css/animate";
+
+// Bulma
+@import "node_modules/bulma/css/bulma";
+@import "helpers";
+
+html, body{
+	height:100%;
+}
+
+h1,h2,h3,h4,p,a, input,label{
+	font-family:'Quicksand', sans-serif!important;
+}
+
+#header-video{
+	width:100%;
+	height:auto;
+	position: absolute;
+	opacity:.1;
+	top: -80%;
+	left:0;
+	overflow:hidden;
+}
