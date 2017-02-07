@@ -1,5 +1,20 @@
 <template>
     <div>
+
+        <div class="loading-overlay">
+            <section class="ctnr">
+                <div class="ldr">
+                    <div class="ldr-blk"></div>
+                    <div class="ldr-blk an_delay"></div>
+                    <div class="ldr-blk an_delay"></div>
+                    <div class="ldr-blk"></div>
+                </div>
+            </section><br><br>
+            <div class="loading-message">
+                Collecting data...
+            </div>
+        </div>
+
         <div class="full-width-component dark-gradient">
             <!-- <video autoplay loop muted id="header-video">
                 <source src="http://vjs.zencdn.net/v/oceans.mp4" type="video/mp4">
@@ -32,7 +47,7 @@
                 </div>
             </div>
             <div class="container">
-        
+
                 <!-- MODAL -->
 
                 <assign-modal v-if="showModal" :ticket="selectedTicket"></assign-modal>
@@ -150,7 +165,16 @@
                         });
                         this.tickets = _.filter(this.tickets, function(value){
                             return !value.completed;
-                        })
+                        });
+
+                        let t1 = setTimeout(function(){
+                            $('.loading-overlay').css('z-index','999').addClass('fadeOut animated');
+                        },3000);
+
+                        let t2 = setTimeout(function(){
+                            $('.loading-overlay').css('z-index','-1');
+                        },4000);
+
                     });
                 },
                 fetchCategories(){
@@ -351,9 +375,49 @@
         }
 
         .user-avatar:hover
-            > .tooltip{
-                opacity: 1;
-            }
-        
+        > .tooltip{
+            opacity: 1;
+        }
 
-    </style>
+        @keyframes pulse {
+          0%   { opacity: 1; }
+          100% { opacity: 0; }
+      }
+
+      body{
+        margin:0;
+    }
+
+    .ctnr {
+      display: flex;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+  }
+
+  .ldr {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      align-items: center;
+      margin: auto;
+      width: 2.5em;
+      height: 2.5em;
+  }
+
+  .ldr-blk {
+      height: 35%;
+      width: 35%;
+      animation: pulse 0.75s ease-in infinite alternate;
+      background-color: #E6E6E6;
+  }
+
+  .an_delay {
+      animation-delay: 0.75s;
+  }
+
+
+</style>

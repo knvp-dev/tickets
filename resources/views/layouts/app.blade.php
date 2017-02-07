@@ -22,6 +22,9 @@
     </head>
     <body>
         <div id="app">
+
+          
+
             <nav class="nav has-shadow">
               <div class="container">
                 <div class="nav-left">
@@ -31,7 +34,7 @@
                 @if (Auth::guest())
                 <a class="nav-item is-tab is-hidden-mobile is-active">Login</a>
                 @else
-                <a class="nav-item is-tab is-hidden-mobile">Tickets</a>
+                <a href="/tickets" class="nav-item is-tab is-hidden-mobile">Tickets</a>
                 @endif
             </div>
             <span class="nav-toggle">
@@ -43,7 +46,7 @@
               @if (Auth::guest())
               <a class="nav-item is-tab is-hidden-mobile is-active">Login</a>
               @else
-              <a class="nav-item is-tab is-hidden-tablet">Tickets</a>
+              <a href="/tickets" class="nav-item is-tab is-hidden-tablet">Tickets</a>
               <a class="nav-item is-tab">
                 <figure class="image is-16x16" style="margin-right: 8px;">
                     <img class="is-rounded" src="{{ Auth::user()->avatar }}">
