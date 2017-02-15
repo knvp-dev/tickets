@@ -14,6 +14,7 @@ require('./bootstrap');
  */
 
 Vue.component('tickets', require('./components/Tickets.vue'));
+Vue.component('ticket-detail', require('./components/TicketDetail.vue'));
 Vue.component('selectbox', require('./components/Selectbox.vue'));
 Vue.component('assign-modal', require('./components/AssignModal.vue'));
 

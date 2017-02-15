@@ -1,0 +1,33 @@
+.login-form{
+	padding:30px;
+	width:400px;
+	display:flex;
+	flex-direction:column;
+}
+
+.login-submit{
+	margin:40px auto!important;
+	display:flex;
+	justify-content: center;
+}
+
+.brand-icon{
+	display:flex;
+	flex-direction:column;
+	margin: 100px;
+	
+	>p{
+		text-align:center;
+		color:white;
+		font-size:1.5em;
+		font-weight: bold;
+		opacity:.8;
+	}
+
+	>.fa{
+		font-size: 4em;
+		color: white;
+		opacity: 0.8;
+		padding:20px;
+	}
+}

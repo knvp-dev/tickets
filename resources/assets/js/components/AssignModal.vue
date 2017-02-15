@@ -18,11 +18,11 @@
 				</ul>
 				<div class="button-controls">
 					<button class="button is-success button-centered" @click="assignUsers(ticket)">Save</button>
-					<button class="button button-centered">Cancel</button>
+					<button class="button button-centered" @click="cancel">Cancel</button>
 				</div>
 			</div>
 		</div>
-		<button class="modal-close"></button>
+		<button class="modal-close" @click="cancel"></button>
 	</div>
 </template>
 
@@ -40,21 +40,20 @@
 		},
 		methods:{
 			fetchUsers(){
-				axios.get('api/users').then((response) => {
+				axios.get('/users').then((response) => {
 					this.users = response.data;
 
-					axios.get('api/ticket/'+this.ticket.id+'/users').then((response) => {
-					this.selectedUsers = response.data.users;
-					let that = this;
-					_.forEach(this.selectedUsers, (val1) => {
-						_.forEach(that.users, (val2) => {
-							if(val1.id == val2.id){
-								val2.selected = true;
-							}
+					axios.get('/ticket/'+this.ticket.id+'/users').then((response) => {
+						this.selectedUsers = response.data;
+						let that = this;
+						_.forEach(this.selectedUsers, (val1) => {
+							_.forEach(that.users, (val2) => {
+								if(val1.id == val2.id){
+									val2.selected = true;
+								}
+							});
 						});
 					});
-				});
-
 				});
 			},
 			selectUser(user){
@@ -68,9 +67,12 @@
 				});
 			},
 			assignUsers(ticket){
-				axios.post('/api/ticket/assign', {'ticket_id': ticket.id, 'users': this.selectedUsers }).then((response) => {
+				axios.post('/ticket/assign', {'ticket_id': ticket.id, 'users': this.selectedUsers }).then((response) => {
 					Event.$emit('users-assigned');
 				});
+			},
+			cancel(){
+				Event.$emit('users-assign-cancel');
 			}
 		}
 	}

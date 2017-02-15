@@ -16,12 +16,19 @@
 @import "node_modules/bulma/css/bulma";
 @import "helpers";
 
+// Components
+@import "login";
+
 html, body{
 	height:100%;
 }
 
 h1,h2,h3,h4,p,a, input,label{
 	font-family:'Quicksand', sans-serif!important;
+}
+
+#app{
+    height:100%;
 }
 
 #header-video{
@@ -52,8 +59,16 @@ h1,h2,h3,h4,p,a, input,label{
     height: 100%;
     flex-direction: column;
     font-size: 1.5em;
-
     text-transform: uppercase;
     color: #b1b1b1;
     font-family: Quicksand;
+}
+
+.fullscreen{
+    background-image:url('/images/header.jpg');
+    height: 100%;
+    background-size: cover;
+    display:flex;
+    align-items:center;
+    flex-direction: column;
 }

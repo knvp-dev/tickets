@@ -77,8 +77,9 @@
                             </div>
                             <div class="list-item-right">
                                 <p v-if="ticket.users.length > 0"><span v-for="user in ticket.users" class="user-avatar" @click="setSelectedTicket(ticket)"><div class="tooltip">{{ user.name }}</div><img :src="user.avatar" class="img-circle" alt=""></span></p>
-                                <a v-if="!ticket.completed" class="button assign-button animate" @click="setSelectedTicket(ticket)"><i class="fa fa-user icon is-small"></i></a>
-                                <a class="button assign-button animate" @click="completeTicket(ticket)"><i class="fa fa-check icon is-small"></i></a>
+                                <a v-if="!ticket.completed" class="button action-button animate" @click="setSelectedTicket(ticket)"><i class="fa fa-user-plus icon is-small"></i></a>
+                                <!-- <a class="button assign-button animate" @click="completeTicket(ticket)"><i class="fa fa-check icon is-small"></i></a> -->
+                                <a :href="'/ticket/'+ticket.id" class="button action-button animate"><i class="fa fa-arrow-right icon is-small"></i></a>
                             </div>
                         </div>
                     </div>
@@ -109,7 +110,8 @@
                             </div>
                             <div class="list-item-right">
                                 <p v-if="ticket.users.length > 0"><img v-for="user in ticket.users" :src="user.avatar" class="img-circle" alt=""></p>
-                                <a class="button assign-button animate"><i class="fa fa-arrow-up icon is-small"></i></a>
+                                <a class="button action-button animate" @click="uncompleteTicket(ticket)"><i class="fa fa-arrow-up icon is-small"></i></a>
+                                <a class="button action-button animate" @click="archiveTicket(ticket)"><i class="fa fa-archive icon is-small"></i></a>
                             </div>
                         </div>
                     </div>
@@ -140,6 +142,10 @@
                     this.showModal = false;
                     this.fetchTickets();
                 });
+
+                Event.$on('users-assign-cancel', () => {
+                    this.showModal = false;
+                });
             },
             props: ['type'],
             data(){
@@ -153,12 +159,13 @@
                     categories: [],
                     closedTickets: [],
                     showModal: false,
+                    showDetail: false,
                     selectedTicket: {}
                 }
             },
             methods:{
                 fetchTickets(){
-                    axios.get('/api/tickets').then( (response) => {
+                    axios.get('/tickets').then( (response) => {
                         this.tickets = response.data;
                         this.closedTickets = _.filter(this.tickets, function(value){
                             return value.completed;
@@ -167,23 +174,21 @@
                             return !value.completed;
                         });
 
-                        let t1 = setTimeout(function(){
-                            $('.loading-overlay').css('z-index','999').addClass('fadeOut animated');
-                        },3000);
+                        $('.loading-overlay').css('z-index','999').addClass('fadeOut animated');
 
                         let t2 = setTimeout(function(){
                             $('.loading-overlay').css('z-index','-1');
-                        },4000);
+                        },1000);
 
                     });
                 },
                 fetchCategories(){
-                    axios.get('api/categories').then((response) => {
+                    axios.get('/categories').then((response) => {
                         this.categories = response.data;
                     });
                 },
                 fetchPriorities(){
-                    axios.get('api/priorities').then((response) => {
+                    axios.get('/priorities').then((response) => {
                         this.priorities = response.data;
                     });
                 },
@@ -192,9 +197,12 @@
                     this.showModal = true;
                 },
                 completeTicket(ticket){
-                    axios.get('api/ticket/complete/'+ticket.id).then((response) => {
+                    axios.get('/ticket/complete/'+ticket.id).then((response) => {
                         this.fetchTickets();
                     });
+                },
+                showTicketDetail(ticket){
+                    Event.$emit('show-detail', ticket);
                 },
                 saveTicket(){
                     let errors = [];
@@ -208,7 +216,7 @@
                     this.selectedTicket = data[0];
 
                     if(this.validate()){
-                        axios.post('api/ticket/save', data).then((response) => {
+                        axios.post('/ticket/save', data).then((response) => {
                             this.tickets.push(response.data);
                             this.selectedTicket = response.data;
                             this.ticketTitle = '';
@@ -222,6 +230,16 @@
                         return false;
                     }
                     return true;
+                },
+                uncompleteTicket(ticket){
+                    axios.get('/ticket/uncomplete/'+ticket.id).then( (response) => {
+                        this.fetchTickets();
+                    });
+                },
+                archiveTicket(ticket){
+                    axios.get('/ticket/archive/'+ticket.id).then( (response) => {
+                        this.fetchTickets();
+                    });
                 }
             }
         }
@@ -287,7 +305,7 @@
             flex-direction: row;
         }
 
-        .assign-button{
+        .action-button{
             width: 30px;
             height: 30px;
             margin-right:5px;
@@ -301,15 +319,15 @@
             transform: rotate(0deg);
         }
 
-        .assign-button:hover{
+        .action-button:hover{
             /*transform: rotate(360deg);*/
         }
 
-        .assign-button>.fa{
+        .action-button>.fa{
             font-size:16px!important;
         }
 
-        .assign-button:focus{
+        .action-button:focus{
             outline:0;
         }
 

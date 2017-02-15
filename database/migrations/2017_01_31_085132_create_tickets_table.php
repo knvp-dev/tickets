@@ -15,13 +15,14 @@ class CreateTicketsTable extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('customer_id');
+            $table->integer('customer_id')->nullable();
             $table->string('title');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->integer('status_id')->default(1);
             $table->integer('category_id')->default(1);
             $table->integer('priority_id')->default(1);
             $table->integer('completed')->default(0);
+            $table->integer('archived')->default(0);
             $table->date('date_closed')->nullable();
             $table->timestamps();
         });

@@ -45,4 +45,19 @@ class Ticket extends Model
     public function scopeIncomplete($query){
     	return $query->where('complete',0);
     }
+
+    public function complete(){
+        $this->completed = 1;
+        $this->save();
+    }
+
+    public function uncomplete(){
+        $this->completed = 0;
+        $this->save();
+    }
+
+    public function archive(){
+        $this->archived = 1;
+        $this->save();
+    }
 }

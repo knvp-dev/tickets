@@ -22,19 +22,17 @@
     </head>
     <body>
         <div id="app">
-
-          
-
             <nav class="nav has-shadow">
               <div class="container">
                 <div class="nav-left">
                   <a class="nav-item">
-                    <img src="images/logo.svg" alt="logo">
+                    <img src="/images/logo.svg" alt="logo">
                 </a>
                 @if (Auth::guest())
                 <a class="nav-item is-tab is-hidden-mobile is-active">Login</a>
                 @else
-                <a href="/tickets" class="nav-item is-tab is-hidden-mobile">Tickets</a>
+                <a href="/" class="nav-item is-tab is-hidden-mobile">Tickets</a>
+                <a href="/archive" class="nav-item is-tab is-hidden-mobile">Archive</a>
                 @endif
             </div>
             <span class="nav-toggle">

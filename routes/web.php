@@ -10,14 +10,28 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
+use Illuminate\Http\Request;
 Auth::routes();
 
-Route::get('/home', 'HomeController@index');
-
 // Tickets
-Route::get('/tickets', 'TicketsController@index');
+Route::get('/', 'TicketsController@index');
+Route::get('tickets', 'TicketsController@tickets');
+Route::post('ticket/save', 'TicketsController@store');
+Route::get('/ticket/{ticket}', 'TicketsController@show');
+Route::get('ticket/{ticket}/users', 'TicketsController@assignedUsers');
+Route::get('ticket/complete/{ticket}', 'TicketsController@completeTicket');
+Route::get('/ticket/uncomplete/{ticket}', 'TicketsController@uncompleteTicket');
+Route::get('/ticket/archive/{ticket}', 'TicketsController@archive');
+Route::post('ticket/assign', 'TicketsController@assignUserToTicket');
+
+Route::get('/users', function(){
+	return App\User::all();
+});
+
+Route::get('categories', function(){
+	return App\Category::all();
+});
+
+Route::get('priorities', function(){
+	return App\Priority::all();
+});
