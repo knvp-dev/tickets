@@ -22,7 +22,12 @@ Route::get('ticket/{ticket}/users', 'TicketsController@assignedUsers');
 Route::get('ticket/complete/{ticket}', 'TicketsController@completeTicket');
 Route::get('/ticket/uncomplete/{ticket}', 'TicketsController@uncompleteTicket');
 Route::get('/ticket/archive/{ticket}', 'TicketsController@archive');
+Route::get('/ticket/unarchive/{ticket}', 'TicketsController@unarchive');
 Route::post('ticket/assign', 'TicketsController@assignUserToTicket');
+
+
+Route::get('/archive', 'ArchiveController@index');
+Route::get('/archive/tickets', 'ArchiveController@archivedTickets');
 
 Route::get('/users', function(){
 	return App\User::all();

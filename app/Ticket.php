@@ -60,4 +60,9 @@ class Ticket extends Model
         $this->archived = 1;
         $this->save();
     }
+
+    public function unarchive(){
+        $this->archived = 0;
+        $this->save();
+    }
 }

@@ -37,7 +37,6 @@ class TicketsController extends Controller
         foreach($request->users as $user){
             $ticket->users()->attach($user['id']);
         }
-        return 'Assigned';
     }
 
     public function completeTicket(Ticket $ticket){
@@ -50,5 +49,9 @@ class TicketsController extends Controller
 
     public function archive(Ticket $ticket){
         $ticket->archive();
+    }
+
+    public function unarchive(Ticket $ticket){
+        $ticket->unarchive();
     }
 }
