@@ -16,11 +16,17 @@ class TicketsController extends Controller
     }
 
     public function show(Ticket $ticket){
-        return view('pages.ticket-detail', compact('ticket'));
+        $ticket_id = $ticket->id;
+        return view('pages.ticket-detail', compact('ticket_id'));
     }
 
     public function store(Request $request){
-        Ticket::create($request[0]);
+        $ticket = Ticket::create($request[0]);
+        return Ticket::whereId($ticket->id)->with(['category','status','priority','customer','users','todos'])->first();
+    }
+
+    public function detail(Ticket $ticket){
+        return Ticket::whereId($ticket->id)->with(['category','status','priority','customer','users','todos'])->first();
     }
 
     public function tickets(){

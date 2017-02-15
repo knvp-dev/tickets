@@ -27302,17 +27302,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = {
 	mounted: function mounted() {
-		console.log(this.ticket);
+		this.fetchTicketDetails(this.ticketid);
 	},
 
-	props: ["data"],
+	props: ["ticketid"],
 	data: function data() {
 		return {
-			ticket: JSON.parse(this.data)
+			ticket: []
 		};
 	},
 
-	methods: {}
+	methods: {
+		fetchTicketDetails: function fetchTicketDetails(id) {
+			var _this = this;
+
+			axios.get('/ticket/detail/' + id).then(function (response) {
+				_this.ticket = response.data;
+			});
+		}
+	}
 };
 
 /***/ }),
@@ -30046,7 +30054,7 @@ exports = module.exports = __webpack_require__(11)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -47983,7 +47991,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "ticket-detail-wrapper"
   }, [_c('h1', {
     staticClass: "title"
-  }, [_vm._v(_vm._s(_vm.ticket.title))])])])])
+  }, [_vm._v(_vm._s(_vm.ticket.title))]), _vm._v(" "), _c('ol', _vm._l((_vm.ticket.todos), function(todo) {
+    return _c('li', [_vm._v(_vm._s(todo.body))])
+  }))])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('a', {
     attrs: {

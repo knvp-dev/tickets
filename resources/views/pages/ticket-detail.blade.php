@@ -2,6 +2,6 @@
 
 @section('content')
 
-<ticket-detail data="{{ $ticket }}"></ticket-detail>
+<ticket-detail ticketid="{{ $ticket_id }}"></ticket-detail>
 
 @endsection

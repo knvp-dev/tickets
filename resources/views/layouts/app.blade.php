@@ -31,7 +31,8 @@
                 @if (Auth::guest())
                 <a class="nav-item is-tab is-hidden-mobile is-active">Login</a>
                 @else
-                <a href="/" class="nav-item is-tab is-hidden-mobile">Tickets</a>
+                <a href="/" class="nav-item is-tab is-hidden-mobile">All tickets</a>
+                <a href="/my-tickets" class="nav-item is-tab is-hidden-mobile">Assigned to me</a>
                 <a href="/archive" class="nav-item is-tab is-hidden-mobile">Archive</a>
                 @endif
             </div>

@@ -6,9 +6,9 @@
 
 		<div class="ticket-detail-wrapper">
 			<h1 class="title">{{ ticket.title }}</h1>
-			<!-- <ul>
-				<li v-for="todo in todos">{{ todo.body }}</li>
-			</ul> -->
+			<ol>
+				<li v-for="todo in ticket.todos">{{ todo.body }}</li>
+			</ol>
 		</div>
 	</section>
 </div>
@@ -17,16 +17,20 @@
 <script>
 	export default{
 		mounted(){
-			console.log(this.ticket);
+			this.fetchTicketDetails(this.ticketid);
 		},
-		props: ["data"],
+		props: ["ticketid"],
 		data(){
 			return{
-				ticket: JSON.parse(this.data)
+				ticket: []
 			}
 		},
 		methods:{
-			
+			fetchTicketDetails(id){
+				axios.get('/ticket/detail/'+id).then((response) => {
+					this.ticket = response.data;
+				});
+			}
 		}
 	}
 </script>

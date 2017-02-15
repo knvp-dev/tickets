@@ -12,6 +12,6 @@ class ArchiveController extends Controller
     }
 
     public function archivedTickets(){
-    	return Ticket::whereArchived(1)->with(['category','status','priority','customer','users'])->orderBy('created_at','ASC')->get();
+    	return Ticket::whereArchived(1)->with(['category','status','priority','customer','users'])->orderBy('updated_at','ASC')->get();
     }
 }

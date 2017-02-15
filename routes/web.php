@@ -17,6 +17,7 @@ Auth::routes();
 Route::get('/', 'TicketsController@index');
 Route::get('tickets', 'TicketsController@tickets');
 Route::post('ticket/save', 'TicketsController@store');
+Route::get('/ticket/detail/{ticket}', 'TicketsController@detail');
 Route::get('/ticket/{ticket}', 'TicketsController@show');
 Route::get('ticket/{ticket}/users', 'TicketsController@assignedUsers');
 Route::get('ticket/complete/{ticket}', 'TicketsController@completeTicket');
