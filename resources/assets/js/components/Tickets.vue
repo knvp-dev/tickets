@@ -61,7 +61,7 @@
                     <div class="ticket-list">
                         <div class="ticket-list-item slideDown animated" v-for="ticket in tickets">
                             <div class="list-item-icon">
-                                <i class="fa fa-ticket" :class="(ticket.completed) ? 'is-green' : ''"></i>
+                                <i class="fa fa-ticket" :class="ticket.priority.name.toLowerCase()"></i>
                             </div>
                             <div class="list-item-left">
                                 <p v-diff-for-humans="ticket.created_at"></p>
@@ -69,10 +69,10 @@
                             </div>
                             <div class="list-item-center">
                                 <div class="list-item-center-top">
-                                    {{ ticket.title }}
+                                    <a :href="'/ticket/'+ticket.id">{{ ticket.title }}</a>
                                 </div>
                                 <div class="list-item-center-bottom">
-                                    {{ ticket.status.name }}
+                                    <i class="fa fa-thermometer-full pr-10 is-small-icon"></i> {{ ticket.priority.name }}
                                 </div>
                             </div>
                             <div class="list-item-right">
@@ -105,7 +105,7 @@
                                     {{ ticket.title }}
                                 </div>
                                 <div class="list-item-center-bottom">
-                                    {{ ticket.status.name }}
+                                    Priority: {{ ticket.priority.name }}
                                 </div>
                             </div>
                             <div class="list-item-right">
@@ -268,7 +268,7 @@
             flex:1;
             justify-content: space-between;
             align-items: center;
-            border-bottom:1px dashed #eee;
+            border-bottom:1px dashed #d4d4d4;
             transition:all 2s;
         }
 
@@ -299,6 +299,9 @@
         .list-item-center-top{
             display: flex;
             flex-direction: row;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: #ae6379;
         }
         .list-item-center-bottom{
             display: flex;
@@ -435,6 +438,18 @@
 
   .an_delay {
       animation-delay: 0.75s;
+  }
+
+  .low{
+
+  }
+
+  .normal{
+    
+  }
+
+  .high{
+    color:#ec7474;
   }
 
 

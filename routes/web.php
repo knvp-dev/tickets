@@ -17,6 +17,7 @@ Auth::routes();
 Route::get('/', 'TicketsController@index');
 Route::get('tickets', 'TicketsController@tickets');
 Route::post('ticket/save', 'TicketsController@store');
+Route::post('ticket/update', 'TicketsController@update');
 Route::get('/ticket/detail/{ticket}', 'TicketsController@detail');
 Route::get('/ticket/{ticket}', 'TicketsController@show');
 Route::get('ticket/{ticket}/users', 'TicketsController@assignedUsers');
@@ -25,6 +26,7 @@ Route::get('/ticket/uncomplete/{ticket}', 'TicketsController@uncompleteTicket');
 Route::get('/ticket/archive/{ticket}', 'TicketsController@archive');
 Route::get('/ticket/unarchive/{ticket}', 'TicketsController@unarchive');
 Route::post('ticket/assign', 'TicketsController@assignUserToTicket');
+Route::get('/ticket/{ticket}/todos', 'TodosController@show');
 
 
 Route::get('/archive', 'ArchiveController@index');

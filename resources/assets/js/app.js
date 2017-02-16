@@ -18,6 +18,7 @@ Vue.component('ticket-detail', require('./components/TicketDetail.vue'));
 Vue.component('selectbox', require('./components/Selectbox.vue'));
 Vue.component('assign-modal', require('./components/AssignModal.vue'));
 Vue.component('archive', require('./components/Archive.vue'));
+Vue.component('todo', require('./components/Todo.vue'));
 
 window.Event = new Vue({});
 

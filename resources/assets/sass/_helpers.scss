@@ -48,12 +48,13 @@
     flex-direction: row;
     justify-content: center;
 	margin:5px;
+	white-space: nowrap;
 }
 
 .select-box-item:hover{
 	cursor:pointer;
 	color:white;
-	background-color:#bdbdbd;
+	background-color:$soft-red;
 }
 
 .select-box-choice{
@@ -85,7 +86,7 @@
 
 .is-selected{
 	color:white;
-	background-color:#5D8995;
+	background-color:$soft-red;
 }
 
 .ticket-submit{
@@ -161,4 +162,30 @@
 
 .button-controls button{
 	margin:5px;
+}
+
+.pr-10{
+	padding-right:10px;
+}
+
+.is-small-icon{
+	font-size:1em;
+    color: #b1b1b1;
+    padding:4px;
+}
+
+.button:hover{
+	color:#ec7474;
+}
+
+a{
+	color:#ec7474;
+}
+
+a:hover{
+	color:darken(#ec7474, 10%);
+}
+
+.nav-item a.is-tab:hover, a.nav-item.is-tab:hover{
+	border-bottom-color:$soft-red;
 }

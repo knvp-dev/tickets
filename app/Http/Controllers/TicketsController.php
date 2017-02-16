@@ -22,15 +22,21 @@ class TicketsController extends Controller
 
     public function store(Request $request){
         $ticket = Ticket::create($request[0]);
-        return Ticket::whereId($ticket->id)->with(['category','status','priority','customer','users','todos'])->first();
+        return Ticket::whereId($ticket->id)->with(['category','status','priority','users','todos'])->first();
+    }
+
+    public function update(Request $request){
+        $ticket = Ticket::whereId($request->id)->first();
+        $ticket->description = $request->description;
+        $ticket->save();
     }
 
     public function detail(Ticket $ticket){
-        return Ticket::whereId($ticket->id)->with(['category','status','priority','customer','users','todos'])->first();
+        return Ticket::whereId($ticket->id)->with(['category','status','priority','users','todos'])->first();
     }
 
     public function tickets(){
-        return Ticket::whereArchived(0)->with(['category','status','priority','customer','users'])->orderBy('created_at','ASC')->get();
+        return Ticket::whereArchived(0)->with(['category','status','priority','users'])->orderBy('created_at','ASC')->get();
     }
 
     public function assignedUsers(Ticket $ticket){

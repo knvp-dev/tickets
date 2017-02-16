@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "./";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 167);
+/******/ 	return __webpack_require__(__webpack_require__.s = 170);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1884,7 +1884,7 @@ function loadLocale(name) {
             module && module.exports) {
         try {
             oldLocale = globalLocale._abbr;
-            __webpack_require__(153)("./" + name);
+            __webpack_require__(154)("./" + name);
             // because defineLocale currently also sets the global locale, we
             // want to undo that for lazy loaded locales
             getSetGlobalLocale(oldLocale);
@@ -26196,7 +26196,7 @@ module.exports = function(module) {
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(148);
+__webpack_require__(149);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -26204,11 +26204,12 @@ __webpack_require__(148);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('tickets', __webpack_require__(158));
-Vue.component('ticket-detail', __webpack_require__(157));
-Vue.component('selectbox', __webpack_require__(156));
-Vue.component('assign-modal', __webpack_require__(155));
-Vue.component('archive', __webpack_require__(154));
+Vue.component('tickets', __webpack_require__(159));
+Vue.component('ticket-detail', __webpack_require__(158));
+Vue.component('selectbox', __webpack_require__(157));
+Vue.component('assign-modal', __webpack_require__(156));
+Vue.component('archive', __webpack_require__(155));
+Vue.component('todo', __webpack_require__(160));
 
 window.Event = new Vue({});
 
@@ -27299,6 +27300,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = {
 	mounted: function mounted() {
@@ -27308,7 +27321,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	props: ["ticketid"],
 	data: function data() {
 		return {
-			ticket: []
+			ticket: [],
+			showDescriptionInput: false
 		};
 	},
 
@@ -27318,6 +27332,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 			axios.get('/ticket/detail/' + id).then(function (response) {
 				_this.ticket = response.data;
+			});
+		},
+		saveDescription: function saveDescription() {
+			var _this2 = this;
+
+			axios.post('/ticket/update', this.ticket).then(function (response) {
+				_this2.showDescriptionInput = false;
 			});
 		}
 	}
@@ -27595,10 +27616,85 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 /* 148 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = {
+	mounted: function mounted() {},
+
+	props: ["ticket", "todos"],
+	data: function data() {
+		return {
+			todo: '',
+			body: ''
+		};
+	},
+
+	methods: {
+		complete: function complete(todo) {
+			todo.completed = !todo.completed;
+		},
+		remove: function remove(todo) {
+			this.todos.splice(this.todos.indexOf(todo), 1);
+		},
+		addTodo: function addTodo() {
+			if (this.body != '') {
+				this.todo = {
+					ticket_id: this.ticket.id,
+					body: this.body,
+					completed: 0
+				};
+				this.todos.push(this.todo);
+				this.body = '';
+			}
+		}
+	}
+};
+
+/***/ }),
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_provided_window_dot_jQuery) {
-window._ = __webpack_require__(152);
+window._ = __webpack_require__(153);
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -27608,7 +27704,7 @@ window._ = __webpack_require__(152);
 
 window.$ = __webpack_provided_window_dot_jQuery = __webpack_require__(3);
 
-__webpack_require__(149);
+__webpack_require__(150);
 
 /**
  * Vue is a modern JavaScript library for building interactive web interfaces
@@ -27616,7 +27712,7 @@ __webpack_require__(149);
  * and simple, leaving you to focus on building your next great project.
  */
 
-window.Vue = __webpack_require__(166);
+window.Vue = __webpack_require__(169);
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -27648,7 +27744,7 @@ moment().format();
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 149 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/*!
@@ -30032,20 +30128,6 @@ if (typeof jQuery === 'undefined') {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 150 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(11)();
-// imports
-
-
-// module
-exports.push([module.i, "\n.fade-enter-active, .fade-leave-active {\n          -webkit-transition: all .2s;\n          transition: all .2s\n}\n.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {\n          left: -50px;\n          opacity:0;\n}\n.ticket-list{\n          width:100%;\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-orient: vertical;\n          -webkit-box-direction: reverse;\n              -ms-flex-direction: column-reverse;\n                  flex-direction: column-reverse;\n          -webkit-transition: all 2s;\n          transition:all 2s;\n          position: relative;\n}\n.ticket-list-item{\n          width:100%;\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-flex:1;\n              -ms-flex:1;\n                  flex:1;\n          -webkit-box-pack: justify;\n              -ms-flex-pack: justify;\n                  justify-content: space-between;\n          -webkit-box-align: center;\n              -ms-flex-align: center;\n                  align-items: center;\n          border-bottom:1px dashed #eee;\n          -webkit-transition: all 2s;\n          transition:all 2s;\n}\n.list-item-icon{\n          display:-webkit-box;\n          display:-ms-flexbox;\n          display:flex;\n          -webkit-box-pack: center;\n              -ms-flex-pack: center;\n                  justify-content: center;\n          -webkit-box-align: center;\n              -ms-flex-align: center;\n                  align-items: center;\n          color:#e6e6e6;\n          padding:40px;\n}\n.list-item-left{\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-orient: vertical;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: column;\n                  flex-direction: column;\n          width:200px;\n}\n.list-item-right{\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-orient: horizontal;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: row;\n                  flex-direction: row;\n          -webkit-box-pack: center;\n              -ms-flex-pack: center;\n                  justify-content: center;\n          -webkit-box-align: start;\n              -ms-flex-align: start;\n                  align-items: flex-start;\n}\n.list-item-center{\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-orient: vertical;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: column;\n                  flex-direction: column;\n          margin-right:auto;\n}\n.list-item-center-top{\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-orient: horizontal;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: row;\n                  flex-direction: row;\n}\n.list-item-center-bottom{\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-orient: horizontal;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: row;\n                  flex-direction: row;\n}\n.action-button{\n          width: 30px;\n          height: 30px;\n          margin-right:5px;\n          padding: 0!important;\n          border-radius: 30px;\n          border: none;\n          border:1px dashed #b7b7b7;\n          background: none;\n          color:#d2d2d2;\n          cursor:pointer;\n          -webkit-transform: rotate(0deg);\n                  transform: rotate(0deg);\n}\n.action-button:hover{\n          /*transform: rotate(360deg);*/\n}\n.action-button>.fa{\n          font-size:16px!important;\n}\n.action-button:focus{\n          outline:0;\n}\n.slideDown {\n          -webkit-animation-duration: 1s;\n          animation-duration: 1s;\n          -webkit-animation-fill-mode: both;\n          animation-fill-mode: both;\n          -webkit-animation-name: slideDown;\n          animation-name: slideDown;\n}\n@-webkit-keyframes slideDown {\nfrom {\n              -webkit-transform: translate3d(0, 0,-100%);\n              transform: translate3d(0, 0,-100%);\n              opacity: 0;\n}\nto {\n              -webkit-transform: translate3d(0, 0, 0);\n              transform: translate3d(0, 0, 0);\n              opacity: 1;\n}\n}\n.user-select-list{\n          display:-webkit-box;\n          display:-ms-flexbox;\n          display:flex;\n          -webkit-box-orient: vertical;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: column;\n                  flex-direction: column;\n          width:80%;\n          margin:0 auto;\n}\n.user-select-list-item{\n          display:-webkit-box;\n          display:-ms-flexbox;\n          display:flex;\n          -webkit-box-orient: horizontal;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: row;\n                  flex-direction: row;\n          -webkit-box-pack: justify;\n              -ms-flex-pack: justify;\n                  justify-content: space-between;\n          -webkit-box-align: center;\n              -ms-flex-align: center;\n                  align-items: center;\n          padding:10px;\n}\n.user-select-list-item span{\n          text-transform: uppercase;\n          margin-right:auto;\n          padding-left:20px;\n}\n.tooltip{\n          background-color:#a7a7a7;\n          color:white;\n          padding:0px 10px;\n          position:absolute;\n          border-radius:5px;\n          top:5px;\n          opacity: 0;\n          z-index:1;\n          display:inline-table;\n          -webkit-transition: all .5s;\n          transition: all .5s;\n}\n.user-avatar{\n          cursor:pointer;\n}\n.user-avatar:hover\n      > .tooltip{\n          opacity: 1;\n}\n@-webkit-keyframes pulse {\n0%   { opacity: 1;\n}\n100% { opacity: 0;\n}\n}\n@keyframes pulse {\n0%   { opacity: 1;\n}\n100% { opacity: 0;\n}\n}\nbody{\n      margin:0;\n}\n.ctnr {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    position: absolute;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    left: 0;\n}\n.ldr {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: row;\n            flex-direction: row;\n    -ms-flex-wrap: wrap;\n        flex-wrap: wrap;\n    -ms-flex-pack: distribute;\n        justify-content: space-around;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    margin: auto;\n    width: 2.5em;\n    height: 2.5em;\n}\n.ldr-blk {\n    height: 35%;\n    width: 35%;\n    -webkit-animation: pulse 0.75s ease-in infinite alternate;\n            animation: pulse 0.75s ease-in infinite alternate;\n    background-color: #E6E6E6;\n}\n.an_delay {\n    -webkit-animation-delay: 0.75s;\n            animation-delay: 0.75s;\n}\n\n\n", ""]);
-
-// exports
-
-
-/***/ }),
 /* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30054,13 +30136,14 @@ exports = module.exports = __webpack_require__(11)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n.fade-enter-active, .fade-leave-active {\n          -webkit-transition: all .2s;\n          transition: all .2s\n}\n.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {\n          left: -50px;\n          opacity:0;\n}\n.ticket-list{\n          width:100%;\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-orient: vertical;\n          -webkit-box-direction: reverse;\n              -ms-flex-direction: column-reverse;\n                  flex-direction: column-reverse;\n          -webkit-transition: all 2s;\n          transition:all 2s;\n          position: relative;\n}\n.ticket-list-item{\n          width:100%;\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-flex:1;\n              -ms-flex:1;\n                  flex:1;\n          -webkit-box-pack: justify;\n              -ms-flex-pack: justify;\n                  justify-content: space-between;\n          -webkit-box-align: center;\n              -ms-flex-align: center;\n                  align-items: center;\n          border-bottom:1px dashed #d4d4d4;\n          -webkit-transition: all 2s;\n          transition:all 2s;\n}\n.list-item-icon{\n          display:-webkit-box;\n          display:-ms-flexbox;\n          display:flex;\n          -webkit-box-pack: center;\n              -ms-flex-pack: center;\n                  justify-content: center;\n          -webkit-box-align: center;\n              -ms-flex-align: center;\n                  align-items: center;\n          color:#e6e6e6;\n          padding:40px;\n}\n.list-item-left{\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-orient: vertical;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: column;\n                  flex-direction: column;\n          width:200px;\n}\n.list-item-right{\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-orient: horizontal;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: row;\n                  flex-direction: row;\n          -webkit-box-pack: center;\n              -ms-flex-pack: center;\n                  justify-content: center;\n          -webkit-box-align: start;\n              -ms-flex-align: start;\n                  align-items: flex-start;\n}\n.list-item-center{\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-orient: vertical;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: column;\n                  flex-direction: column;\n          margin-right:auto;\n}\n.list-item-center-top{\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-orient: horizontal;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: row;\n                  flex-direction: row;\n          text-transform: uppercase;\n          font-weight: bold;\n          color: #ae6379;\n}\n.list-item-center-bottom{\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-orient: horizontal;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: row;\n                  flex-direction: row;\n}\n.action-button{\n          width: 30px;\n          height: 30px;\n          margin-right:5px;\n          padding: 0!important;\n          border-radius: 30px;\n          border: none;\n          border:1px dashed #b7b7b7;\n          background: none;\n          color:#d2d2d2;\n          cursor:pointer;\n          -webkit-transform: rotate(0deg);\n                  transform: rotate(0deg);\n}\n.action-button:hover{\n          /*transform: rotate(360deg);*/\n}\n.action-button>.fa{\n          font-size:16px!important;\n}\n.action-button:focus{\n          outline:0;\n}\n.slideDown {\n          -webkit-animation-duration: 1s;\n          animation-duration: 1s;\n          -webkit-animation-fill-mode: both;\n          animation-fill-mode: both;\n          -webkit-animation-name: slideDown;\n          animation-name: slideDown;\n}\n@-webkit-keyframes slideDown {\nfrom {\n              -webkit-transform: translate3d(0, 0,-100%);\n              transform: translate3d(0, 0,-100%);\n              opacity: 0;\n}\nto {\n              -webkit-transform: translate3d(0, 0, 0);\n              transform: translate3d(0, 0, 0);\n              opacity: 1;\n}\n}\n.user-select-list{\n          display:-webkit-box;\n          display:-ms-flexbox;\n          display:flex;\n          -webkit-box-orient: vertical;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: column;\n                  flex-direction: column;\n          width:80%;\n          margin:0 auto;\n}\n.user-select-list-item{\n          display:-webkit-box;\n          display:-ms-flexbox;\n          display:flex;\n          -webkit-box-orient: horizontal;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: row;\n                  flex-direction: row;\n          -webkit-box-pack: justify;\n              -ms-flex-pack: justify;\n                  justify-content: space-between;\n          -webkit-box-align: center;\n              -ms-flex-align: center;\n                  align-items: center;\n          padding:10px;\n}\n.user-select-list-item span{\n          text-transform: uppercase;\n          margin-right:auto;\n          padding-left:20px;\n}\n.tooltip{\n          background-color:#a7a7a7;\n          color:white;\n          padding:0px 10px;\n          position:absolute;\n          border-radius:5px;\n          top:5px;\n          opacity: 0;\n          z-index:1;\n          display:inline-table;\n          -webkit-transition: all .5s;\n          transition: all .5s;\n}\n.user-avatar{\n          cursor:pointer;\n}\n.user-avatar:hover\n      > .tooltip{\n          opacity: 1;\n}\n@-webkit-keyframes pulse {\n0%   { opacity: 1;\n}\n100% { opacity: 0;\n}\n}\n@keyframes pulse {\n0%   { opacity: 1;\n}\n100% { opacity: 0;\n}\n}\nbody{\n      margin:0;\n}\n.ctnr {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    position: absolute;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    left: 0;\n}\n.ldr {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: row;\n            flex-direction: row;\n    -ms-flex-wrap: wrap;\n        flex-wrap: wrap;\n    -ms-flex-pack: distribute;\n        justify-content: space-around;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    margin: auto;\n    width: 2.5em;\n    height: 2.5em;\n}\n.ldr-blk {\n    height: 35%;\n    width: 35%;\n    -webkit-animation: pulse 0.75s ease-in infinite alternate;\n            animation: pulse 0.75s ease-in infinite alternate;\n    background-color: #E6E6E6;\n}\n.an_delay {\n    -webkit-animation-delay: 0.75s;\n            animation-delay: 0.75s;\n}\n.low{\n}\n.normal{\n}\n.high{\n  color:#ec7474;\n}\n\n\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 152 */
+/* 152 */,
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -47152,7 +47235,7 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(121), __webpack_require__(122)(module)))
 
 /***/ }),
-/* 153 */
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -47387,18 +47470,18 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 153;
+webpackContext.id = 154;
 
 
 /***/ }),
-/* 154 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(143),
   /* template */
-  __webpack_require__(161),
+  __webpack_require__(163),
   /* scopeId */
   null,
   /* cssModules */
@@ -47425,14 +47508,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 155 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(144),
   /* template */
-  __webpack_require__(159),
+  __webpack_require__(161),
   /* scopeId */
   null,
   /* cssModules */
@@ -47459,14 +47542,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 156 */
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(145),
   /* template */
-  __webpack_require__(163),
+  __webpack_require__(166),
   /* scopeId */
   null,
   /* cssModules */
@@ -47493,18 +47576,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 157 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
-
-
-/* styles */
-__webpack_require__(165)
 
 var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(146),
   /* template */
-  __webpack_require__(162),
+  __webpack_require__(164),
   /* scopeId */
   null,
   /* cssModules */
@@ -47531,18 +47610,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 158 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(164)
+__webpack_require__(167)
 
 var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(147),
   /* template */
-  __webpack_require__(160),
+  __webpack_require__(162),
   /* scopeId */
   null,
   /* cssModules */
@@ -47569,7 +47648,45 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 159 */
+/* 160 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__(179)
+
+var Component = __webpack_require__(2)(
+  /* script */
+  __webpack_require__(148),
+  /* template */
+  __webpack_require__(165),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/webdeveloper/valet_code/v54/resources/assets/js/components/Todo.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Todo.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7fd610c2", Component.options)
+  } else {
+    hotAPI.reload("data-v-7fd610c2", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -47661,7 +47778,7 @@ if (false) {
 }
 
 /***/ }),
-/* 160 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -47747,7 +47864,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "list-item-icon"
     }, [_c('i', {
       staticClass: "fa fa-ticket",
-      class: (ticket.completed) ? 'is-green' : ''
+      class: ticket.priority.name.toLowerCase()
     })]), _vm._v(" "), _c('div', {
       staticClass: "list-item-left"
     }, [_c('p', {
@@ -47761,9 +47878,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "list-item-center"
     }, [_c('div', {
       staticClass: "list-item-center-top"
-    }, [_vm._v("\n                                " + _vm._s(ticket.title) + "\n                            ")]), _vm._v(" "), _c('div', {
+    }, [_c('a', {
+      attrs: {
+        "href": '/ticket/' + ticket.id
+      }
+    }, [_vm._v(_vm._s(ticket.title))])]), _vm._v(" "), _c('div', {
       staticClass: "list-item-center-bottom"
-    }, [_vm._v("\n                                " + _vm._s(ticket.status.name) + "\n                            ")])]), _vm._v(" "), _c('div', {
+    }, [_c('i', {
+      staticClass: "fa fa-thermometer-full pr-10 is-small-icon"
+    }), _vm._v(" " + _vm._s(ticket.priority.name) + "\n                            ")])]), _vm._v(" "), _c('div', {
       staticClass: "list-item-right"
     }, [(ticket.users.length > 0) ? _c('p', _vm._l((ticket.users), function(user) {
       return _c('span', {
@@ -47831,7 +47954,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "list-item-center-top"
     }, [_vm._v("\n                                " + _vm._s(ticket.title) + "\n                            ")]), _vm._v(" "), _c('div', {
       staticClass: "list-item-center-bottom"
-    }, [_vm._v("\n                                " + _vm._s(ticket.status.name) + "\n                            ")])]), _vm._v(" "), _c('div', {
+    }, [_vm._v("\n                                Priority: " + _vm._s(ticket.priority.name) + "\n                            ")])]), _vm._v(" "), _c('div', {
       staticClass: "list-item-right"
     }, [(ticket.users.length > 0) ? _c('p', _vm._l((ticket.users), function(user) {
       return _c('img', {
@@ -47901,7 +48024,7 @@ if (false) {
 }
 
 /***/ }),
-/* 161 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -47979,30 +48102,72 @@ if (false) {
 }
 
 /***/ }),
-/* 162 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
+  return _c('div', [_c('div', {
     staticClass: "container"
   }, [_c('section', {
     staticClass: "section"
-  }, [_vm._m(0), _vm._v(" "), _c('div', {
+  }, [_c('div', {
     staticClass: "ticket-detail-wrapper"
   }, [_c('h1', {
     staticClass: "title"
-  }, [_vm._v(_vm._s(_vm.ticket.title))]), _vm._v(" "), _c('ol', _vm._l((_vm.ticket.todos), function(todo) {
-    return _c('li', [_vm._v(_vm._s(todo.body))])
-  }))])])])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('a', {
-    attrs: {
-      "href": "/"
+  }, [_vm._v(_vm._s(_vm.ticket.title))]), _vm._v(" "), (_vm.ticket.description == null) ? _c('a', {
+    on: {
+      "click": function($event) {
+        _vm.showDescriptionInput = true
+      }
     }
-  }, [_c('i', {
-    staticClass: "fa fa-arrow-left"
-  }), _vm._v(" Back")])
-}]}
+  }, [_vm._v("Add description")]) : _vm._e(), _vm._v(" "), (_vm.ticket.description != null && !_vm.showDescriptionInput) ? _c('a', {
+    on: {
+      "click": function($event) {
+        _vm.showDescriptionInput = true
+      }
+    }
+  }, [_vm._v("Edit description")]) : _vm._e(), _vm._v(" "), (_vm.ticket.description != null && !_vm.showDescriptionInput) ? _c('p', [_vm._v(_vm._s(_vm.ticket.description))]) : _vm._e(), _vm._v(" "), (_vm.showDescriptionInput) ? _c('div', {
+    staticClass: "description-form"
+  }, [_c('p', {
+    staticClass: "control"
+  }, [_c('textarea', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.ticket.description),
+      expression: "ticket.description"
+    }],
+    staticClass: "textarea",
+    attrs: {
+      "placeholder": "Textarea"
+    },
+    domProps: {
+      "value": _vm._s(_vm.ticket.description)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.ticket.description = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('p', [_c('button', {
+    staticClass: "button",
+    on: {
+      "click": _vm.saveDescription
+    }
+  }, [_vm._v("Save")])])]) : _vm._e()])]), _vm._v(" "), _c('div', {
+    staticClass: "columns"
+  }, [_c('div', {
+    staticClass: "column"
+  }, [_c('todo', {
+    attrs: {
+      "todos": this.ticket.todos,
+      "ticket": this.ticket
+    }
+  })], 1), _vm._v(" "), _c('div', {
+    staticClass: "column"
+  })])])])
+},staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
@@ -48012,7 +48177,99 @@ if (false) {
 }
 
 /***/ }),
-/* 163 */
+/* 165 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "container"
+  }, [_c('section', {
+    staticClass: "section"
+  }, [_c('h1', {
+    staticClass: "title"
+  }, [_vm._v("Todo")]), _vm._v(" "), _c('div', {
+    staticClass: "todo-form "
+  }, [_c('p', {
+    staticClass: "control"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.body),
+      expression: "body"
+    }],
+    staticClass: "input",
+    attrs: {
+      "type": "text",
+      "placeholder": "Add new todo item"
+    },
+    domProps: {
+      "value": _vm._s(_vm.body)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.body = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('p', {
+    staticClass: "control"
+  }, [_c('button', {
+    staticClass: "button",
+    on: {
+      "click": _vm.addTodo
+    }
+  }, [_vm._v("Add")])])]), _vm._v(" "), _c('div', {
+    staticClass: "ticket-list"
+  }, _vm._l((_vm.todos), function(todo) {
+    return _c('div', {
+      staticClass: "ticket-list-item slideDown animated"
+    }, [_c('div', {
+      staticClass: "list-item-icon has-small-padding"
+    }, [(todo.completed == 0) ? _c('i', {
+      staticClass: "fa fa-circle-o"
+    }) : _c('i', {
+      staticClass: "fa fa-check is-green"
+    })]), _vm._v(" "), _c('div', {
+      staticClass: "list-item-left",
+      staticStyle: {
+        "width": "330px"
+      }
+    }, [_c('p', [_vm._v(_vm._s(todo.body))])]), _vm._v(" "), _c('div', {
+      staticClass: "list-item-right"
+    }, [_c('a', {
+      staticClass: "button action-button animate",
+      on: {
+        "click": function($event) {
+          _vm.complete(todo)
+        }
+      }
+    }, [(!todo.completed) ? _c('i', {
+      staticClass: "fa fa-check icon is-small"
+    }) : _c('i', {
+      staticClass: "fa fa-undo icon is-small"
+    })]), _vm._v(" "), _c('a', {
+      staticClass: "button action-button animate",
+      on: {
+        "click": function($event) {
+          _vm.remove(todo)
+        }
+      }
+    }, [_c('i', {
+      staticClass: "fa fa-remove icon is-small"
+    })])])])
+  }))])])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-7fd610c2", module.exports)
+  }
+}
+
+/***/ }),
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -48054,13 +48311,13 @@ if (false) {
 }
 
 /***/ }),
-/* 164 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(150);
+var content = __webpack_require__(151);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(120)(content, {});
@@ -48080,33 +48337,8 @@ if(false) {
 }
 
 /***/ }),
-/* 165 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(151);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(120)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-646d4156!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./TicketDetail.vue", function() {
-			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-646d4156!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./TicketDetail.vue");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 166 */
+/* 168 */,
+/* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56682,12 +56914,59 @@ module.exports = Vue$3;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(121)))
 
 /***/ }),
-/* 167 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(123);
 module.exports = __webpack_require__(124);
 
+
+/***/ }),
+/* 171 */,
+/* 172 */,
+/* 173 */,
+/* 174 */,
+/* 175 */,
+/* 176 */,
+/* 177 */,
+/* 178 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(11)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.has-small-padding{\n\tpadding:20px!important;\n}\n.todo-form >.control{\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\twidth: 100%;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 179 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(178);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(120)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-7fd610c2!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Todo.vue", function() {
+			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-7fd610c2!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Todo.vue");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
 
 /***/ })
 /******/ ]);
