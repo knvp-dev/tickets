@@ -18,7 +18,7 @@
 						<i class="fa fa-circle-o" v-if="todo.completed == 0"></i>
 						<i v-else class="fa fa-check is-green"></i>
 					</div>
-					<div class="list-item-left" style="width: 330px;">
+					<div class="list-item-left" style="width:330px;">
 						<p>{{ todo.body }}</p>
 					</div>
 					<div class="list-item-right">

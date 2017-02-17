@@ -151,7 +151,7 @@
 }
 
 .is-green{
-	color:#91d279;
+	color:#91d279!important;
 }
 
 .button-controls{
@@ -188,4 +188,8 @@ a:hover{
 
 .nav-item a.is-tab:hover, a.nav-item.is-tab:hover{
 	border-bottom-color:$soft-red;
+}
+
+.has-border-right{
+	border-right:1px solid #eee;
 }

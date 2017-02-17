@@ -72,3 +72,16 @@ h1,h2,h3,h4,p,a, input,label{
     align-items:center;
     flex-direction: column;
 }
+
+.title-bar{
+    background-image:url('/images/header.jpg');
+    height:50px;
+    background-position: 0 -50%;
+    background-size: cover;
+}
+
+.title-bar h1{
+    color:white;
+    padding:7px;
+    font-size:1.7em;
+}

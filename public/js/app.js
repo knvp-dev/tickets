@@ -27312,6 +27312,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = {
 	mounted: function mounted() {
@@ -27322,16 +27337,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	data: function data() {
 		return {
 			ticket: [],
+			category: [],
+			priority: [],
+			users: [],
 			showDescriptionInput: false
 		};
 	},
 
+	computed: {
+		hasNoDescription: function hasNoDescription() {
+			return this.ticket.description == null ? true : false;
+		},
+		hasDescription: function hasDescription() {
+			return this.ticket.description != null ? true : false;
+		}
+	},
 	methods: {
 		fetchTicketDetails: function fetchTicketDetails(id) {
 			var _this = this;
 
 			axios.get('/ticket/detail/' + id).then(function (response) {
 				_this.ticket = response.data;
+				_this.category = _this.ticket.category;
+				_this.priority = _this.ticket.priority;
+				_this.users = _this.ticket.users;
 			});
 		},
 		saveDescription: function saveDescription() {
@@ -30142,7 +30171,20 @@ exports.push([module.i, "\n.fade-enter-active, .fade-leave-active {\n          -
 
 
 /***/ }),
-/* 152 */,
+/* 152 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(11)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.has-small-padding{\n\tpadding:20px!important;\n}\n.todo-form >.control{\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\twidth: 100%;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
 /* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -47653,7 +47695,7 @@ module.exports = Component.exports
 
 
 /* styles */
-__webpack_require__(179)
+__webpack_require__(168)
 
 var Component = __webpack_require__(2)(
   /* script */
@@ -48114,19 +48156,37 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "ticket-detail-wrapper"
   }, [_c('h1', {
     staticClass: "title"
-  }, [_vm._v(_vm._s(_vm.ticket.title))]), _vm._v(" "), (_vm.ticket.description == null) ? _c('a', {
+  }, [(!_vm.ticket.completed) ? _c('i', {
+    staticClass: "fa fa-circle-o pr-10 is-small-icon"
+  }) : _c('i', {
+    staticClass: "fa fa-check pr-10 is-small-icon is-green"
+  }), _vm._v("\n\t\t\t\t\t" + _vm._s(_vm.ticket.title) + " "), _c('br'), _vm._v(" "), _c('span', {
+    staticClass: "tag"
+  }, [_vm._v(_vm._s(_vm.category.name))])]), _vm._v(" "), _c('div', {
+    staticClass: "assigned-user"
+  }, [(_vm.users.length > 0) ? _c('p', _vm._l((_vm.users), function(user) {
+    return _c('span', {
+      staticClass: "user-avatar"
+    }, [_c('img', {
+      staticClass: "img-circle",
+      attrs: {
+        "src": user.avatar,
+        "alt": ""
+      }
+    })])
+  })) : _vm._e()]), _vm._v(" "), _c('hr'), _vm._v(" "), (_vm.hasNoDescription) ? _c('a', {
     on: {
       "click": function($event) {
         _vm.showDescriptionInput = true
       }
     }
-  }, [_vm._v("Add description")]) : _vm._e(), _vm._v(" "), (_vm.ticket.description != null && !_vm.showDescriptionInput) ? _c('a', {
+  }, [_vm._v("Add description")]) : _vm._e(), _vm._v(" "), (_vm.hasDescription && !_vm.showDescriptionInput) ? _c('div', [_c('a', {
     on: {
       "click": function($event) {
         _vm.showDescriptionInput = true
       }
     }
-  }, [_vm._v("Edit description")]) : _vm._e(), _vm._v(" "), (_vm.ticket.description != null && !_vm.showDescriptionInput) ? _c('p', [_vm._v(_vm._s(_vm.ticket.description))]) : _vm._e(), _vm._v(" "), (_vm.showDescriptionInput) ? _c('div', {
+  }, [_vm._v("Edit description")]), _vm._v(" "), (_vm.hasDescription && !_vm.showDescriptionInput) ? _c('p', [_vm._v(_vm._s(_vm.ticket.description))]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.showDescriptionInput) ? _c('div', {
     staticClass: "description-form"
   }, [_c('p', {
     staticClass: "control"
@@ -48158,7 +48218,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v("Save")])])]) : _vm._e()])]), _vm._v(" "), _c('div', {
     staticClass: "columns"
   }, [_c('div', {
-    staticClass: "column"
+    staticClass: "column has-border-right"
   }, [_c('todo', {
     attrs: {
       "todos": this.ticket.todos,
@@ -48337,7 +48397,32 @@ if(false) {
 }
 
 /***/ }),
-/* 168 */,
+/* 168 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(152);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(120)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-7fd610c2!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Todo.vue", function() {
+			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-7fd610c2!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Todo.vue");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
 /* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -56920,53 +57005,6 @@ module.exports = Vue$3;
 __webpack_require__(123);
 module.exports = __webpack_require__(124);
 
-
-/***/ }),
-/* 171 */,
-/* 172 */,
-/* 173 */,
-/* 174 */,
-/* 175 */,
-/* 176 */,
-/* 177 */,
-/* 178 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(11)();
-// imports
-
-
-// module
-exports.push([module.i, "\n.has-small-padding{\n\tpadding:20px!important;\n}\n.todo-form >.control{\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\twidth: 100%;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 179 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(178);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(120)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-7fd610c2!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Todo.vue", function() {
-			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-7fd610c2!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Todo.vue");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
 
 /***/ })
 /******/ ]);
