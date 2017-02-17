@@ -178,12 +178,23 @@
 	color:#ec7474;
 }
 
+
+
 a{
 	color:#ec7474;
 }
 
 a:hover{
 	color:darken(#ec7474, 10%);
+}
+
+.list-item-center-top a{
+	color:#afafaf;
+}
+
+
+.list-item-center-top a:hover{
+	color:#ec7474;
 }
 
 .nav-item a.is-tab:hover, a.nav-item.is-tab:hover{
