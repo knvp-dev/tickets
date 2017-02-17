@@ -27504,6 +27504,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = {
     mounted: function mounted() {
@@ -27542,6 +27555,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             priorities: [],
             categories: [],
             closedTickets: [],
+            filteredTickets: [],
+            filter: '',
             showModal: false,
             showDetail: false,
             selectedTicket: {}
@@ -27560,6 +27575,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.tickets = _.filter(_this2.tickets, function (value) {
                     return !value.completed;
                 });
+
+                _this2.filterTickets(0);
 
                 $('.loading-overlay').css('z-index', '999').addClass('fadeOut animated');
 
@@ -27595,6 +27612,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         showTicketDetail: function showTicketDetail(ticket) {
             Event.$emit('show-detail', ticket);
+        },
+        filterTickets: function filterTickets(category) {
+            this.filteredTickets = this.tickets;
+            if (category != 0) {
+                this.filter = category.name;
+                this.filteredTickets = _.filter(this.tickets, function (ticket) {
+                    return ticket.category.id === category.id;
+                });
+            } else {
+                this.filter = "All";
+            }
         },
         saveTicket: function saveTicket() {
             var _this6 = this;
@@ -47887,19 +47915,45 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }) : _vm._e(), _vm._v(" "), _c('section', {
     staticClass: "section"
+  }, [_c('div', {
+    staticClass: "columns"
+  }, [_c('div', {
+    staticClass: "column"
   }, [_c('h1', {
     staticClass: "title"
-  }, [_vm._v("Open tickets")]), _vm._v(" "), _c('h2', {
+  }, [_vm._v("Open tickets - " + _vm._s(_vm.filter))])]), _vm._v(" "), _c('div', {
+    staticClass: "column"
+  }, [_c('div', {
+    staticClass: "ticket-filters"
+  }, [_c('ul', [_c('li', {
+    staticClass: "tag filter-tag",
+    class: (_vm.filter == 'All') ? 'filter-active' : '',
+    on: {
+      "click": function($event) {
+        _vm.filterTickets(0)
+      }
+    }
+  }, [_c('a', [_vm._v("All")])]), _vm._v(" "), _vm._l((_vm.categories), function(category) {
+    return _c('li', {
+      staticClass: "tag filter-tag",
+      class: (_vm.filter == category.name) ? 'filter-active' : '',
+      on: {
+        "click": function($event) {
+          _vm.filterTickets(category)
+        }
+      }
+    }, [_c('a', [_vm._v(_vm._s(category.name))])])
+  })], 2)])])]), _vm._v(" "), _c('h2', {
     directives: [{
       name: "show",
       rawName: "v-show",
-      value: (_vm.tickets.length == 0),
-      expression: "tickets.length == 0"
+      value: (_vm.filteredTickets.length == 0),
+      expression: "filteredTickets.length == 0"
     }],
     staticClass: "has-text-centered"
   }, [_vm._v("Good job! There are no open tickets")]), _vm._v(" "), _c('div', {
     staticClass: "ticket-list"
-  }, _vm._l((_vm.tickets), function(ticket) {
+  }, _vm._l((_vm.filteredTickets), function(ticket) {
     return _c('div', {
       staticClass: "ticket-list-item slideDown animated"
     }, [_c('div', {

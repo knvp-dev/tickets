@@ -48,18 +48,31 @@
             </div>
             <div class="container">
 
-                <!-- MODAL -->
-
                 <assign-modal v-if="showModal" :ticket="selectedTicket"></assign-modal>
 
                 <section class="section">
 
-                    <h1 class="title">Open tickets</h1>
+                <div class="columns">
+                    <div class="column">
+                        <h1 class="title">Open tickets - {{ filter }}</h1>
+                    </div>
+                    <div class="column">
+                        <div class="ticket-filters">
+                        <ul>
+                            <li class="tag filter-tag" :class="(filter == 'All') ? 'filter-active' : ''" @click="filterTickets(0)"><a>All</a></li>
+                            <li class="tag filter-tag" :class="(filter == category.name) ? 'filter-active' : ''" v-for="category in categories" @click="filterTickets(category)"><a>{{ category.name }}</a></li>
+                        </ul>
+                    </div>
+                    </div>
+                </div>
+                    
 
-                    <h2 v-show="tickets.length == 0" class="has-text-centered">Good job! There are no open tickets</h2>
+                    
+
+                    <h2 v-show="filteredTickets.length == 0" class="has-text-centered">Good job! There are no open tickets</h2>
 
                     <div class="ticket-list">
-                        <div class="ticket-list-item slideDown animated" v-for="ticket in tickets">
+                        <div class="ticket-list-item slideDown animated" v-for="ticket in filteredTickets">
                             <div class="list-item-icon">
                                 <i class="fa fa-ticket" :class="ticket.priority.name.toLowerCase()"></i>
                             </div>
@@ -158,6 +171,8 @@
                     priorities: [],
                     categories: [],
                     closedTickets: [],
+                    filteredTickets: [],
+                    filter: '',
                     showModal: false,
                     showDetail: false,
                     selectedTicket: {}
@@ -173,6 +188,8 @@
                         this.tickets = _.filter(this.tickets, function(value){
                             return !value.completed;
                         });
+
+                        this.filterTickets(0);
 
                         $('.loading-overlay').css('z-index','999').addClass('fadeOut animated');
 
@@ -203,6 +220,18 @@
                 },
                 showTicketDetail(ticket){
                     Event.$emit('show-detail', ticket);
+                },
+                filterTickets(category){
+                    this.filteredTickets = this.tickets;
+                    if(category != 0){
+                        this.filter = category.name;
+                        this.filteredTickets = _.filter(this.tickets, (ticket) => {
+                            return ticket.category.id === category.id;
+                        });
+                    }else{
+                        this.filter = "All";
+                    }
+                    
                 },
                 saveTicket(){
                     let errors = [];

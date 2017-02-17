@@ -85,3 +85,22 @@ h1,h2,h3,h4,p,a, input,label{
     padding:7px;
     font-size:1.7em;
 }
+
+.ticket-filters{
+    float:right;
+}
+
+.filter-tag{
+    margin:5px;
+}
+
+.filter-tag a{
+    color:black;
+}
+
+.filter-tag:hover, .filter-active{
+    background-color:$soft-red;
+    >a{
+        color:white;
+    }
+}
