@@ -82,7 +82,7 @@
                             </div>
                             <div class="list-item-center">
                                 <div class="list-item-center-top">
-                                    <a :href="'/ticket/'+ticket.id">{{ ticket.title }}</a>
+                                    <router-link :to="'/ticket/'+ticket.id">{{ ticket.title }}</router-link>
                                 </div>
                                 <div class="list-item-center-bottom">
                                     <i class="fa fa-thermometer-full pr-10 is-small-icon"></i> {{ ticket.priority.name }}
@@ -92,7 +92,7 @@
                                 <p v-if="ticket.users.length > 0"><span v-for="user in ticket.users" class="user-avatar" @click="setSelectedTicket(ticket)"><div class="tooltip">{{ user.name }}</div><img :src="user.avatar" class="img-circle" alt=""></span></p>
                                 <a v-if="!ticket.completed" class="button action-button animate" @click="setSelectedTicket(ticket)"><i class="fa fa-user-plus icon is-small"></i></a>
                                 <!-- <a class="button assign-button animate" @click="completeTicket(ticket)"><i class="fa fa-check icon is-small"></i></a> -->
-                                <a :href="'/ticket/'+ticket.id" class="button action-button animate"><i class="fa fa-arrow-right icon is-small"></i></a>
+                                <router-link :to="'/ticket/'+ticket.id" class="button action-button animate"><i class="fa fa-arrow-right icon is-small"></i></router-link>
                             </div>
                         </div>
                     </div>
@@ -115,16 +115,17 @@
                             </div>
                             <div class="list-item-center">
                                 <div class="list-item-center-top">
-                                    {{ ticket.title }}
+                                    <router-link :to="'/ticket/'+ticket.id">{{ ticket.title }}</router-link>
                                 </div>
                                 <div class="list-item-center-bottom">
                                     Priority: {{ ticket.priority.name }}
                                 </div>
                             </div>
                             <div class="list-item-right">
-                                <p v-if="ticket.users.length > 0"><img v-for="user in ticket.users" :src="user.avatar" class="img-circle" alt=""></p>
-                                <a class="button action-button animate" @click="uncompleteTicket(ticket)"><i class="fa fa-arrow-up icon is-small"></i></a>
+                                <!-- <p v-if="ticket.users.length > 0"><img v-for="user in ticket.users" :src="user.avatar" class="img-circle" alt=""></p> -->
+                                <a class="button action-button animate" @click="uncompleteTicket(ticket)"><i class="fa fa-refresh icon is-small"></i></a>
                                 <a class="button action-button animate" @click="archiveTicket(ticket)"><i class="fa fa-archive icon is-small"></i></a>
+                                <router-link :to="'/ticket/'+ticket.id" class="button action-button animate"><i class="fa fa-arrow-right icon is-small"></i></router-link>
                             </div>
                         </div>
                     </div>
@@ -160,7 +161,6 @@
                     this.showModal = false;
                 });
             },
-            props: ['type'],
             data(){
                 return{
                     ticketTitle: '',

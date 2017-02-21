@@ -33,7 +33,7 @@
 			
 			<div class="columns">
 				<div class="column has-border-right">
-					<todo :todos="this.ticket.todos" :ticket="this.ticket"></todo>
+					<todo :todos="this.todos" :ticket="this.ticket"></todo>
 				</div>
 				<div class="column">
 					
@@ -44,14 +44,16 @@
 	<script>
 		export default{
 			mounted(){
+				this.ticketid = this.$route.params.id;
 				this.fetchTicketDetails(this.ticketid);
 			},
-			props: ["ticketid"],
 			data(){
 				return{
 					ticket: [],
+					todos: [],
 					category: [],
 					priority: [],
+					ticketid: null,
 					users: [],
 					showDescriptionInput: false
 				}
@@ -66,11 +68,17 @@
 			},
 			methods:{
 				fetchTicketDetails(id){
-					axios.get('/ticket/detail/'+id).then((response) => {
+					axios.get('/ticket/'+id).then((response) => {
 						this.ticket = response.data;
 						this.category = this.ticket.category;
 						this.priority = this.ticket.priority;
 						this.users = this.ticket.users;
+						this.fetchTodos(id);
+					});
+				},
+				fetchTodos(id){
+					axios.get('/ticket/'+id+'/todos').then((response) => {
+						this.todos = response.data;
 					});
 				},
 				saveDescription(){

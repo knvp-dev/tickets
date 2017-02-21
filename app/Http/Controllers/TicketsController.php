@@ -12,31 +12,20 @@ class TicketsController extends Controller
     }
 
     public function index(){
-    	return view('pages.tickets');
+       return Ticket::whereArchived(0)->with(['category','status','priority','users'])->orderBy('created_at','ASC')->get();
     }
 
-    public function show(Ticket $ticket){
-        $ticket_id = $ticket->id;
-        return view('pages.ticket-detail', compact('ticket_id'));
+    public function show($ticket_id){
+        return Ticket::whereId($ticket_id)->with(['category','status','priority','users'])->first();
     }
 
     public function store(Request $request){
         $ticket = Ticket::create($request[0]);
-        return Ticket::whereId($ticket->id)->with(['category','status','priority','users','todos'])->first();
+        return Ticket::whereId($ticket->id)->with(['category','status','priority','users'])->first();
     }
 
     public function update(Request $request){
-        $ticket = Ticket::whereId($request->id)->first();
-        $ticket->description = $request->description;
-        $ticket->save();
-    }
-
-    public function detail(Ticket $ticket){
-        return Ticket::whereId($ticket->id)->with(['category','status','priority','users','todos'])->first();
-    }
-
-    public function tickets(){
-        return Ticket::whereArchived(0)->with(['category','status','priority','users'])->orderBy('created_at','ASC')->get();
+        Ticket::whereId($request->id)->update($this->prepareRequestForUpdate($request)->toArray());
     }
 
     public function assignedUsers(Ticket $ticket){
@@ -65,5 +54,13 @@ class TicketsController extends Controller
 
     public function unarchive(Ticket $ticket){
         $ticket->unarchive();
+    }
+
+    public function prepareRequestForUpdate($data){
+        unset($data['category']);
+        unset($data['status']);
+        unset($data['priority']);
+        unset($data['users']);
+        return $data;
     }
 }

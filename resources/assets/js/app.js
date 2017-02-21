@@ -13,17 +13,17 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('tickets', require('./components/Tickets.vue'));
-Vue.component('ticket-detail', require('./components/TicketDetail.vue'));
+import router from './routes';
+
 Vue.component('selectbox', require('./components/Selectbox.vue'));
 Vue.component('assign-modal', require('./components/AssignModal.vue'));
-Vue.component('archive', require('./components/Archive.vue'));
 Vue.component('todo', require('./components/Todo.vue'));
 
 window.Event = new Vue({});
 
 const app = new Vue({
     el: '#app',
+    router,
     mounted(){
     	
     }

@@ -17,7 +17,7 @@
 					</div>
 					<div class="list-item-center">
 						<div class="list-item-center-top">
-							{{ ticket.title }}
+							<router-link :to="'/ticket/'+ticket.id">{{ ticket.title }}</router-link>
 						</div>
 						<div class="list-item-center-bottom">
 							{{ ticket.status.name }}
@@ -26,6 +26,7 @@
 					<div class="list-item-right">
 						<p v-if="ticket.users.length > 0"><span v-for="user in ticket.users" class="user-avatar"><div class="tooltip">{{ user.name }}</div><img :src="user.avatar" class="img-circle" alt=""></span></p>
 						<a class="button action-button animate" @click="unarchiveTicket(ticket)"><i class="fa fa-refresh icon is-small"></i></a>
+						<router-link :to="'/ticket/'+ticket.id" class="button action-button animate"><i class="fa fa-arrow-right icon is-small"></i></router-link>
 					</div>
 				</div>
 			</div>

@@ -61,6 +61,9 @@
 						completed: 0
 					};
 					this.todos.push(this.todo);
+					axios.post('/ticket/'+this.ticket.id+'/todo/save', { todo: this.todo }).then((response) => {
+						console.log(response.data);
+					});
 					this.body = '';
 				}
 			}

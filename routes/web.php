@@ -10,24 +10,28 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-use Illuminate\Http\Request;
+
 Auth::routes();
 
 // Tickets
-Route::get('/', 'TicketsController@index');
-Route::get('tickets', 'TicketsController@tickets');
+Route::get('/', 'HomeController@index');
+Route::get('tickets', 'TicketsController@index');
+Route::get('/ticket/{ticket_id}', 'TicketsController@show');
+
 Route::post('ticket/save', 'TicketsController@store');
 Route::post('ticket/update', 'TicketsController@update');
-Route::get('/ticket/detail/{ticket}', 'TicketsController@detail');
-Route::get('/ticket/{ticket}', 'TicketsController@show');
+Route::post('ticket/assign', 'TicketsController@assignUserToTicket');
+
 Route::get('ticket/{ticket}/users', 'TicketsController@assignedUsers');
 Route::get('ticket/complete/{ticket}', 'TicketsController@completeTicket');
 Route::get('/ticket/uncomplete/{ticket}', 'TicketsController@uncompleteTicket');
 Route::get('/ticket/archive/{ticket}', 'TicketsController@archive');
 Route::get('/ticket/unarchive/{ticket}', 'TicketsController@unarchive');
-Route::post('ticket/assign', 'TicketsController@assignUserToTicket');
+
 Route::get('/ticket/{ticket}/todos', 'TodosController@show');
 
+Route::post('/ticket/{ticket}/todo/save', 'TodosController@store');
+Route::delete('/ticket/{ticket}/todo/delete', 'TodosController@delete');
 
 Route::get('/archive', 'ArchiveController@index');
 Route::get('/archive/tickets', 'ArchiveController@archivedTickets');

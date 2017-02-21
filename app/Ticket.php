@@ -51,6 +51,14 @@ class Ticket extends Model
         $this->save();
     }
 
+    public function addTodo($todo){
+        $this->todos()->create($todo);
+    }
+
+    public function removeTodo($todo){
+        $this->todos()->delete($todo);
+    }
+
     public function uncomplete(){
         $this->completed = 0;
         $this->save();
