@@ -20,7 +20,8 @@ Route::get('/ticket/{ticket_id}', 'TicketsController@show');
 
 Route::post('ticket/save', 'TicketsController@store');
 Route::post('ticket/update', 'TicketsController@update');
-Route::post('ticket/assign', 'TicketsController@assignUserToTicket');
+Route::get('ticket/{ticket}/assign/{user}', 'TicketsController@assignUserToTicket');
+Route::get('ticket/{ticket}/unassign/{user}', 'TicketsController@unAssignUserFromTicket');
 
 Route::get('ticket/{ticket}/users', 'TicketsController@assignedUsers');
 Route::get('ticket/complete/{ticket}', 'TicketsController@completeTicket');
@@ -30,8 +31,10 @@ Route::get('/ticket/unarchive/{ticket}', 'TicketsController@unarchive');
 
 Route::get('/ticket/{ticket}/todos', 'TodosController@show');
 
+Route::get('/todo/{todo}/complete', 'TodosController@complete');
+Route::get('/todo/{todo}/uncomplete', 'TodosController@uncomplete');
 Route::post('/ticket/{ticket}/todo/save', 'TodosController@store');
-Route::delete('/ticket/{ticket}/todo/delete', 'TodosController@delete');
+Route::get('/todo/{todo}/delete', 'TodosController@delete');
 
 Route::get('/archive', 'ArchiveController@index');
 Route::get('/archive/tickets', 'ArchiveController@archivedTickets');

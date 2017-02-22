@@ -17,16 +17,14 @@ import router from './routes';
 
 Vue.component('selectbox', require('./components/Selectbox.vue'));
 Vue.component('assign-modal', require('./components/AssignModal.vue'));
+Vue.component('confirmation-modal', require('./components/ConfirmationModal.vue'));
 Vue.component('todo', require('./components/Todo.vue'));
 
 window.Event = new Vue({});
 
 const app = new Vue({
     el: '#app',
-    router,
-    mounted(){
-    	
-    }
+    router
 });
 
 Vue.directive('diff-for-humans', function(el, binding){

@@ -4,11 +4,11 @@
 
 .is-underline-input{
 	border: none;
-    border-bottom: 1px solid #fff;
-    box-shadow: none;
-    border-radius: 0;
-    background:none;
-    color:white;
+	border-bottom: 1px solid #fff;
+	box-shadow: none;
+	border-radius: 0;
+	background:none;
+	color:white;
 }
 
 .is-underline-input:focus{
@@ -39,14 +39,14 @@
 
 .select-box-item{
 	padding: 5px 20px;
-    width:100%;
-    background-color: white;
-    color:#717171;
-    font-size:.9em;
-    text-transform: uppercase;
-    display:flex;
-    flex-direction: row;
-    justify-content: center;
+	width:100%;
+	background-color: white;
+	color:#717171;
+	font-size:.9em;
+	text-transform: uppercase;
+	display:flex;
+	flex-direction: row;
+	justify-content: center;
 	margin:5px;
 	white-space: nowrap;
 }
@@ -59,11 +59,11 @@
 
 .select-box-choice{
 	padding: 9px 30px;
-    border-bottom: 1px solid #eee;
-    color: #fff;
-    font-size: .9em;
-    text-transform: uppercase;
-    margin-right: 10px;
+	border-bottom: 1px solid #eee;
+	color: #fff;
+	font-size: .9em;
+	text-transform: uppercase;
+	margin-right: 10px;
 }
 
 .select-box-choice:hover{
@@ -91,8 +91,8 @@
 
 .ticket-submit{
 	padding: 0px 20px;
-    margin-top: 2px;
-    height: 37px;
+	margin-top: 2px;
+	height: 37px;
 }
 
 .animate{
@@ -105,8 +105,8 @@
 	background: -webkit-linear-gradient(-45deg, #3f4c6b 0%,#606c88 100%); /* Chrome10-25,Safari5.1-6 */
 	background: linear-gradient(135deg, #3f4c6b 0%,#606c88 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 	background-image: url(/images/header.jpg);
-    background-size: cover;
-    background-position-y: 40%;
+	background-size: cover;
+	background-position-y: 40%;
 }
 
 .full-width-component{
@@ -120,21 +120,21 @@
 
 .add-button{
 	width: 40px;
-    height: 40px;
-    padding: 0!important;
-    border-radius: 30px;
-    border: none;
-    border:1px dashed #fff;
-    background: none;
-    color:white;
-    cursor:pointer;
-    transform: rotate(0deg);
-    margin-top:7px;
-    margin-left: 20px;
+	height: 40px;
+	padding: 0!important;
+	border-radius: 30px;
+	border: none;
+	border:1px dashed #fff;
+	background: none;
+	color:white;
+	cursor:pointer;
+	transform: rotate(0deg);
+	margin-top:7px;
+	margin-left: 20px;
 }
 
 .add-button:hover{
-    /*transform: rotate(90deg);*/
+	/*transform: rotate(90deg);*/
 	border:1px solid #fff;
 }
 
@@ -170,8 +170,8 @@
 
 .is-small-icon{
 	font-size:1em;
-    color: #b1b1b1;
-    padding:4px;
+	color: #b1b1b1;
+	padding:4px;
 }
 
 .button:hover{
@@ -203,4 +203,19 @@ a:hover{
 
 .has-border-right{
 	border-right:1px solid #eee;
+}
+
+.has-small-padding{
+	padding:20px!important;
+}
+
+.button-red{
+	background-color:$soft-red;
+	color:white;
+	border-color:$soft-red;
+	&:hover{
+		color:$soft-red;
+		background-color:white;
+		border-color:1#A5A5A5;
+	}
 }

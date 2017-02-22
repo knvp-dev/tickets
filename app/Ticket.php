@@ -46,17 +46,25 @@ class Ticket extends Model
     	return $query->where('complete',0);
     }
 
-    public function complete(){
-        $this->completed = 1;
-        $this->save();
+    public function assignUser($user){
+        $this->users()->sync([$user->id], false);
+    }
+
+    public function unAssignUser($user){
+        $this->users()->detach($user);
+    }
+
+    public function amountOfUsers(){
+        return $this->users()->count();
     }
 
     public function addTodo($todo){
         $this->todos()->create($todo);
     }
 
-    public function removeTodo($todo){
-        $this->todos()->delete($todo);
+    public function complete(){
+        $this->completed = 1;
+        $this->save();
     }
 
     public function uncomplete(){

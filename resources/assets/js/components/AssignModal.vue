@@ -12,12 +12,12 @@
 					<li v-for="user in users" class="user-select-list-item">
 						<img :src="user.avatar" alt="" class="img-circle" /> 
 						<span>{{ user.name }}</span>
-						<a v-show="!user.selected" class="button assign-button animate" @click="selectUser(user)"><i class="fa fa-plus icon is-small"></i></a>
-						<a v-show="user.selected" class="button success-button assign-button animate is-green" @click="deSelectUser(user)"><i class="fa fa-check icon is-small is-green"></i></a>
+						<a v-show="!user.selected" class="button assign-button animate" @click="assignUser(user)"><i class="fa fa-plus icon is-small"></i></a>
+						<a v-show="user.selected" class="button success-button assign-button animate is-green" @click="unAssignUser(user)"><i class="fa fa-check icon is-small is-green"></i></a>
 					</li>
 				</ul>
 				<div class="button-controls">
-					<button class="button is-success button-centered" @click="assignUsers(ticket)">Save</button>
+					<button class="button is-success button-centered" @click="save">Save</button>
 					<button class="button button-centered" @click="cancel">Cancel</button>
 				</div>
 			</div>
@@ -56,20 +56,20 @@
 					});
 				});
 			},
-			selectUser(user){
+			save(){
+				Event.$emit('users-assigned');
+			},
+			assignUser(user){
 				user.selected = 1;
 				this.selectedUsers.push(user);
+				axios.get('/ticket/'+this.ticket.id+'/assign/'+user.id);
 			},
-			deSelectUser(user){
+			unAssignUser(user){
 				user.selected = 0;
 				this.selectedUsers = _.reject(this.selectedUsers, function (value){
 					return value.id == user.id;
 				});
-			},
-			assignUsers(ticket){
-				axios.post('/ticket/assign', {'ticket_id': ticket.id, 'users': this.selectedUsers }).then((response) => {
-					Event.$emit('users-assigned');
-				});
+				axios.get('/ticket/'+this.ticket.id+'/unassign/'+user.id);
 			},
 			cancel(){
 				Event.$emit('users-assign-cancel');

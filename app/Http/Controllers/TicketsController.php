@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Ticket;
+use App\User;
 
 class TicketsController extends Controller
 {
@@ -32,12 +33,12 @@ class TicketsController extends Controller
         return $ticket->users;
     }
 
-    public function assignUserToTicket(Request $request){
-        $ticket = Ticket::whereId($request->ticket_id)->with('users')->first();
-        $ticket->users()->detach();
-        foreach($request->users as $user){
-            $ticket->users()->attach($user['id']);
-        }
+    public function assignUserToTicket(Ticket $ticket, User $user){
+        $ticket->assignUser($user);
+    }
+
+    public function unAssignUserFromTicket(Ticket $ticket, User $user){
+        $ticket->unAssignUser($user);
     }
 
     public function completeTicket(Ticket $ticket){

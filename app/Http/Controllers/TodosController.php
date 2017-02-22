@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Ticket;
+use App\Todo;
 use Illuminate\Http\Request;
 
 class TodosController extends Controller
@@ -15,8 +16,8 @@ class TodosController extends Controller
 		$ticket->addTodo($request->todo);
 	}
 
-	public function delete(Ticket $ticket, Request $request){
-		$ticket->removeTodo($request->todo);
+	public function delete(Todo $todo){
+		$todo->delete();
 	}
 
    	public function complete(Todo $todo){

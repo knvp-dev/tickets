@@ -104,3 +104,8 @@ h1,h2,h3,h4,p,a, input,label{
         color:white;
     }
 }
+
+.todo-form >.control{
+    display: flex;
+    width: 100%;
+}

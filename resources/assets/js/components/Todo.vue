@@ -37,32 +37,46 @@
 <script>
 	export default{
 		mounted(){
-
+			this.fetchTodos();
 		},
-		props: ["ticket","todos"],
+		props: ["ticketid"],
 		data(){
 			return{
+				todos: [],
 				todo: '',
 				body: ''
 			}
 		},
 		methods:{
+			fetchTodos(id){
+				this.todos = [];
+				axios.get('/ticket/'+this.ticketid+'/todos').then((response) => {
+					this.todos = response.data;
+				});
+			},
 			complete(todo){
-				todo.completed = !todo.completed;
+				if(!todo.completed){
+					todo.completed = !todo.completed;
+					axios.get('/todo/'+todo.id+'/complete');
+				}else{
+					todo.completed = !todo.completed;
+					axios.get('/todo/'+todo.id+'/uncomplete');
+				}
 			},
 			remove(todo){
-				this.todos.splice(this.todos.indexOf(todo), 1);
+				axios.get('/todo/'+todo.id+'/delete').then((response) => {
+					this.fetchTodos();
+				});
 			},
 			addTodo(){
 				if(this.body != ''){
 					this.todo = {
-						ticket_id: this.ticket.id,
+						ticket_id: this.ticketid,
 						body: this.body,
 						completed: 0
 					};
-					this.todos.push(this.todo);
-					axios.post('/ticket/'+this.ticket.id+'/todo/save', { todo: this.todo }).then((response) => {
-						console.log(response.data);
+					axios.post('/ticket/'+this.ticketid+'/todo/save', { todo: this.todo }).then((response) => {
+						this.fetchTodos();
 					});
 					this.body = '';
 				}
@@ -70,14 +84,3 @@
 		}
 	}
 </script>
-
-<style>
-	.has-small-padding{
-		padding:20px!important;
-	}
-
-	.todo-form >.control{
-		display: flex;
-		width: 100%;
-	}
-</style>

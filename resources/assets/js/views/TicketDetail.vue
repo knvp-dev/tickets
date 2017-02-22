@@ -9,6 +9,8 @@
 						{{ ticket.title }} <br> <span class="tag">{{ category.name }}</span>
 					</h1>
 
+					<button class="button button-red pull-right" @click="showConfirmation">Remove this ticket</button>
+
 					<div class="assigned-user">
 						<p v-if="users.length > 0"><span v-for="user in users" class="user-avatar"><!-- <div class="tooltip">{{ user.name }}</div> --><img :src="user.avatar" class="img-circle" alt=""></span></p>
 					</div>
@@ -33,7 +35,7 @@
 			
 			<div class="columns">
 				<div class="column has-border-right">
-					<todo :todos="this.todos" :ticket="this.ticket"></todo>
+					<todo :ticketid="this.$route.params.id"></todo>
 				</div>
 				<div class="column">
 					
@@ -50,7 +52,6 @@
 			data(){
 				return{
 					ticket: [],
-					todos: [],
 					category: [],
 					priority: [],
 					ticketid: null,
@@ -73,18 +74,15 @@
 						this.category = this.ticket.category;
 						this.priority = this.ticket.priority;
 						this.users = this.ticket.users;
-						this.fetchTodos(id);
-					});
-				},
-				fetchTodos(id){
-					axios.get('/ticket/'+id+'/todos').then((response) => {
-						this.todos = response.data;
 					});
 				},
 				saveDescription(){
 					axios.post('/ticket/update', this.ticket).then((response) => {
 						this.showDescriptionInput = false;
 					});
+				},
+				showConfirmation(){
+					
 				}
 			}
 		}
