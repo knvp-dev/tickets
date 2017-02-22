@@ -7,9 +7,10 @@
 					<i v-if="!ticket.completed" class="fa fa-circle-o pr-10 is-small-icon"></i>
 					<i v-else class="fa fa-check pr-10 is-small-icon is-green"></i>
 						{{ ticket.title }} <br> <span class="tag">{{ category.name }}</span>
+						<button v-if="!ticket.completed" class="button button-green pull-right mr-10" @click="completeTicket">Close ticket</button>
+						<button v-else class="button is-default pull-right mr-10" @click="completeTicket">Reopen ticket</button>
+						<button class="button button-red pull-right mr-10" @click="showConfirmation">Remove this ticket</button>
 					</h1>
-
-					<button class="button button-red pull-right" @click="showConfirmation">Remove this ticket</button>
 
 					<div class="assigned-user">
 						<p v-if="users.length > 0"><span v-for="user in users" class="user-avatar"><!-- <div class="tooltip">{{ user.name }}</div> --><img :src="user.avatar" class="img-circle" alt=""></span></p>
@@ -82,7 +83,18 @@
 					});
 				},
 				showConfirmation(){
-					
+					axios.get('/ticket/'+this.ticket.id+'/delete').then((response) => {
+						this.$router.push('/');
+					});
+				},
+				completeTicket(){
+					if(!this.ticket.completed){
+						this.ticket.completed = 1;
+						axios.get('/ticket/'+this.ticket.id+'/complete');
+					}else{
+						this.ticket.completed = 0;
+						axios.get('/ticket/'+this.ticket.id+'/uncomplete');
+					}
 				}
 			}
 		}

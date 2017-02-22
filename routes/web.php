@@ -24,10 +24,11 @@ Route::get('ticket/{ticket}/assign/{user}', 'TicketsController@assignUserToTicke
 Route::get('ticket/{ticket}/unassign/{user}', 'TicketsController@unAssignUserFromTicket');
 
 Route::get('ticket/{ticket}/users', 'TicketsController@assignedUsers');
-Route::get('ticket/complete/{ticket}', 'TicketsController@completeTicket');
-Route::get('/ticket/uncomplete/{ticket}', 'TicketsController@uncompleteTicket');
+Route::get('ticket/{ticket}/complete', 'TicketsController@completeTicket');
+Route::get('/ticket/{ticket}/uncomplete', 'TicketsController@uncompleteTicket');
 Route::get('/ticket/archive/{ticket}', 'TicketsController@archive');
 Route::get('/ticket/unarchive/{ticket}', 'TicketsController@unarchive');
+Route::get('/ticket/{ticket}/delete', 'TicketsController@remove');
 
 Route::get('/ticket/{ticket}/todos', 'TodosController@show');
 

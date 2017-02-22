@@ -49,6 +49,16 @@ class TicketTest extends TestCase
     }
 
     /** @test */
+    public function ticket_can_be_deleted(){
+        $this->initForTesting();
+        $ticket1 = $this->createSingleTicket();
+        $ticket2 = $this->createSingleTicket(2);
+        $ticket1->delete();
+        $tickets = Ticket::all();
+        $this->assertCount(1, $tickets);
+    }
+
+    /** @test */
     public function can_fetch_todos_for_ticket(){
         $this->initForTesting();
         $ticket = $this->createSingleTicket();
@@ -123,8 +133,8 @@ class TicketTest extends TestCase
 
     // HELPER METHODS
     
-    protected function createSingleTicket(){
-        factory(Ticket::class, 1)->create(['id'=>1]);
+    protected function createSingleTicket($id = 1){
+        factory(Ticket::class, 1)->create(['id'=>$id]);
         $ticket = Ticket::first();
         return $ticket;
     }

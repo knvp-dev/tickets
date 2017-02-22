@@ -29731,6 +29731,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = {
 	mounted: function mounted() {
@@ -29774,7 +29775,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				_this2.showDescriptionInput = false;
 			});
 		},
-		showConfirmation: function showConfirmation() {}
+		showConfirmation: function showConfirmation() {
+			var _this3 = this;
+
+			axios.get('/ticket/' + this.ticket.id + '/delete').then(function (response) {
+				_this3.$router.push('/');
+			});
+		},
+		completeTicket: function completeTicket() {
+			if (!this.ticket.completed) {
+				this.ticket.completed = 1;
+				axios.get('/ticket/' + this.ticket.id + '/complete');
+			} else {
+				this.ticket.completed = 0;
+				axios.get('/ticket/' + this.ticket.id + '/uncomplete');
+			}
+		}
 	}
 };
 
@@ -50331,12 +50347,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "fa fa-check pr-10 is-small-icon is-green"
   }), _vm._v("\n\t\t\t\t\t" + _vm._s(_vm.ticket.title) + " "), _c('br'), _vm._v(" "), _c('span', {
     staticClass: "tag"
-  }, [_vm._v(_vm._s(_vm.category.name))])]), _vm._v(" "), _c('button', {
-    staticClass: "button button-red pull-right",
+  }, [_vm._v(_vm._s(_vm.category.name))]), _vm._v(" "), (!_vm.ticket.completed) ? _c('button', {
+    staticClass: "button button-green pull-right mr-10",
+    on: {
+      "click": _vm.completeTicket
+    }
+  }, [_vm._v("Close ticket")]) : _c('button', {
+    staticClass: "button is-default pull-right mr-10",
+    on: {
+      "click": _vm.completeTicket
+    }
+  }, [_vm._v("Reopen ticket")]), _vm._v(" "), _c('button', {
+    staticClass: "button button-red pull-right mr-10",
     on: {
       "click": _vm.showConfirmation
     }
-  }, [_vm._v("Remove this ticket")]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Remove this ticket")])]), _vm._v(" "), _c('div', {
     staticClass: "assigned-user"
   }, [(_vm.users.length > 0) ? _c('p', _vm._l((_vm.users), function(user) {
     return _c('span', {

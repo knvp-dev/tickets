@@ -219,3 +219,18 @@ a:hover{
 		border-color:1#A5A5A5;
 	}
 }
+
+.button-green{
+	background-color:$soft-green;
+	color:white;
+	border-color:$soft-green;
+	&:hover{
+		color:$soft-green;
+		background-color:white;
+		border-color:1#A5A5A5;
+	}
+}
+
+.mr-10{
+	margin-right:10px;
+}

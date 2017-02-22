@@ -57,6 +57,10 @@ class TicketsController extends Controller
         $ticket->unarchive();
     }
 
+    public function remove(Ticket $ticket){
+        $ticket->delete();
+    }
+
     public function prepareRequestForUpdate($data){
         unset($data['category']);
         unset($data['status']);
