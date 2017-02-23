@@ -18,7 +18,8 @@ import router from './routes';
 Vue.component('selectbox', require('./components/Selectbox.vue'));
 Vue.component('assign-modal', require('./components/AssignModal.vue'));
 Vue.component('confirmation-modal', require('./components/ConfirmationModal.vue'));
-Vue.component('todo', require('./components/Todo.vue'));
+Vue.component('todos', require('./components/Todos.vue'));
+Vue.component('messages', require('./components/Messages.vue'));
 
 window.Event = new Vue({});
 

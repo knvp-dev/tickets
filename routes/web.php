@@ -40,6 +40,13 @@ Route::get('/todo/{todo}/delete', 'TodosController@delete');
 Route::get('/archive', 'ArchiveController@index');
 Route::get('/archive/tickets', 'ArchiveController@archivedTickets');
 
+Route::get('/ticket/{ticket}/messages', 'TicketsController@messages');
+Route::post('/ticket/{ticket}/messages/create', 'TicketsController@addMessage');
+
+Route::get('/user', function(){
+	return Auth::user();
+});
+
 Route::get('/users', function(){
 	return App\User::all();
 });

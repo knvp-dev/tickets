@@ -71,3 +71,11 @@ $factory->define(App\Priority::class, function (Faker\Generator $faker) {
         'name' => $faker->word
     ];
 });
+
+$factory->define(App\Message::class, function(Faker\Generator $faker){
+    return [
+        'user_id' => App\User::all()->random()->id,
+        'ticket_id' => App\Ticket::all()->random()->id,
+        'body' => $faker->sentence($nbWords = 10),
+    ];
+});

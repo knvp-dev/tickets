@@ -36,10 +36,10 @@
 			
 			<div class="columns">
 				<div class="column has-border-right">
-					<todo :ticketid="this.$route.params.id"></todo>
+					<todos :ticketid="this.$route.params.id"></todos>
 				</div>
 				<div class="column">
-					
+					<messages :ticketid="this.$route.params.id"></messages>
 				</div>
 			</div>
 		</div>

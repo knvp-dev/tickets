@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Ticket;
 use App\User;
+use App\Message;
 
 class TicketsController extends Controller
 {
@@ -27,6 +28,14 @@ class TicketsController extends Controller
 
     public function update(Request $request){
         Ticket::whereId($request->id)->update($this->prepareRequestForUpdate($request)->toArray());
+    }
+
+    public function messages(Ticket $ticket){
+        return Message::where('ticket_id',$ticket->id)->with('user')->get();
+    }
+
+    public function addMessage(Ticket $ticket, Request $request){
+        $ticket->addMessage($request->message);
     }
 
     public function assignedUsers(Ticket $ticket){

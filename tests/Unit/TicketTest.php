@@ -13,6 +13,7 @@ use App\Category;
 use App\Status;
 use App\Priority;
 use App\Todo;
+use App\Message;
 
 class TicketTest extends TestCase
 {
@@ -59,30 +60,16 @@ class TicketTest extends TestCase
     }
 
     /** @test */
-    public function can_fetch_todos_for_ticket(){
-        $this->initForTesting();
-        $ticket = $this->createSingleTicket();
-        $this->createTodo(1);
-        $this->assertCount(1, $ticket->todos);
-    }
-
-    /** @test */
     public function can_add_todo_to_ticket(){
         $this->initForTesting();
         $ticket = $this->createSingleTicket();
-        $this->createTodo(1);
+        $todo = [
+            'ticket_id' => $ticket->id,
+            'body' => 'todo body',
+            'completed' => 0
+        ];
+        $ticket->addTodo($todo);
         $this->assertTrue($ticket->todos()->first()->body == 'todo body');
-        $this->assertCount(1, $ticket->todos);
-    }
-
-    /** @test */
-    public function can_delete_todo_from_ticket(){
-        $this->initForTesting();
-        $ticket = $this->createSingleTicket();
-        $this->createTodo(1);
-        $this->createTodo(2);
-        $todo = $ticket->todos()->first();
-        $response = $this->call('GET','/todo/1/delete');
         $this->assertCount(1, $ticket->todos);
     }
 
@@ -90,7 +77,12 @@ class TicketTest extends TestCase
     public function can_complete_and_uncomplete_todo_for_ticket(){
         $this->initForTesting();
         $ticket = $this->createSingleTicket();
-        $this->createTodo(1);
+        $todo1 = [
+            'ticket_id' => $ticket->id,
+            'body' => 'todo body',
+            'completed' => 0
+        ];
+        $ticket->addTodo($todo1);
         $todo = $ticket->todos()->first();
         $todo->complete();
         $this->assertTrue(!! $todo->completed);
@@ -99,7 +91,7 @@ class TicketTest extends TestCase
     }
 
     /** @test */
-    public function can_assign_user_to_ticket(){
+    public function can_assign_and_unassign_user_to_ticket(){
         $this->initForTesting();
         $ticket = $this->createSingleTicket();
 
@@ -118,17 +110,16 @@ class TicketTest extends TestCase
     }
 
     /** @test */
-    public function can_fetch_assigned_users_for_ticket(){
+    public function can_add_messages_to_ticket(){
         $this->initForTesting();
         $ticket = $this->createSingleTicket();
-
-        $user1 = factory(User::class)->create();
-        $user2 = factory(User::class)->create();
-
-        $ticket->assignUser($user1);
-        $ticket->assignUser($user2);
-
-        $this->assertCount(2, $ticket->users);
+        $message = [
+            'user_id' => 1,
+            'body' => "message body"
+        ];
+        $ticket->addMessage($message);
+        $this->assertCount(1, $ticket->messages);
+        $this->assertEquals($ticket->messages()->first()->body ,"message body");
     }
 
     // HELPER METHODS
@@ -137,17 +128,6 @@ class TicketTest extends TestCase
         factory(Ticket::class, 1)->create(['id'=>$id]);
         $ticket = Ticket::first();
         return $ticket;
-    }
-
-    protected function createTodo($id){
-        $todo = new Todo([
-            'id' => $id,
-            'ticket_id'=> 1,
-            'body'=> 'todo body',
-            'completed'=> 0
-        ]);
-        $response = $this->call('POST','/ticket/1/todo/save', ['todo' => $todo->toArray()]);
-        $this->assertEquals(200, $response->getStatusCode());
     }
 
     protected function initForTesting(){

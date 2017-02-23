@@ -14,9 +14,10 @@ class DummyDataSeeder extends Seeder
     	factory('App\Status',3)->create();
     	factory('App\Category',3)->create();
     	factory('App\Priority',3)->create();
-        factory('App\User',1)->create();
+        factory('App\User',5)->create();
         factory('App\Customer',10)->create();
         factory('App\Ticket', 5)->create();
         factory('App\Todo', 10)->create();
+        factory('App\Message', 10)->create();
     }
 }

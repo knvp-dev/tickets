@@ -9,6 +9,7 @@ use App\Customer;
 use App\Category;
 use App\Status;
 use App\Todo;
+use App\Message;
 
 class Ticket extends Model
 {
@@ -38,6 +39,10 @@ class Ticket extends Model
     	return $this->hasMany(Todo::class);
     }
 
+    public function messages(){
+        return $this->hasMany(Message::class);
+    }
+
     public function scopeComplete($query){
     	return $query->where('completed',1);
     }
@@ -60,6 +65,10 @@ class Ticket extends Model
 
     public function addTodo($todo){
         $this->todos()->create($todo);
+    }
+
+    public function addMessage($message){
+        $this->messages()->create($message);
     }
 
     public function complete(){

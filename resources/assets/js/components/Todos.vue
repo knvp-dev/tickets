@@ -5,11 +5,10 @@
 
 			<div class="todo-form ">
 				<p class="control">
-					<input type="text" class="input" placeholder="Add new todo item" v-model="body">
-				</p>
-				<p class="control">
+					<input type="text" class="input mr-10" placeholder="Add new todo item" v-model="body">
 					<button class="button" @click="addTodo">Add</button>
 				</p>
+				<hr>
 			</div>
 
 			<div class="ticket-list">

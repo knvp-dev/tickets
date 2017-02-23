@@ -18,7 +18,6 @@
 				</ul>
 				<div class="button-controls">
 					<button class="button is-success button-centered" @click="save">Save</button>
-					<button class="button button-centered" @click="cancel">Cancel</button>
 				</div>
 			</div>
 		</div>
