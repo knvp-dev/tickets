@@ -37,6 +37,6 @@ class MessageSent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('ticket.'.$this->message->ticket->id.'.messages');
+        return new PrivateChannel('ticket.'.$this->message->ticket->id.'.messages');
     }
 }

@@ -7,6 +7,7 @@ use App\Events\MessageSent;
 use App\Ticket;
 use App\User;
 use App\Message;
+use Auth;
 
 class TicketsController extends Controller
 {
@@ -24,6 +25,7 @@ class TicketsController extends Controller
 
     public function store(Request $request){
         $ticket = Ticket::create($request[0]);
+        $ticket->assignUser(Auth::user());
         return Ticket::whereId($ticket->id)->with(['category','status','priority','users'])->first();
     }
 
@@ -36,9 +38,11 @@ class TicketsController extends Controller
     }
 
     public function addMessage(Ticket $ticket, Request $request){
+        $this->guardForUnAssignedUsers($ticket);
         $message = $ticket->addMessage($request->message);
         $data = Message::whereId($message->id)->with('user')->first();
         event(new MessageSent($data));
+        return $data;
     }
 
     public function assignedUsers(Ticket $ticket){
@@ -46,30 +50,37 @@ class TicketsController extends Controller
     }
 
     public function assignUserToTicket(Ticket $ticket, User $user){
+        $this->guardForUnAssignedUsers($ticket);
         $ticket->assignUser($user);
     }
 
     public function unAssignUserFromTicket(Ticket $ticket, User $user){
+        $this->guardForUnAssignedUsers($ticket);
         $ticket->unAssignUser($user);
     }
 
     public function completeTicket(Ticket $ticket){
+        $this->guardForUnAssignedUsers($ticket);
         $ticket->complete();
     }
 
     public function uncompleteTicket(Ticket $ticket){
+        $this->guardForUnAssignedUsers($ticket);
         $ticket->uncomplete();
     }
 
     public function archive(Ticket $ticket){
+        $this->guardForUnAssignedUsers($ticket);
         $ticket->archive();
     }
 
     public function unarchive(Ticket $ticket){
+        $this->guardForUnAssignedUsers($ticket);
         $ticket->unarchive();
     }
 
     public function remove(Ticket $ticket){
+        $this->guardForUnAssignedUsers($ticket);
         $ticket->delete();
     }
 
@@ -79,5 +90,11 @@ class TicketsController extends Controller
         unset($data['priority']);
         unset($data['users']);
         return $data;
+    }
+
+    protected function guardForUnAssignedUsers($ticket){
+        if(!Auth::user()->isAssignedToTicket($ticket)){
+            abort(403, 'Unauthorized');
+        }
     }
 }

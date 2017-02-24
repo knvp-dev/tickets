@@ -16,5 +16,5 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('ticket.{ticket_id}.messages', function ($user, $ticket_id) {
-    return Ticket::whereId($ticket_id)->users()->find($user)->first();
+    return ! is_null($user->tickets->find($ticket_id));
 });

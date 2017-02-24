@@ -29527,7 +29527,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		this.listen();
 		this.fetchAuthenticatedUser();
 		this.fetchMessages();
-		$(".message-list").animate({ scrollTop: $('.message-list')[0].scrollHeight }, 1000);
 	},
 
 	props: ['ticketid'],
@@ -29540,14 +29539,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		};
 	},
 
+	watch: {
+		messages: function messages() {
+			$(".message-list").animate({ scrollTop: $('.message-list')[0].scrollHeight }, 1000);
+		}
+	},
 	methods: {
 		listen: function listen() {
 			var _this = this;
 
-			Echo.channel('ticket.' + this.ticketid + '.messages').listen('MessageSent', function (event) {
+			Echo.private('ticket.' + this.ticketid + '.messages').listen('MessageSent', function (event) {
 				event.message.user = _this.user;
 				_this.messages.push(event.message);
-				$(".message-list").animate({ scrollTop: $('.message-list')[0].scrollHeight }, 1000);
 			});
 		},
 		fetchAuthenticatedUser: function fetchAuthenticatedUser() {
@@ -29562,7 +29565,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 			axios.get('/ticket/' + this.ticketid + '/messages').then(function (response) {
 				_this3.messages = response.data;
-				$(".message-list").animate({ scrollTop: $('.message-list')[0].scrollHeight }, 1000);
 			});
 		},
 		sendMessage: function sendMessage() {
@@ -29573,7 +29575,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				body: this.body
 			};
 			axios.post('/ticket/' + this.ticketid + '/messages/create', { 'message': this.newMessage }).then(function (response) {
-				_this4.fetchMessages();
+				_this4.messages.push(response.data);
 			});
 			this.body = '';
 		}

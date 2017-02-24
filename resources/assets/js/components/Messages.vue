@@ -39,7 +39,6 @@
 			this.listen();
 			this.fetchAuthenticatedUser();
 			this.fetchMessages();
-			$(".message-list").animate({ scrollTop: $('.message-list')[0].scrollHeight}, 1000);
 		},
 		props: ['ticketid'],
 		data(){
@@ -50,13 +49,17 @@
 				messages: []
 			}
 		},
+		watch:{
+			messages(){
+				$(".message-list").animate({ scrollTop: $('.message-list')[0].scrollHeight}, 1000);
+			}
+		},
 		methods:{
 			listen(){
-				Echo.channel('ticket.'+this.ticketid+'.messages')
+				Echo.private('ticket.'+this.ticketid+'.messages')
 					.listen('MessageSent', (event) => {
 						event.message.user = this.user;
 						this.messages.push(event.message);
-						$(".message-list").animate({ scrollTop: $('.message-list')[0].scrollHeight}, 1000);
 					});
 			},
 			fetchAuthenticatedUser(){
@@ -67,7 +70,6 @@
 			fetchMessages(){
 				axios.get('/ticket/'+this.ticketid+'/messages').then((response) => {
 					this.messages = response.data;
-					$(".message-list").animate({ scrollTop: $('.message-list')[0].scrollHeight}, 1000);
 				});
 			},
 			sendMessage(){
@@ -76,7 +78,7 @@
 					body: this.body
 				};
 				axios.post('/ticket/'+this.ticketid+'/messages/create', {'message': this.newMessage}).then((response) => {
-					this.fetchMessages();
+					this.messages.push(response.data);
 				});
 				this.body = '';
 			}
