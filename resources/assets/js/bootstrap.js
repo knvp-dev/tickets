@@ -43,9 +43,11 @@ moment().format();
  * allows your team to easily build robust real-time web applications.
  */
 
-// import Echo from "laravel-echo"
+import Echo from "laravel-echo"
 
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: 'your-pusher-key'
-// });
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: '1bbe7f722f2c352d5d33',
+    cluster: 'eu',
+    host: 'api-eu.pusher.com'
+});

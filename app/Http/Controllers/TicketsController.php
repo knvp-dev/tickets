@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Events\MessageSent;
 use App\Ticket;
 use App\User;
 use App\Message;
@@ -31,11 +32,13 @@ class TicketsController extends Controller
     }
 
     public function messages(Ticket $ticket){
-        return Message::where('ticket_id',$ticket->id)->with('user')->get();
+        return Message::where('ticket_id',$ticket->id)->with('user')->orderBy('created_at','ASC')->get();
     }
 
     public function addMessage(Ticket $ticket, Request $request){
-        $ticket->addMessage($request->message);
+        $message = $ticket->addMessage($request->message);
+        $data = Message::whereId($message->id)->with('user')->first();
+        event(new MessageSent($data));
     }
 
     public function assignedUsers(Ticket $ticket){

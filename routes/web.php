@@ -35,7 +35,7 @@ Route::get('/ticket/{ticket}/todos', 'TodosController@show');
 Route::get('/todo/{todo}/complete', 'TodosController@complete');
 Route::get('/todo/{todo}/uncomplete', 'TodosController@uncomplete');
 Route::post('/ticket/{ticket}/todo/save', 'TodosController@store');
-Route::get('/todo/{todo}/delete', 'TodosController@delete');
+Route::delete('/todo/{todo}/delete', 'TodosController@delete');
 
 Route::get('/archive', 'ArchiveController@index');
 Route::get('/archive/tickets', 'ArchiveController@archivedTickets');

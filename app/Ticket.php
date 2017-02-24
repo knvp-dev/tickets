@@ -64,11 +64,11 @@ class Ticket extends Model
     }
 
     public function addTodo($todo){
-        $this->todos()->create($todo);
+        return $this->todos()->create($todo);
     }
 
     public function addMessage($message){
-        $this->messages()->create($message);
+        return $this->messages()->create($message);
     }
 
     public function complete(){

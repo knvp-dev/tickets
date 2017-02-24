@@ -36,6 +36,7 @@
 <script>
 	export default{
 		mounted(){
+			this.listen();
 			this.fetchTodos();
 		},
 		props: ["ticketid"],
@@ -47,6 +48,17 @@
 			}
 		},
 		methods:{
+			listen(){
+				Echo.channel('ticket.'+this.ticketid+'.todos')
+					.listen('TodoCreated', event => {
+						this.todos.push(event.todo);
+					}).listen('TodoStatusChanged', event => {
+						let todo = _.find(this.todos, { 'id': event.todo.id } );
+						todo.completed = event.todo.completed;
+					}).listen('TodoDeleted', event => {
+						this.removeTodoFromData(event.todo.id);
+					});
+			},
 			fetchTodos(id){
 				this.todos = [];
 				axios.get('/ticket/'+this.ticketid+'/todos').then((response) => {
@@ -63,8 +75,8 @@
 				}
 			},
 			remove(todo){
-				axios.get('/todo/'+todo.id+'/delete').then((response) => {
-					this.fetchTodos();
+				axios.delete('/todo/'+todo.id+'/delete').then((response) => {
+					this.removeTodoFromData(todo.id);
 				});
 			},
 			addTodo(){
@@ -75,10 +87,13 @@
 						completed: 0
 					};
 					axios.post('/ticket/'+this.ticketid+'/todo/save', { todo: this.todo }).then((response) => {
-						this.fetchTodos();
+						this.todos.push(response.data);
 					});
 					this.body = '';
 				}
+			},
+			removeTodoFromData(todoId){
+				this.todos = _.reject(this.todos, t => t.id == todoId);
 			}
 		}
 	}
