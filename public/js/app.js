@@ -29706,7 +29706,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		listen: function listen() {
 			var _this = this;
 
-			Echo.private('ticket.' + this.ticketid + '.todos').listen('TodoCreated', function (event) {
+			Echo.channel('ticket.' + this.ticketid + '.todos').listen('TodoCreated', function (event) {
 				_this.todos.push(event.todo);
 			}).listen('TodoStatusChanged', function (event) {
 				var todo = _.find(_this.todos, { 'id': event.todo.id });

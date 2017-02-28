@@ -49,7 +49,7 @@
 		},
 		methods:{
 			listen(){
-				Echo.private('ticket.'+this.ticketid+'.todos')
+				Echo.channel('ticket.'+this.ticketid+'.todos')
 					.listen('TodoCreated', event => {
 						this.todos.push(event.todo);
 					}).listen('TodoStatusChanged', event => {
