@@ -20,7 +20,7 @@ class TicketsController extends Controller
     }
 
     public function show($ticket_id){
-        return Ticket::whereId($ticket_id)->with(['category','status','priority','users'])->first();
+        return Ticket::whereId($ticket_id)->with(['category','status','priority','users','owner'])->first();
     }
 
     public function store(Request $request){
@@ -89,6 +89,7 @@ class TicketsController extends Controller
         unset($data['status']);
         unset($data['priority']);
         unset($data['users']);
+        unset($data['owner']);
         return $data;
     }
 

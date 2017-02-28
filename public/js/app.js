@@ -28505,7 +28505,19 @@ window.Event = new Vue({});
 
 var app = new Vue({
   el: '#app',
-  router: __WEBPACK_IMPORTED_MODULE_0__routes__["a" /* default */]
+  router: __WEBPACK_IMPORTED_MODULE_0__routes__["a" /* default */],
+  data: function data() {
+    return {
+      AuthUser: {}
+    };
+  },
+  created: function created() {
+    var _this = this;
+
+    axios.get('/user').then(function (response) {
+      _this.$root.AuthUser = response.data;
+    });
+  }
 });
 
 Vue.directive('diff-for-humans', function (el, binding) {
@@ -29694,7 +29706,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		listen: function listen() {
 			var _this = this;
 
-			Echo.channel('ticket.' + this.ticketid + '.todos').listen('TodoCreated', function (event) {
+			Echo.private('ticket.' + this.ticketid + '.todos').listen('TodoCreated', function (event) {
 				_this.todos.push(event.todo);
 			}).listen('TodoStatusChanged', function (event) {
 				var todo = _.find(_this.todos, { 'id': event.todo.id });
@@ -29885,6 +29897,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = {
 	mounted: function mounted() {
@@ -29896,6 +29910,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			ticket: [],
 			category: [],
 			priority: [],
+			owner: [],
 			ticketid: null,
 			users: [],
 			showDescriptionInput: false
@@ -29908,6 +29923,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		hasDescription: function hasDescription() {
 			return this.ticket.description != null ? true : false;
+		},
+		userIsAuthorized: function userIsAuthorized() {
+			return _.some(this.users, this.$root.AuthUser);
 		}
 	},
 	methods: {
@@ -29919,6 +29937,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				_this.category = _this.ticket.category;
 				_this.priority = _this.ticket.priority;
 				_this.users = _this.ticket.users;
+				_this.owner = _this.ticket.owner;
 			});
 		},
 		saveDescription: function saveDescription() {
@@ -55523,7 +55542,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "fa fa-check pr-10 is-small-icon is-green"
   }), _vm._v("\n\t\t\t\t\t" + _vm._s(_vm.ticket.title) + " "), _c('br'), _vm._v(" "), _c('span', {
     staticClass: "tag"
-  }, [_vm._v(_vm._s(_vm.category.name))]), _vm._v(" "), (!_vm.ticket.completed) ? _c('button', {
+  }, [_vm._v(_vm._s(_vm.category.name))]), _vm._v(" "), (_vm.$root.AuthUser.id == _vm.owner.id) ? _c('div', [(!_vm.ticket.completed) ? _c('button', {
     staticClass: "button button-green pull-right mr-10",
     on: {
       "click": _vm.completeTicket
@@ -55538,7 +55557,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": _vm.showConfirmation
     }
-  }, [_vm._v("Remove this ticket")])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Remove this ticket")])]) : _vm._e()]), _vm._v(" "), _c('div', {
     staticClass: "assigned-user"
   }, [(_vm.users.length > 0) ? _c('p', _vm._l((_vm.users), function(user) {
     return _c('span', {
@@ -55550,19 +55569,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "alt": ""
       }
     })])
-  })) : _vm._e()]), _vm._v(" "), _c('hr'), _vm._v(" "), (_vm.hasNoDescription) ? _c('a', {
+  })) : _vm._e()]), _vm._v(" "), _c('hr'), _vm._v(" "), (_vm.hasNoDescription && _vm.userIsAuthorized) ? _c('a', {
     on: {
       "click": function($event) {
         _vm.showDescriptionInput = true
       }
     }
-  }, [_vm._v("Add description")]) : _vm._e(), _vm._v(" "), (_vm.hasDescription && !_vm.showDescriptionInput) ? _c('div', [_c('a', {
+  }, [_vm._v("Add description")]) : _vm._e(), _vm._v(" "), (_vm.hasDescription && !_vm.showDescriptionInput) ? _c('div', [(_vm.userIsAuthorized) ? _c('a', {
     on: {
       "click": function($event) {
         _vm.showDescriptionInput = true
       }
     }
-  }, [_vm._v("Edit description")]), _vm._v(" "), (_vm.hasDescription && !_vm.showDescriptionInput) ? _c('p', [_vm._v(_vm._s(_vm.ticket.description))]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.showDescriptionInput) ? _c('div', {
+  }, [_vm._v("Edit description")]) : _vm._e(), _vm._v(" "), (_vm.hasDescription && !_vm.showDescriptionInput) ? _c('p', [_vm._v(_vm._s(_vm.ticket.description))]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.showDescriptionInput && _vm.userIsAuthorized) ? _c('div', {
     staticClass: "description-form"
   }, [_c('p', {
     staticClass: "control"

@@ -25,7 +25,17 @@ window.Event = new Vue({});
 
 const app = new Vue({
     el: '#app',
-    router
+    router,
+    data(){
+    	return{
+    		AuthUser: {}
+    	}
+    },
+    created(){
+    	axios.get('/user').then((response) => {
+			this.$root.AuthUser = response.data;
+    	});
+    }
 });
 
 Vue.directive('diff-for-humans', function(el, binding){

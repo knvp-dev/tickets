@@ -15,6 +15,10 @@ class Ticket extends Model
 {
     protected $guarded = [];
 
+    public function owner(){
+        return $this->hasOne(User::class, 'id', 'owner_id');
+    }
+
     public function users(){
     	return $this->belongsToMany(User::class);
     }

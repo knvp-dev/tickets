@@ -7,9 +7,11 @@
 					<i v-if="!ticket.completed" class="fa fa-circle-o pr-10 is-small-icon"></i>
 					<i v-else class="fa fa-check pr-10 is-small-icon is-green"></i>
 						{{ ticket.title }} <br> <span class="tag">{{ category.name }}</span>
+						<div v-if="$root.AuthUser.id == owner.id">
 						<button v-if="!ticket.completed" class="button button-green pull-right mr-10" @click="completeTicket">Close ticket</button>
 						<button v-else class="button is-default pull-right mr-10" @click="completeTicket">Reopen ticket</button>
 						<button class="button button-red pull-right mr-10" @click="showConfirmation">Remove this ticket</button>
+						</div>
 					</h1>
 
 					<div class="assigned-user">
@@ -18,12 +20,12 @@
 
 					<hr>
 
-					<a v-if="hasNoDescription" @click="showDescriptionInput = true">Add description</a>
+					<a v-if="hasNoDescription && userIsAuthorized" @click="showDescriptionInput = true">Add description</a>
 					<div v-if="hasDescription && !showDescriptionInput">
-						<a @click="showDescriptionInput = true">Edit description</a>
+						<a @click="showDescriptionInput = true" v-if="userIsAuthorized">Edit description</a>
 						<p v-if="hasDescription && !showDescriptionInput">{{ ticket.description }}</p>
 					</div>
-					<div class="description-form" v-if="showDescriptionInput">
+					<div class="description-form" v-if="showDescriptionInput && userIsAuthorized">
 						<p class="control">
 							<textarea class="textarea" placeholder="Textarea" v-model="ticket.description"></textarea>
 						</p>
@@ -55,6 +57,7 @@
 					ticket: [],
 					category: [],
 					priority: [],
+					owner: [],
 					ticketid: null,
 					users: [],
 					showDescriptionInput: false
@@ -66,6 +69,9 @@
 				},
 				hasDescription(){
 					return (this.ticket.description != null) ? true : false;
+				},
+				userIsAuthorized(){
+					return _.some(this.users, this.$root.AuthUser);
 				}
 			},
 			methods:{
@@ -75,6 +81,7 @@
 						this.category = this.ticket.category;
 						this.priority = this.ticket.priority;
 						this.users = this.ticket.users;
+						this.owner = this.ticket.owner;
 					});
 				},
 				saveDescription(){

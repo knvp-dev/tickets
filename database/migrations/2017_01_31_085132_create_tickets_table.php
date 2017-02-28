@@ -17,6 +17,7 @@ class CreateTicketsTable extends Migration
             $table->increments('id');
             $table->integer('customer_id')->nullable();
             $table->string('title');
+            $table->integer('owner_id')->nullable();
             $table->text('description')->nullable();
             $table->integer('status_id')->default(1);
             $table->integer('category_id')->default(1);
