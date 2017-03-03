@@ -14,7 +14,6 @@
 							<p>{{ message.body }}</p>
 							<div class="message-date" v-diff-for-humans="message.created_at"></div>
 						</div>
-						
 					</div>
 				</div>
 			</div>
@@ -37,35 +36,28 @@
 	export default{
 		mounted(){
 			this.listen();
-			this.fetchAuthenticatedUser();
 			this.fetchMessages();
 		},
 		props: ['ticketid'],
 		data(){
 			return{
-				newMessage: '',
+				newMessage: {},
 				body: '',
-				user: '',
 				messages: []
 			}
 		},
 		watch:{
 			messages(){
-				$(".message-list").animate({ scrollTop: $('.message-list')[0].scrollHeight}, 1000);
+				this.animateMessageList();
 			}
 		},
 		methods:{
 			listen(){
-				Echo.private('ticket.'+this.ticketid+'.messages')
+				Echo.channel('ticket.'+this.ticketid+'.messages')
 					.listen('MessageSent', (event) => {
-						event.message.user = this.user;
-						this.messages.push(event.message);
+						event.message.user = event.user;
+						this.addMessageToData(event.message);
 					});
-			},
-			fetchAuthenticatedUser(){
-				axios.get('/user').then((response) => {
-					this.user = response.data;
-				});
 			},
 			fetchMessages(){
 				axios.get('/ticket/'+this.ticketid+'/messages').then((response) => {
@@ -73,14 +65,27 @@
 				});
 			},
 			sendMessage(){
+				this.buildUpMessage();
+				axios.post('/ticket/'+this.ticketid+'/messages/create', {'message': this.newMessage})
+				.then((response) => {
+					this.addMessageToData(response.data);
+					this.clearInputField();
+				});
+			},
+			buildUpMessage(){
 				this.newMessage = {
-					user_id: this.user.id,
+					user_id: this.$root.AuthUser.id,
 					body: this.body
 				};
-				axios.post('/ticket/'+this.ticketid+'/messages/create', {'message': this.newMessage}).then((response) => {
-					this.messages.push(response.data);
-				});
+			},
+			addMessageToData(message){
+				this.messages.push(message);
+			},
+			clearInputField(){
 				this.body = '';
+			},
+			animateMessageList(){
+				$(".message-list").animate({ scrollTop: $('.message-list')[0].scrollHeight}, 500);
 			}
 		}
 	}

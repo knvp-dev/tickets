@@ -29532,64 +29532,66 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = {
 	mounted: function mounted() {
 		this.listen();
-		this.fetchAuthenticatedUser();
 		this.fetchMessages();
 	},
 
 	props: ['ticketid'],
 	data: function data() {
 		return {
-			newMessage: '',
+			newMessage: {},
 			body: '',
-			user: '',
 			messages: []
 		};
 	},
 
 	watch: {
 		messages: function messages() {
-			$(".message-list").animate({ scrollTop: $('.message-list')[0].scrollHeight }, 1000);
+			this.animateMessageList();
 		}
 	},
 	methods: {
 		listen: function listen() {
 			var _this = this;
 
-			Echo.private('ticket.' + this.ticketid + '.messages').listen('MessageSent', function (event) {
-				event.message.user = _this.user;
-				_this.messages.push(event.message);
-			});
-		},
-		fetchAuthenticatedUser: function fetchAuthenticatedUser() {
-			var _this2 = this;
-
-			axios.get('/user').then(function (response) {
-				_this2.user = response.data;
+			Echo.channel('ticket.' + this.ticketid + '.messages').listen('MessageSent', function (event) {
+				event.message.user = event.user;
+				_this.addMessageToData(event.message);
 			});
 		},
 		fetchMessages: function fetchMessages() {
-			var _this3 = this;
+			var _this2 = this;
 
 			axios.get('/ticket/' + this.ticketid + '/messages').then(function (response) {
-				_this3.messages = response.data;
+				_this2.messages = response.data;
 			});
 		},
 		sendMessage: function sendMessage() {
-			var _this4 = this;
+			var _this3 = this;
 
+			this.buildUpMessage();
+			axios.post('/ticket/' + this.ticketid + '/messages/create', { 'message': this.newMessage }).then(function (response) {
+				_this3.addMessageToData(response.data);
+				_this3.clearInputField();
+			});
+		},
+		buildUpMessage: function buildUpMessage() {
 			this.newMessage = {
-				user_id: this.user.id,
+				user_id: this.$root.AuthUser.id,
 				body: this.body
 			};
-			axios.post('/ticket/' + this.ticketid + '/messages/create', { 'message': this.newMessage }).then(function (response) {
-				_this4.messages.push(response.data);
-			});
+		},
+		addMessageToData: function addMessageToData(message) {
+			this.messages.push(message);
+		},
+		clearInputField: function clearInputField() {
 			this.body = '';
+		},
+		animateMessageList: function animateMessageList() {
+			$(".message-list").animate({ scrollTop: $('.message-list')[0].scrollHeight }, 500);
 		}
 	}
 };
@@ -29697,7 +29699,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	data: function data() {
 		return {
 			todos: [],
-			todo: '',
+			todo: {},
 			body: ''
 		};
 	},
@@ -29706,8 +29708,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		listen: function listen() {
 			var _this = this;
 
-			Echo.private('ticket.' + this.ticketid + '.todos').listen('TodoCreated', function (event) {
-				_this.todos.push(event.todo);
+			Echo.channel('ticket.' + this.ticketid + '.todos').listen('TodoCreated', function (event) {
+				_this.addTodoToData(event.todo);
 			}).listen('TodoStatusChanged', function (event) {
 				var todo = _.find(_this.todos, { 'id': event.todo.id });
 				todo.completed = event.todo.completed;
@@ -29715,22 +29717,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				_this.removeTodoFromData(event.todo.id);
 			});
 		},
-		fetchTodos: function fetchTodos(id) {
+		fetchTodos: function fetchTodos() {
 			var _this2 = this;
 
-			this.todos = [];
 			axios.get('/ticket/' + this.ticketid + '/todos').then(function (response) {
 				_this2.todos = response.data;
 			});
-		},
-		complete: function complete(todo) {
-			if (!todo.completed) {
-				todo.completed = !todo.completed;
-				axios.get('/todo/' + todo.id + '/complete');
-			} else {
-				todo.completed = !todo.completed;
-				axios.get('/todo/' + todo.id + '/uncomplete');
-			}
 		},
 		remove: function remove(todo) {
 			var _this3 = this;
@@ -29739,25 +29731,36 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				_this3.removeTodoFromData(todo.id);
 			});
 		},
-		addTodo: function addTodo() {
+		saveTodo: function saveTodo() {
 			var _this4 = this;
 
-			if (this.body != '') {
-				this.todo = {
-					ticket_id: this.ticketid,
-					body: this.body,
-					completed: 0
-				};
-				axios.post('/ticket/' + this.ticketid + '/todo/save', { todo: this.todo }).then(function (response) {
-					_this4.todos.push(response.data);
-				});
-				this.body = '';
-			}
+			this.buildUpTodo();
+			axios.post('/ticket/' + this.ticketid + '/todo/save', { 'todo': this.todo }).then(function (response) {
+				_this4.addTodoToData(response.data);
+				_this4.clearInputField();
+			});
+		},
+		buildUpTodo: function buildUpTodo() {
+			this.todo = { ticket_id: this.ticketid, body: this.body, completed: 0 };
 		},
 		removeTodoFromData: function removeTodoFromData(todoId) {
 			this.todos = _.reject(this.todos, function (t) {
 				return t.id == todoId;
 			});
+		},
+		clearInputField: function clearInputField() {
+			this.body = '';
+		},
+		addTodoToData: function addTodoToData(data) {
+			this.todos.push(data);
+		},
+		completeTodo: function completeTodo(todo) {
+			todo.completed = 1;
+			axios.get('/todo/' + todo.id + '/complete');
+		},
+		uncompleteTodo: function uncompleteTodo(todo) {
+			todo.completed = 0;
+			axios.get('/todo/' + todo.id + '/uncomplete');
 		}
 	}
 };
@@ -55936,7 +55939,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('h1', {
     staticClass: "title"
   }, [_vm._v("Todo")]), _vm._v(" "), _c('div', {
-    staticClass: "todo-form "
+    staticClass: "todo-form"
   }, [_c('p', {
     staticClass: "control"
   }, [_c('input', {
@@ -55960,12 +55963,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.body = $event.target.value
       }
     }
-  }), _vm._v(" "), _c('button', {
+  }), _vm._v(" "), (_vm.body != '') ? _c('button', {
     staticClass: "button",
     on: {
-      "click": _vm.addTodo
+      "click": _vm.saveTodo
     }
-  }, [_vm._v("Add")])]), _vm._v(" "), _c('hr')]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Add")]) : _vm._e()]), _vm._v(" "), _c('hr')]), _vm._v(" "), _c('div', {
     staticClass: "ticket-list"
   }, _vm._l((_vm.todos), function(todo) {
     return _c('div', {
@@ -55987,7 +55990,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "button action-button animate",
       on: {
         "click": function($event) {
-          _vm.complete(todo)
+          (!todo.completed) ? _vm.completeTodo(todo): _vm.uncompleteTodo(todo)
         }
       }
     }, [(!todo.completed) ? _c('i', {

@@ -3,10 +3,10 @@
 		<section class="section">
 			<h1 class="title">Todo</h1>
 
-			<div class="todo-form ">
+			<div class="todo-form">
 				<p class="control">
 					<input type="text" class="input mr-10" placeholder="Add new todo item" v-model="body">
-					<button class="button" @click="addTodo">Add</button>
+					<button class="button" @click="saveTodo" v-if="body != ''">Add</button>
 				</p>
 				<hr>
 			</div>
@@ -21,7 +21,7 @@
 						<p>{{ todo.body }}</p>
 					</div>
 					<div class="list-item-right">
-						<a class="button action-button animate" @click="complete(todo)">
+						<a class="button action-button animate" @click="(!todo.completed) ? completeTodo(todo) : uncompleteTodo(todo)">
 							<i v-if="!todo.completed" class="fa fa-check icon is-small"></i>
 							<i v-else class="fa fa-undo icon is-small"></i>
 						</a>
@@ -43,15 +43,15 @@
 		data(){
 			return{
 				todos: [],
-				todo: '',
+				todo: {},
 				body: ''
 			}
 		},
 		methods:{
 			listen(){
-				Echo.private('ticket.'+this.ticketid+'.todos')
+				Echo.channel('ticket.'+this.ticketid+'.todos')
 					.listen('TodoCreated', event => {
-						this.todos.push(event.todo);
+						this.addTodoToData(event.todo);
 					}).listen('TodoStatusChanged', event => {
 						let todo = _.find(this.todos, { 'id': event.todo.id } );
 						todo.completed = event.todo.completed;
@@ -59,41 +59,43 @@
 						this.removeTodoFromData(event.todo.id);
 					});
 			},
-			fetchTodos(id){
-				this.todos = [];
+			fetchTodos(){
 				axios.get('/ticket/'+this.ticketid+'/todos').then((response) => {
 					this.todos = response.data;
 				});
-			},
-			complete(todo){
-				if(!todo.completed){
-					todo.completed = !todo.completed;
-					axios.get('/todo/'+todo.id+'/complete');
-				}else{
-					todo.completed = !todo.completed;
-					axios.get('/todo/'+todo.id+'/uncomplete');
-				}
 			},
 			remove(todo){
 				axios.delete('/todo/'+todo.id+'/delete').then((response) => {
 					this.removeTodoFromData(todo.id);
 				});
 			},
-			addTodo(){
-				if(this.body != ''){
-					this.todo = {
-						ticket_id: this.ticketid,
-						body: this.body,
-						completed: 0
-					};
-					axios.post('/ticket/'+this.ticketid+'/todo/save', { todo: this.todo }).then((response) => {
-						this.todos.push(response.data);
-					});
-					this.body = '';
-				}
+			saveTodo(){
+				this.buildUpTodo();
+				axios.post('/ticket/'+this.ticketid+'/todo/save', {'todo': this.todo})
+				.then((response) => {
+					this.addTodoToData(response.data);
+					this.clearInputField();
+				});
+			},
+			buildUpTodo(){
+				this.todo = {ticket_id: this.ticketid, body: this.body, completed: 0};
 			},
 			removeTodoFromData(todoId){
 				this.todos = _.reject(this.todos, t => t.id == todoId);
+			},
+			clearInputField(){
+				this.body = '';
+			},
+			addTodoToData(data){
+				this.todos.push(data);
+			},
+			completeTodo(todo){
+				todo.completed = 1;
+				axios.get('/todo/'+todo.id+'/complete');
+			},
+			uncompleteTodo(todo){
+				todo.completed = 0;
+				axios.get('/todo/'+todo.id+'/uncomplete');
 			}
 		}
 	}

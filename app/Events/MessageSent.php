@@ -11,12 +11,14 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 use App\Message;
+use App\User;
 
 class MessageSent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $message;
+    public $user;
 
     /**
      * Create a new event instance.
@@ -26,7 +28,7 @@ class MessageSent implements ShouldBroadcast
     public function __construct(Message $message)
     {
         $this->message = $message;
-
+        $this->user = User::whereId($message->user_id)->first();
         $this->dontBroadcastToCurrentUser();
     }
 
@@ -37,6 +39,6 @@ class MessageSent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('ticket.'.$this->message->ticket->id.'.messages');
+        return new Channel('ticket.'.$this->message->ticket->id.'.messages');
     }
 }
