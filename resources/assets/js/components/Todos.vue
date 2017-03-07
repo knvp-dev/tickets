@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
 		<section class="section">
-			<h1 class="title">Todo</h1>
+			<h1 class="title">Todos</h1>
 
 			<div class="todo-form">
 				<p class="control">

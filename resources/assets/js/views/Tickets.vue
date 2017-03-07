@@ -46,29 +46,27 @@
                     </div>
                 </div>
             </div>
+
             <div class="container">
 
-                <assign-modal v-if="showModal" :ticket="selectedTicket"></assign-modal>
+                <assign-modal v-if="showAssignUsersModal" :ticket="selectedTicket"></assign-modal>
 
                 <section class="section">
 
-                <div class="columns">
-                    <div class="column">
-                        <h1 class="title">Open tickets - {{ filter }}</h1>
+                    <div class="columns">
+                        <div class="column">
+                            <h1 class="title">Open tickets - {{ filter }}</h1>
+                        </div>
+                        <div class="column">
+                            <div class="ticket-filters">
+                                <ul>
+                                    <li class="tag filter-tag" :class="(filter == 'All') ? 'filter-active' : ''" @click="filterTickets(0)"><a>All</a></li>
+                                    <li class="tag filter-tag" :class="(filter == category.name) ? 'filter-active' : ''" v-for="category in categories" @click="filterTickets(category)"><a>{{ category.name }}</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                    <div class="column">
-                        <div class="ticket-filters">
-                        <ul>
-                            <li class="tag filter-tag" :class="(filter == 'All') ? 'filter-active' : ''" @click="filterTickets(0)"><a>All</a></li>
-                            <li class="tag filter-tag" :class="(filter == category.name) ? 'filter-active' : ''" v-for="category in categories" @click="filterTickets(category)"><a>{{ category.name }}</a></li>
-                        </ul>
-                    </div>
-                    </div>
-                </div>
                     
-
-                    
-
                     <h2 v-show="filteredTickets.length == 0" class="has-text-centered">Good job! There are no open tickets</h2>
 
                     <div class="ticket-list">
@@ -151,12 +149,12 @@
                 });
 
                 Event.$on('users-assigned', () => {
-                    this.showModal = false;
+                    this.showAssignUsersModal = false;
                     this.fetchTickets();
                 });
 
                 Event.$on('users-assign-cancel', () => {
-                    this.showModal = false;
+                    this.showAssignUsersModal = false;
                 });
             },
             data(){
@@ -171,7 +169,7 @@
                     closedTickets: [],
                     filteredTickets: [],
                     filter: '',
-                    showModal: false,
+                    showAssignUsersModal: false,
                     showDetail: false,
                     selectedTicket: {}
                 }
@@ -209,10 +207,10 @@
                 },
                 setSelectedTicket(ticket){
                     this.selectedTicket = ticket;
-                    this.showModal = true;
+                    this.showAssignUsersModal = true;
                 },
                 completeTicket(ticket){
-                    axios.get('/ticket/complete/'+ticket.id).then((response) => {
+                    axios.get('/ticket/'+ticket.id+'/complete').then((response) => {
                         this.fetchTickets();
                     });
                 },
@@ -232,8 +230,6 @@
                     
                 },
                 saveTicket(){
-                    let errors = [];
-
                     let data = [{
                         title: this.ticketTitle,
                         category_id: this.category.id,
@@ -248,7 +244,7 @@
                             this.selectedTicket = response.data;
                             this.ticketTitle = '';
                             Event.$emit('form-submitted');
-                            this.showModal = true;
+                            this.showAssignUsersModal = true;
                         });
                     }
                 },
@@ -259,12 +255,12 @@
                     return true;
                 },
                 uncompleteTicket(ticket){
-                    axios.get('/ticket/uncomplete/'+ticket.id).then( (response) => {
+                    axios.get('/ticket/'+ticket.id+'/uncomplete').then( (response) => {
                         this.fetchTickets();
                     });
                 },
                 archiveTicket(ticket){
-                    axios.get('/ticket/archive/'+ticket.id).then( (response) => {
+                    axios.get('/ticket/'+ticket.id+'/archive').then( (response) => {
                         this.fetchTickets();
                     });
                 }
@@ -472,12 +468,12 @@
   }
 
   .normal{
-    
+
   }
 
   .high{
     color:#ec7474;
-  }
+}
 
 
 </style>

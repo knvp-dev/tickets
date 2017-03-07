@@ -30130,12 +30130,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         });
 
         Event.$on('users-assigned', function () {
-            _this.showModal = false;
+            _this.showAssignUsersModal = false;
             _this.fetchTickets();
         });
 
         Event.$on('users-assign-cancel', function () {
-            _this.showModal = false;
+            _this.showAssignUsersModal = false;
         });
     },
     data: function data() {
@@ -30150,7 +30150,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             closedTickets: [],
             filteredTickets: [],
             filter: '',
-            showModal: false,
+            showAssignUsersModal: false,
             showDetail: false,
             selectedTicket: {}
         };
@@ -30194,12 +30194,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         setSelectedTicket: function setSelectedTicket(ticket) {
             this.selectedTicket = ticket;
-            this.showModal = true;
+            this.showAssignUsersModal = true;
         },
         completeTicket: function completeTicket(ticket) {
             var _this5 = this;
 
-            axios.get('/ticket/complete/' + ticket.id).then(function (response) {
+            axios.get('/ticket/' + ticket.id + '/complete').then(function (response) {
                 _this5.fetchTickets();
             });
         },
@@ -30220,8 +30220,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         saveTicket: function saveTicket() {
             var _this6 = this;
 
-            var errors = [];
-
             var data = [{
                 title: this.ticketTitle,
                 category_id: this.category.id,
@@ -30236,7 +30234,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     _this6.selectedTicket = response.data;
                     _this6.ticketTitle = '';
                     Event.$emit('form-submitted');
-                    _this6.showModal = true;
+                    _this6.showAssignUsersModal = true;
                 });
             }
         },
@@ -30249,14 +30247,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         uncompleteTicket: function uncompleteTicket(ticket) {
             var _this7 = this;
 
-            axios.get('/ticket/uncomplete/' + ticket.id).then(function (response) {
+            axios.get('/ticket/' + ticket.id + '/uncomplete').then(function (response) {
                 _this7.fetchTickets();
             });
         },
         archiveTicket: function archiveTicket(ticket) {
             var _this8 = this;
 
-            axios.get('/ticket/archive/' + ticket.id).then(function (response) {
+            axios.get('/ticket/' + ticket.id + '/archive').then(function (response) {
                 _this8.fetchTickets();
             });
         }
@@ -55714,7 +55712,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "fa fa-plus"
   })])])], 1)], 1)]) : _vm._e()]), _vm._v(" "), _c('div', {
     staticClass: "container"
-  }, [(_vm.showModal) ? _c('assign-modal', {
+  }, [(_vm.showAssignUsersModal) ? _c('assign-modal', {
     attrs: {
       "ticket": _vm.selectedTicket
     }
@@ -55938,7 +55936,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "section"
   }, [_c('h1', {
     staticClass: "title"
-  }, [_vm._v("Todo")]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Todos")]), _vm._v(" "), _c('div', {
     staticClass: "todo-form"
   }, [_c('p', {
     staticClass: "control"
