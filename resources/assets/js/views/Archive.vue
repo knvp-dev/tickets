@@ -51,7 +51,7 @@
 				});
 			},
 			unarchiveTicket(ticket){
-				axios.get('/ticket/unarchive/'+ticket.id).then((response) => {
+				axios.get('/ticket/'+ticket.id+'/unarchive').then((response) => {
 					this.fetchArchivedTickets();
 				});
 			}

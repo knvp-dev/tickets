@@ -60,7 +60,7 @@
                         <div class="column">
                             <div class="ticket-filters">
                                 <ul>
-                                    <li class="tag filter-tag" :class="(filter == 'All') ? 'filter-active' : ''" @click="filterTickets(0)"><a>All</a></li>
+                                    <li class="tag filter-tag" :class="(filter == 'All') ? 'filter-active' : ''" @click="filterTickets('All')"><a>All</a></li>
                                     <li class="tag filter-tag" :class="(filter == category.name) ? 'filter-active' : ''" v-for="category in categories" @click="filterTickets(category)"><a>{{ category.name }}</a></li>
                                 </ul>
                             </div>
@@ -87,8 +87,8 @@
                                 </div>
                             </div>
                             <div class="list-item-right">
-                                <p v-if="ticket.users.length > 0"><span v-for="user in ticket.users" class="user-avatar" @click="setSelectedTicket(ticket)"><div class="tooltip">{{ user.name }}</div><img :src="user.avatar" class="img-circle" alt=""></span></p>
-                                <a v-if="!ticket.completed" class="button action-button animate" @click="setSelectedTicket(ticket)"><i class="fa fa-user-plus icon is-small"></i></a>
+                                <p v-if="ticket.users.length > 0"><span v-for="user in ticket.users" class="user-avatar" @click="assignUsers(ticket)"><div class="tooltip">{{ user.name }}</div><img :src="user.avatar" class="img-circle" alt=""></span></p>
+                                <a v-if="!ticket.completed" class="button action-button animate" @click="assignUsers(ticket)"><i class="fa fa-user-plus icon is-small"></i></a>
                                 <!-- <a class="button assign-button animate" @click="completeTicket(ticket)"><i class="fa fa-check icon is-small"></i></a> -->
                                 <router-link :to="'/ticket/'+ticket.id" class="button action-button animate"><i class="fa fa-arrow-right icon is-small"></i></router-link>
                             </div>
@@ -168,7 +168,7 @@
                     categories: [],
                     closedTickets: [],
                     filteredTickets: [],
-                    filter: '',
+                    filter: 'All',
                     showAssignUsersModal: false,
                     showDetail: false,
                     selectedTicket: {}
@@ -177,18 +177,23 @@
             methods:{
                 fetchTickets(){
                     axios.get('/tickets').then( (response) => {
+                        // populate tickets array
                         this.tickets = response.data;
+
+                        // Filter tickets array and return the completed tickets
                         this.closedTickets = _.filter(this.tickets, function(value){
                             return value.completed;
                         });
+
+                        // Filter tickets array and return the uncompleted tickets
                         this.tickets = _.filter(this.tickets, function(value){
                             return !value.completed;
                         });
 
-                        this.filterTickets(0);
+                        this.filterTickets(this.filter);
 
+                        // animate loading screen
                         $('.loading-overlay').css('z-index','999').addClass('fadeOut animated');
-
                         let t2 = setTimeout(function(){
                             $('.loading-overlay').css('z-index','-1');
                         },1000);
@@ -196,30 +201,29 @@
                     });
                 },
                 fetchCategories(){
+                    // Fetch all categories
                     axios.get('/categories').then((response) => {
                         this.categories = response.data;
                     });
                 },
                 fetchPriorities(){
+                    // Fetch all priorities
                     axios.get('/priorities').then((response) => {
                         this.priorities = response.data;
                     });
                 },
-                setSelectedTicket(ticket){
+                assignUsers(ticket){
+                    // open the modal for assigning users to a ticket
                     this.selectedTicket = ticket;
                     this.showAssignUsersModal = true;
-                },
-                completeTicket(ticket){
-                    axios.get('/ticket/'+ticket.id+'/complete').then((response) => {
-                        this.fetchTickets();
-                    });
                 },
                 showTicketDetail(ticket){
                     Event.$emit('show-detail', ticket);
                 },
                 filterTickets(category){
+                    // Filter open tickets by category
                     this.filteredTickets = this.tickets;
-                    if(category != 0){
+                    if(category != "All"){
                         this.filter = category.name;
                         this.filteredTickets = _.filter(this.tickets, (ticket) => {
                             return ticket.category.id === category.id;
@@ -227,19 +231,19 @@
                     }else{
                         this.filter = "All";
                     }
-                    
                 },
                 saveTicket(){
-                    let data = [{
+                    // Build up ticket data object
+                    let newTicket = {
                         title: this.ticketTitle,
                         category_id: this.category.id,
-                        priority_id: this.priority.id
-                    }];
+                        priority_id: this.priority.id,
+                        owner_id: this.$root.AuthUser.id
+                    };
 
-                    this.selectedTicket = data[0];
-
+                    // Validate the new ticket data, create the ticket an add the new ticket to tickets array
                     if(this.validate()){
-                        axios.post('/ticket/save', data).then((response) => {
+                        axios.post('/ticket/save', {'ticket': newTicket}).then((response) => {
                             this.tickets.push(response.data);
                             this.selectedTicket = response.data;
                             this.ticketTitle = '';
@@ -254,15 +258,17 @@
                     }
                     return true;
                 },
+                completeTicket(ticket){
+                    ticket.completed = 1;
+                    axios.get('/ticket/'+ticket.id+'/complete');
+                },
                 uncompleteTicket(ticket){
-                    axios.get('/ticket/'+ticket.id+'/uncomplete').then( (response) => {
-                        this.fetchTickets();
-                    });
+                    ticket.completed = 0;
+                    axios.get('/ticket/'+ticket.id+'/uncomplete');
                 },
                 archiveTicket(ticket){
-                    axios.get('/ticket/'+ticket.id+'/archive').then( (response) => {
-                        this.fetchTickets();
-                    });
+                    ticket.archived = 1;
+                    axios.get('/ticket/'+ticket.id+'/archive');
                 }
             }
         }

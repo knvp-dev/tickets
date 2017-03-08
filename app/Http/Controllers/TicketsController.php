@@ -38,7 +38,7 @@ class TicketsController extends Controller
      * @return Ticket           Return the newly created ticket
      */
     public function store(Request $request){
-        $ticket = Ticket::create($request[0]);
+        $ticket = Ticket::create($request->ticket);
         $ticket->assignUser(Auth::user());
         return Ticket::whereId($ticket->id)->with(['category','status','priority','users'])->first();
     }

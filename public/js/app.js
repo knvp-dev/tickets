@@ -29482,6 +29482,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = {
+	props: ['isActive'],
 	methods: {
 		confirm: function confirm() {
 			Event.$emit('modal-confirmed');
@@ -29829,7 +29830,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		unarchiveTicket: function unarchiveTicket(ticket) {
 			var _this2 = this;
 
-			axios.get('/ticket/unarchive/' + ticket.id).then(function (response) {
+			axios.get('/ticket/' + ticket.id + '/unarchive').then(function (response) {
 				_this2.fetchArchivedTickets();
 			});
 		}
@@ -29902,21 +29903,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = {
 	mounted: function mounted() {
-		this.ticketid = this.$route.params.id;
-		this.fetchTicketDetails(this.ticketid);
+		var _this = this;
+
+		this.fetchTicketDetails();
+
+		Event.$on('modal-confirmed', function () {
+			_this.removeTicket();
+		});
+
+		Event.$on('modal-declined', function () {
+			_this.showConfirmation = false;
+		});
 	},
 	data: function data() {
 		return {
 			ticket: [],
+			ticketid: this.$route.params.id,
 			category: [],
-			priority: [],
 			owner: [],
-			ticketid: null,
 			users: [],
-			showDescriptionInput: false
+			showDescriptionInput: false,
+			showConfirmation: false
 		};
 	},
 
@@ -29932,39 +29950,40 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		}
 	},
 	methods: {
-		fetchTicketDetails: function fetchTicketDetails(id) {
-			var _this = this;
+		fetchTicketDetails: function fetchTicketDetails() {
+			var _this2 = this;
 
-			axios.get('/ticket/' + id).then(function (response) {
-				_this.ticket = response.data;
-				_this.category = _this.ticket.category;
-				_this.priority = _this.ticket.priority;
-				_this.users = _this.ticket.users;
-				_this.owner = _this.ticket.owner;
+			axios.get('/ticket/' + this.ticketid).then(function (response) {
+				_this2.ticket = response.data;
+				_this2.category = _this2.ticket.category;
+				_this2.users = _this2.ticket.users;
+				_this2.owner = _this2.ticket.owner;
 			});
 		},
 		saveDescription: function saveDescription() {
-			var _this2 = this;
-
-			axios.post('/ticket/update', this.ticket).then(function (response) {
-				_this2.showDescriptionInput = false;
-			});
-		},
-		showConfirmation: function showConfirmation() {
 			var _this3 = this;
 
-			axios.get('/ticket/' + this.ticket.id + '/delete').then(function (response) {
-				_this3.$router.push('/');
+			axios.post('/ticket/update', this.ticket).then(function (response) {
+				_this3.showDescriptionInput = false;
 			});
 		},
+		showConfirmationModal: function showConfirmationModal() {
+			this.showConfirmation = true;
+		},
 		completeTicket: function completeTicket() {
-			if (!this.ticket.completed) {
-				this.ticket.completed = 1;
-				axios.get('/ticket/' + this.ticket.id + '/complete');
-			} else {
-				this.ticket.completed = 0;
-				axios.get('/ticket/' + this.ticket.id + '/uncomplete');
-			}
+			this.ticket.completed = 1;
+			axios.get('/ticket/' + this.ticketid + '/complete');
+		},
+		unCompleteTicket: function unCompleteTicket() {
+			this.ticket.completed = 0;
+			axios.get('/ticket/' + this.ticketid + '/uncomplete');
+		},
+		removeTicket: function removeTicket() {
+			var _this4 = this;
+
+			axios.get('/ticket/' + this.ticketid + '/delete').then(function (response) {
+				_this4.$router.push('/');
+			});
 		}
 	}
 };
@@ -29975,8 +29994,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
 //
 //
 //
@@ -30149,7 +30166,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             categories: [],
             closedTickets: [],
             filteredTickets: [],
-            filter: '',
+            filter: 'All',
             showAssignUsersModal: false,
             showDetail: false,
             selectedTicket: {}
@@ -30161,18 +30178,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             axios.get('/tickets').then(function (response) {
+                // populate tickets array
                 _this2.tickets = response.data;
+
+                // Filter tickets array and return the completed tickets
                 _this2.closedTickets = _.filter(_this2.tickets, function (value) {
                     return value.completed;
                 });
+
+                // Filter tickets array and return the uncompleted tickets
                 _this2.tickets = _.filter(_this2.tickets, function (value) {
                     return !value.completed;
                 });
 
-                _this2.filterTickets(0);
+                _this2.filterTickets(_this2.filter);
 
+                // animate loading screen
                 $('.loading-overlay').css('z-index', '999').addClass('fadeOut animated');
-
                 var t2 = setTimeout(function () {
                     $('.loading-overlay').css('z-index', '-1');
                 }, 1000);
@@ -30181,6 +30203,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         fetchCategories: function fetchCategories() {
             var _this3 = this;
 
+            // Fetch all categories
             axios.get('/categories').then(function (response) {
                 _this3.categories = response.data;
             });
@@ -30188,27 +30211,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         fetchPriorities: function fetchPriorities() {
             var _this4 = this;
 
+            // Fetch all priorities
             axios.get('/priorities').then(function (response) {
                 _this4.priorities = response.data;
             });
         },
-        setSelectedTicket: function setSelectedTicket(ticket) {
+        assignUsers: function assignUsers(ticket) {
+            // open the modal for assigning users to a ticket
             this.selectedTicket = ticket;
             this.showAssignUsersModal = true;
-        },
-        completeTicket: function completeTicket(ticket) {
-            var _this5 = this;
-
-            axios.get('/ticket/' + ticket.id + '/complete').then(function (response) {
-                _this5.fetchTickets();
-            });
         },
         showTicketDetail: function showTicketDetail(ticket) {
             Event.$emit('show-detail', ticket);
         },
         filterTickets: function filterTickets(category) {
+            // Filter open tickets by category
             this.filteredTickets = this.tickets;
-            if (category != 0) {
+            if (category != "All") {
                 this.filter = category.name;
                 this.filteredTickets = _.filter(this.tickets, function (ticket) {
                     return ticket.category.id === category.id;
@@ -30218,23 +30237,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         saveTicket: function saveTicket() {
-            var _this6 = this;
+            var _this5 = this;
 
-            var data = [{
+            // Build up ticket data object
+            var newTicket = {
                 title: this.ticketTitle,
                 category_id: this.category.id,
-                priority_id: this.priority.id
-            }];
+                priority_id: this.priority.id,
+                owner_id: this.$root.AuthUser.id
+            };
 
-            this.selectedTicket = data[0];
-
+            // Validate the new ticket data, create the ticket an add the new ticket to tickets array
             if (this.validate()) {
-                axios.post('/ticket/save', data).then(function (response) {
-                    _this6.tickets.push(response.data);
-                    _this6.selectedTicket = response.data;
-                    _this6.ticketTitle = '';
+                axios.post('/ticket/save', { 'ticket': newTicket }).then(function (response) {
+                    _this5.tickets.push(response.data);
+                    _this5.selectedTicket = response.data;
+                    _this5.ticketTitle = '';
                     Event.$emit('form-submitted');
-                    _this6.showAssignUsersModal = true;
+                    _this5.showAssignUsersModal = true;
                 });
             }
         },
@@ -30244,19 +30264,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
             return true;
         },
+        completeTicket: function completeTicket(ticket) {
+            ticket.completed = 1;
+            axios.get('/ticket/' + ticket.id + '/complete');
+        },
         uncompleteTicket: function uncompleteTicket(ticket) {
-            var _this7 = this;
-
-            axios.get('/ticket/' + ticket.id + '/uncomplete').then(function (response) {
-                _this7.fetchTickets();
-            });
+            ticket.completed = 0;
+            axios.get('/ticket/' + ticket.id + '/uncomplete');
         },
         archiveTicket: function archiveTicket(ticket) {
-            var _this8 = this;
-
-            axios.get('/ticket/' + ticket.id + '/archive').then(function (response) {
-                _this8.fetchTickets();
-            });
+            ticket.archived = 1;
+            axios.get('/ticket/' + ticket.id + '/archive');
         }
     }
 };
@@ -32747,7 +32765,7 @@ exports = module.exports = __webpack_require__(11)();
 
 
 // module
-exports.push([module.i, "\n.fade-enter-active, .fade-leave-active {\n          -webkit-transition: all .2s;\n          transition: all .2s\n}\n.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {\n          left: -50px;\n          opacity:0;\n}\n.ticket-list{\n          width:100%;\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-orient: vertical;\n          -webkit-box-direction: reverse;\n              -ms-flex-direction: column-reverse;\n                  flex-direction: column-reverse;\n          -webkit-transition: all 2s;\n          transition:all 2s;\n          position: relative;\n}\n.ticket-list-item{\n          width:100%;\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-flex:1;\n              -ms-flex:1;\n                  flex:1;\n          -webkit-box-pack: justify;\n              -ms-flex-pack: justify;\n                  justify-content: space-between;\n          -webkit-box-align: center;\n              -ms-flex-align: center;\n                  align-items: center;\n          border-bottom:1px dashed #d4d4d4;\n          -webkit-transition: all 2s;\n          transition:all 2s;\n}\n.list-item-icon{\n          display:-webkit-box;\n          display:-ms-flexbox;\n          display:flex;\n          -webkit-box-pack: center;\n              -ms-flex-pack: center;\n                  justify-content: center;\n          -webkit-box-align: center;\n              -ms-flex-align: center;\n                  align-items: center;\n          color:#e6e6e6;\n          padding:40px;\n}\n.list-item-left{\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-orient: vertical;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: column;\n                  flex-direction: column;\n          width:200px;\n}\n.list-item-right{\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-orient: horizontal;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: row;\n                  flex-direction: row;\n          -webkit-box-pack: center;\n              -ms-flex-pack: center;\n                  justify-content: center;\n          -webkit-box-align: start;\n              -ms-flex-align: start;\n                  align-items: flex-start;\n}\n.list-item-center{\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-orient: vertical;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: column;\n                  flex-direction: column;\n          margin-right:auto;\n}\n.list-item-center-top{\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-orient: horizontal;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: row;\n                  flex-direction: row;\n          text-transform: uppercase;\n          font-weight: bold;\n          color: #ae6379;\n}\n.list-item-center-bottom{\n          display: -webkit-box;\n          display: -ms-flexbox;\n          display: flex;\n          -webkit-box-orient: horizontal;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: row;\n                  flex-direction: row;\n}\n.action-button{\n          width: 30px;\n          height: 30px;\n          margin-right:5px;\n          padding: 0!important;\n          border-radius: 30px;\n          border: none;\n          border:1px dashed #b7b7b7;\n          background: none;\n          color:#d2d2d2;\n          cursor:pointer;\n          -webkit-transform: rotate(0deg);\n                  transform: rotate(0deg);\n}\n.action-button:hover{\n          /*transform: rotate(360deg);*/\n}\n.action-button>.fa{\n          font-size:16px!important;\n}\n.action-button:focus{\n          outline:0;\n}\n.slideDown {\n          -webkit-animation-duration: 1s;\n          animation-duration: 1s;\n          -webkit-animation-fill-mode: both;\n          animation-fill-mode: both;\n          -webkit-animation-name: slideDown;\n          animation-name: slideDown;\n}\n@-webkit-keyframes slideDown {\nfrom {\n              -webkit-transform: translate3d(0, 0,-100%);\n              transform: translate3d(0, 0,-100%);\n              opacity: 0;\n}\nto {\n              -webkit-transform: translate3d(0, 0, 0);\n              transform: translate3d(0, 0, 0);\n              opacity: 1;\n}\n}\n.user-select-list{\n          display:-webkit-box;\n          display:-ms-flexbox;\n          display:flex;\n          -webkit-box-orient: vertical;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: column;\n                  flex-direction: column;\n          width:80%;\n          margin:0 auto;\n}\n.user-select-list-item{\n          display:-webkit-box;\n          display:-ms-flexbox;\n          display:flex;\n          -webkit-box-orient: horizontal;\n          -webkit-box-direction: normal;\n              -ms-flex-direction: row;\n                  flex-direction: row;\n          -webkit-box-pack: justify;\n              -ms-flex-pack: justify;\n                  justify-content: space-between;\n          -webkit-box-align: center;\n              -ms-flex-align: center;\n                  align-items: center;\n          padding:10px;\n}\n.user-select-list-item span{\n          text-transform: uppercase;\n          margin-right:auto;\n          padding-left:20px;\n}\n.tooltip{\n          background-color:#a7a7a7;\n          color:white;\n          padding:0px 10px;\n          position:absolute;\n          border-radius:5px;\n          top:5px;\n          opacity: 0;\n          z-index:1;\n          display:inline-table;\n          -webkit-transition: all .5s;\n          transition: all .5s;\n}\n.user-avatar{\n          cursor:pointer;\n}\n.user-avatar:hover\n      > .tooltip{\n          opacity: 1;\n}\n@-webkit-keyframes pulse {\n0%   { opacity: 1;\n}\n100% { opacity: 0;\n}\n}\n@keyframes pulse {\n0%   { opacity: 1;\n}\n100% { opacity: 0;\n}\n}\nbody{\n      margin:0;\n}\n.ctnr {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    position: absolute;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    left: 0;\n}\n.ldr {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: row;\n            flex-direction: row;\n    -ms-flex-wrap: wrap;\n        flex-wrap: wrap;\n    -ms-flex-pack: distribute;\n        justify-content: space-around;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    margin: auto;\n    width: 2.5em;\n    height: 2.5em;\n}\n.ldr-blk {\n    height: 35%;\n    width: 35%;\n    -webkit-animation: pulse 0.75s ease-in infinite alternate;\n            animation: pulse 0.75s ease-in infinite alternate;\n    background-color: #E6E6E6;\n}\n.an_delay {\n    -webkit-animation-delay: 0.75s;\n            animation-delay: 0.75s;\n}\n.low{\n}\n.normal{\n}\n.high{\n  color:#ec7474;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.fade-enter-active, .fade-leave-active {\n            -webkit-transition: all .2s;\n            transition: all .2s\n}\n.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {\n            left: -50px;\n            opacity:0;\n}\n.ticket-list{\n            width:100%;\n            display: -webkit-box;\n            display: -ms-flexbox;\n            display: flex;\n            -webkit-box-orient: vertical;\n            -webkit-box-direction: reverse;\n                -ms-flex-direction: column-reverse;\n                    flex-direction: column-reverse;\n            -webkit-transition: all 2s;\n            transition:all 2s;\n            position: relative;\n}\n.ticket-list-item{\n            width:100%;\n            display: -webkit-box;\n            display: -ms-flexbox;\n            display: flex;\n            -webkit-box-flex:1;\n                -ms-flex:1;\n                    flex:1;\n            -webkit-box-pack: justify;\n                -ms-flex-pack: justify;\n                    justify-content: space-between;\n            -webkit-box-align: center;\n                -ms-flex-align: center;\n                    align-items: center;\n            border-bottom:1px dashed #d4d4d4;\n            -webkit-transition: all 2s;\n            transition:all 2s;\n}\n.list-item-icon{\n            display:-webkit-box;\n            display:-ms-flexbox;\n            display:flex;\n            -webkit-box-pack: center;\n                -ms-flex-pack: center;\n                    justify-content: center;\n            -webkit-box-align: center;\n                -ms-flex-align: center;\n                    align-items: center;\n            color:#e6e6e6;\n            padding:40px;\n}\n.list-item-left{\n            display: -webkit-box;\n            display: -ms-flexbox;\n            display: flex;\n            -webkit-box-orient: vertical;\n            -webkit-box-direction: normal;\n                -ms-flex-direction: column;\n                    flex-direction: column;\n            width:200px;\n}\n.list-item-right{\n            display: -webkit-box;\n            display: -ms-flexbox;\n            display: flex;\n            -webkit-box-orient: horizontal;\n            -webkit-box-direction: normal;\n                -ms-flex-direction: row;\n                    flex-direction: row;\n            -webkit-box-pack: center;\n                -ms-flex-pack: center;\n                    justify-content: center;\n            -webkit-box-align: start;\n                -ms-flex-align: start;\n                    align-items: flex-start;\n}\n.list-item-center{\n            display: -webkit-box;\n            display: -ms-flexbox;\n            display: flex;\n            -webkit-box-orient: vertical;\n            -webkit-box-direction: normal;\n                -ms-flex-direction: column;\n                    flex-direction: column;\n            margin-right:auto;\n}\n.list-item-center-top{\n            display: -webkit-box;\n            display: -ms-flexbox;\n            display: flex;\n            -webkit-box-orient: horizontal;\n            -webkit-box-direction: normal;\n                -ms-flex-direction: row;\n                    flex-direction: row;\n            text-transform: uppercase;\n            font-weight: bold;\n            color: #ae6379;\n}\n.list-item-center-bottom{\n            display: -webkit-box;\n            display: -ms-flexbox;\n            display: flex;\n            -webkit-box-orient: horizontal;\n            -webkit-box-direction: normal;\n                -ms-flex-direction: row;\n                    flex-direction: row;\n}\n.action-button{\n            width: 30px;\n            height: 30px;\n            margin-right:5px;\n            padding: 0!important;\n            border-radius: 30px;\n            border: none;\n            border:1px dashed #b7b7b7;\n            background: none;\n            color:#d2d2d2;\n            cursor:pointer;\n            -webkit-transform: rotate(0deg);\n                    transform: rotate(0deg);\n}\n.action-button:hover{\n            /*transform: rotate(360deg);*/\n}\n.action-button>.fa{\n            font-size:16px!important;\n}\n.action-button:focus{\n            outline:0;\n}\n.slideDown {\n            -webkit-animation-duration: 1s;\n            animation-duration: 1s;\n            -webkit-animation-fill-mode: both;\n            animation-fill-mode: both;\n            -webkit-animation-name: slideDown;\n            animation-name: slideDown;\n}\n@-webkit-keyframes slideDown {\nfrom {\n                -webkit-transform: translate3d(0, 0,-100%);\n                transform: translate3d(0, 0,-100%);\n                opacity: 0;\n}\nto {\n                -webkit-transform: translate3d(0, 0, 0);\n                transform: translate3d(0, 0, 0);\n                opacity: 1;\n}\n}\n.user-select-list{\n            display:-webkit-box;\n            display:-ms-flexbox;\n            display:flex;\n            -webkit-box-orient: vertical;\n            -webkit-box-direction: normal;\n                -ms-flex-direction: column;\n                    flex-direction: column;\n            width:80%;\n            margin:0 auto;\n}\n.user-select-list-item{\n            display:-webkit-box;\n            display:-ms-flexbox;\n            display:flex;\n            -webkit-box-orient: horizontal;\n            -webkit-box-direction: normal;\n                -ms-flex-direction: row;\n                    flex-direction: row;\n            -webkit-box-pack: justify;\n                -ms-flex-pack: justify;\n                    justify-content: space-between;\n            -webkit-box-align: center;\n                -ms-flex-align: center;\n                    align-items: center;\n            padding:10px;\n}\n.user-select-list-item span{\n            text-transform: uppercase;\n            margin-right:auto;\n            padding-left:20px;\n}\n.tooltip{\n            background-color:#a7a7a7;\n            color:white;\n            padding:0px 10px;\n            position:absolute;\n            border-radius:5px;\n            top:5px;\n            opacity: 0;\n            z-index:1;\n            display:inline-table;\n            -webkit-transition: all .5s;\n            transition: all .5s;\n}\n.user-avatar{\n            cursor:pointer;\n}\n.user-avatar:hover\n        > .tooltip{\n            opacity: 1;\n}\n@-webkit-keyframes pulse {\n0%   { opacity: 1;\n}\n100% { opacity: 0;\n}\n}\n@keyframes pulse {\n0%   { opacity: 1;\n}\n100% { opacity: 0;\n}\n}\nbody{\n        margin:0;\n}\n.ctnr {\n      display: -webkit-box;\n      display: -ms-flexbox;\n      display: flex;\n      position: absolute;\n      top: 0;\n      right: 0;\n      bottom: 0;\n      left: 0;\n}\n.ldr {\n      display: -webkit-box;\n      display: -ms-flexbox;\n      display: flex;\n      -webkit-box-orient: horizontal;\n      -webkit-box-direction: normal;\n          -ms-flex-direction: row;\n              flex-direction: row;\n      -ms-flex-wrap: wrap;\n          flex-wrap: wrap;\n      -ms-flex-pack: distribute;\n          justify-content: space-around;\n      -webkit-box-align: center;\n          -ms-flex-align: center;\n              align-items: center;\n      margin: auto;\n      width: 2.5em;\n      height: 2.5em;\n}\n.ldr-blk {\n      height: 35%;\n      width: 35%;\n      -webkit-animation: pulse 0.75s ease-in infinite alternate;\n              animation: pulse 0.75s ease-in infinite alternate;\n      background-color: #E6E6E6;\n}\n.an_delay {\n      -webkit-animation-delay: 0.75s;\n              animation-delay: 0.75s;\n}\n.low{\n}\n.normal{\n}\n.high{\n    color:#ec7474;\n}\n\n\n", ""]);
 
 // exports
 
@@ -55245,6 +55263,10 @@ module.exports = Component.exports
 /* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
+
+/* styles */
+__webpack_require__(192)
+
 var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(151),
@@ -55319,7 +55341,8 @@ module.exports = Component.exports
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "modal is-active"
+    staticClass: "modal",
+    class: (_vm.isActive) ? 'is-active' : ''
   }, [_c('div', {
     staticClass: "modal-background"
   }), _vm._v(" "), _c('div', {
@@ -55529,47 +55552,42 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('div', {
-    staticClass: "container"
-  }, [_c('section', {
-    staticClass: "section"
+  return _c('div', [_c('confirmation-modal', {
+    attrs: {
+      "isActive": _vm.showConfirmation
+    }
+  }), _vm._v(" "), _c('div', {
+    staticClass: "full-width-component dark-gradient h-50"
   }, [_c('div', {
-    staticClass: "ticket-detail-wrapper"
+    staticClass: "container"
   }, [_c('h1', {
     staticClass: "title"
   }, [(!_vm.ticket.completed) ? _c('i', {
     staticClass: "fa fa-circle-o pr-10 is-small-icon"
   }) : _c('i', {
     staticClass: "fa fa-check pr-10 is-small-icon is-green"
-  }), _vm._v("\n\t\t\t\t\t" + _vm._s(_vm.ticket.title) + " "), _c('br'), _vm._v(" "), _c('span', {
+  }), _vm._v("\n\t\t\t\t" + _vm._s(_vm.ticket.title) + " "), _c('span', {
     staticClass: "tag"
-  }, [_vm._v(_vm._s(_vm.category.name))]), _vm._v(" "), (_vm.$root.AuthUser.id == _vm.owner.id) ? _c('div', [(!_vm.ticket.completed) ? _c('button', {
-    staticClass: "button button-green pull-right mr-10",
-    on: {
-      "click": _vm.completeTicket
-    }
-  }, [_vm._v("Close ticket")]) : _c('button', {
-    staticClass: "button is-default pull-right mr-10",
-    on: {
-      "click": _vm.completeTicket
-    }
-  }, [_vm._v("Reopen ticket")]), _vm._v(" "), _c('button', {
-    staticClass: "button button-red pull-right mr-10",
-    on: {
-      "click": _vm.showConfirmation
-    }
-  }, [_vm._v("Remove this ticket")])]) : _vm._e()]), _vm._v(" "), _c('div', {
+  }, [_vm._v(_vm._s(_vm.category.name))]), _vm._v(" "), _c('br')])])]), _vm._v(" "), _c('div', {
+    staticClass: "container"
+  }, [_c('section', {
+    staticClass: "section"
+  }, [_c('div', {
+    staticClass: "ticket-detail-wrapper"
+  }, [_c('div', {
     staticClass: "assigned-user"
   }, [(_vm.users.length > 0) ? _c('p', _vm._l((_vm.users), function(user) {
     return _c('span', {
       staticClass: "user-avatar"
+    }, [_c('div', {
+      staticClass: "ticketdetailuser"
     }, [_c('img', {
       staticClass: "img-circle",
       attrs: {
         "src": user.avatar,
         "alt": ""
       }
-    })])
+    }), _vm._v(_vm._s(user.name))])])
   })) : _vm._e()]), _vm._v(" "), _c('hr'), _vm._v(" "), (_vm.hasNoDescription && _vm.userIsAuthorized) ? _c('a', {
     on: {
       "click": function($event) {
@@ -55625,7 +55643,24 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "ticketid": this.$route.params.id
     }
-  })], 1)])])])
+  })], 1)]), _vm._v(" "), (_vm.$root.AuthUser.id == _vm.owner.id) ? _c('div', {
+    staticClass: "mb-20"
+  }, [_c('button', {
+    staticClass: "button button-red pull-right mr-10",
+    on: {
+      "click": _vm.showConfirmationModal
+    }
+  }, [_vm._v("Remove this ticket")]), _vm._v(" "), (!_vm.ticket.completed) ? _c('button', {
+    staticClass: "button button-green pull-right mr-10",
+    on: {
+      "click": _vm.completeTicket
+    }
+  }, [_vm._v("Close ticket")]) : _c('button', {
+    staticClass: "button is-default pull-right mr-10",
+    on: {
+      "click": _vm.unCompleteTicket
+    }
+  }, [_vm._v("Reopen ticket")])]) : _vm._e()])], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -55733,7 +55768,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     class: (_vm.filter == 'All') ? 'filter-active' : '',
     on: {
       "click": function($event) {
-        _vm.filterTickets(0)
+        _vm.filterTickets('All')
       }
     }
   }, [_c('a', [_vm._v("All")])]), _vm._v(" "), _vm._l((_vm.categories), function(category) {
@@ -55792,7 +55827,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         staticClass: "user-avatar",
         on: {
           "click": function($event) {
-            _vm.setSelectedTicket(ticket)
+            _vm.assignUsers(ticket)
           }
         }
       }, [_c('div', {
@@ -55808,7 +55843,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "button action-button animate",
       on: {
         "click": function($event) {
-          _vm.setSelectedTicket(ticket)
+          _vm.assignUsers(ticket)
         }
       }
     }, [_c('i', {
@@ -64771,6 +64806,53 @@ module.exports = Vue$3;
 __webpack_require__(124);
 module.exports = __webpack_require__(125);
 
+
+/***/ }),
+/* 184 */,
+/* 185 */,
+/* 186 */,
+/* 187 */,
+/* 188 */,
+/* 189 */,
+/* 190 */,
+/* 191 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(11)();
+// imports
+
+
+// module
+exports.push([module.i, "\nh1.title{\n\tcolor:white;\n}\n.assigned-user{\n\tdisplay:-webkit-box;\n\tdisplay:-ms-flexbox;\n\tdisplay:flex;\n\tmargin-top: -20px;\n}\n.assigned-user > p{\n\tdisplay:-webkit-box;\n\tdisplay:-ms-flexbox;\n\tdisplay:flex;\n}\n.ticketdetailuser{\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\twidth: 100%;\n\theight: 30px;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n\tbackground-color: #f3f3f3;\n\t-webkit-box-orient: horizontal;\n\t-webkit-box-direction: normal;\n\t    -ms-flex-direction: row;\n\t        flex-direction: row;\n\tborder-radius: 45px;\n\tpadding-right:10px;\n}\n.user-avatar{\n\tmargin-right: 10px;\n}\n.mb-20{\n\tmargin-bottom:20px;\n}\n.h-50{\n\theight: 130px;\n\tmin-height:130px;\n\tpadding: 50px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 192 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(191);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(121)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-2617ce6e!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./TicketDetail.vue", function() {
+			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-2617ce6e!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./TicketDetail.vue");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
 
 /***/ })
 /******/ ]);

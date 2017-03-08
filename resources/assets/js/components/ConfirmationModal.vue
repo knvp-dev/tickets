@@ -1,5 +1,5 @@
 <template>
-	<div class="modal is-active">
+	<div class="modal" :class="(isActive) ? 'is-active' : ''">
 		<div class="modal-background"></div>
 		<div class="modal-content">
 			<div class="box">
@@ -15,6 +15,7 @@
 </template>
 <script>
 	export default{
+		props: ['isActive'],
 		methods:{
 			confirm(){
 				Event.$emit('modal-confirmed');
