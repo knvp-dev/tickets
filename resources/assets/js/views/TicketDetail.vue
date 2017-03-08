@@ -17,7 +17,7 @@
 				<div class="ticket-detail-wrapper">
 
 					<div class="assigned-user">
-						<p v-if="users.length > 0"><span v-for="user in users" class="user-avatar"><div class="ticketdetailuser"><img :src="user.avatar" class="img-circle" alt="">{{ user.name }}</div></span></p>
+						<p v-if="users.length > 0"><span v-for="user in users" class="user-avatar user-avatar-detail"><div class="ticketdetailuser"><img :src="user.avatar" class="img-circle" alt="">{{ user.name }}</div></span></p>
 					</div>
 
 					<hr>
@@ -125,11 +125,6 @@
 </script>
 
 <style>
-
-	h1.title{
-		color:white;
-	}
-
 	.assigned-user{
 		display:flex;
 		margin-top: -20px;
@@ -150,7 +145,7 @@
 		padding-right:10px;
 	}
 
-	.user-avatar{
+	.user-avatar-detail{
 		margin-right: 10px;
 	}
 

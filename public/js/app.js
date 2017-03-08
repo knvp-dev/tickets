@@ -55578,7 +55578,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "assigned-user"
   }, [(_vm.users.length > 0) ? _c('p', _vm._l((_vm.users), function(user) {
     return _c('span', {
-      staticClass: "user-avatar"
+      staticClass: "user-avatar user-avatar-detail"
     }, [_c('div', {
       staticClass: "ticketdetailuser"
     }, [_c('img', {
@@ -64823,7 +64823,7 @@ exports = module.exports = __webpack_require__(11)();
 
 
 // module
-exports.push([module.i, "\nh1.title{\n\tcolor:white;\n}\n.assigned-user{\n\tdisplay:-webkit-box;\n\tdisplay:-ms-flexbox;\n\tdisplay:flex;\n\tmargin-top: -20px;\n}\n.assigned-user > p{\n\tdisplay:-webkit-box;\n\tdisplay:-ms-flexbox;\n\tdisplay:flex;\n}\n.ticketdetailuser{\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\twidth: 100%;\n\theight: 30px;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n\tbackground-color: #f3f3f3;\n\t-webkit-box-orient: horizontal;\n\t-webkit-box-direction: normal;\n\t    -ms-flex-direction: row;\n\t        flex-direction: row;\n\tborder-radius: 45px;\n\tpadding-right:10px;\n}\n.user-avatar{\n\tmargin-right: 10px;\n}\n.mb-20{\n\tmargin-bottom:20px;\n}\n.h-50{\n\theight: 130px;\n\tmin-height:130px;\n\tpadding: 50px;\n}\n", ""]);
+exports.push([module.i, "\n.assigned-user{\n\tdisplay:-webkit-box;\n\tdisplay:-ms-flexbox;\n\tdisplay:flex;\n\tmargin-top: -20px;\n}\n.assigned-user > p{\n\tdisplay:-webkit-box;\n\tdisplay:-ms-flexbox;\n\tdisplay:flex;\n}\n.ticketdetailuser{\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\twidth: 100%;\n\theight: 30px;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n\tbackground-color: #f3f3f3;\n\t-webkit-box-orient: horizontal;\n\t-webkit-box-direction: normal;\n\t    -ms-flex-direction: row;\n\t        flex-direction: row;\n\tborder-radius: 45px;\n\tpadding-right:10px;\n}\n.user-avatar-detail{\n\tmargin-right: 10px;\n}\n.mb-20{\n\tmargin-bottom:20px;\n}\n.h-50{\n\theight: 130px;\n\tmin-height:130px;\n\tpadding: 50px;\n}\n", ""]);
 
 // exports
 
