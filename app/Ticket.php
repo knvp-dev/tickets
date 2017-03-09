@@ -47,14 +47,6 @@ class Ticket extends Model
         return $this->hasMany(Message::class);
     }
 
-    public function scopeComplete($query){
-    	return $query->where('completed',1);
-    }
-
-    public function scopeIncomplete($query){
-    	return $query->where('complete',0);
-    }
-
     public function assignUser($user){
         $this->users()->sync([$user->id], false);
     }
@@ -93,5 +85,17 @@ class Ticket extends Model
     public function unarchive(){
         $this->archived = 0;
         $this->save();
+    }
+
+    public function scopeArchived($query){
+        return $query->whereArchived(1);
+    }
+
+    public function scopeNotArchived($query){
+        return $query->whereArchived(0);
+    }
+
+    public function scopeWithRelations($query){
+        return $query->with(['category','status','priority','users','owner']);
     }
 }

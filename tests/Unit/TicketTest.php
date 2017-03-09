@@ -19,18 +19,15 @@ class TicketTest extends TestCase
 {
     use DatabaseTransactions;
 
-    // TESTS
-
 	/** @test */
-	public function can_fetch_all_tickets(){
+	public function it_can_fetch_all_tickets(){
         $this->initForTesting();
-        factory(Ticket::class, 5)->create();
-        $tickets = Ticket::all();
+        $tickets = factory(Ticket::class, 5)->create();
         $this->assertCount(5, $tickets);
     }
 
     /** @test */
-    public function ticket_can_be_completed_and_uncompleted(){
+    public function it_can_be_completed_and_uncompleted(){
         $this->initForTesting();
         $ticket = $this->createSingleTicket();
         $ticket->complete();
@@ -40,7 +37,7 @@ class TicketTest extends TestCase
     }
 
     /** @test */
-    public function ticket_can_be_archived_and_unarchived(){
+    public function it_can_be_archived_and_unarchived(){
         $this->initForTesting();
         $ticket = $this->createSingleTicket();
         $ticket->archive();
@@ -50,17 +47,16 @@ class TicketTest extends TestCase
     }
 
     /** @test */
-    public function ticket_can_be_deleted(){
+    public function it_can_be_deleted(){
         $this->initForTesting();
         $ticket1 = $this->createSingleTicket();
         $ticket2 = $this->createSingleTicket(2);
         $ticket1->delete();
-        $tickets = Ticket::all();
-        $this->assertCount(1, $tickets);
+        $this->assertCount(1, Ticket::all());
     }
 
     /** @test */
-    public function can_add_todo_to_ticket(){
+    public function it_can_add_todo(){
         $this->initForTesting();
         $ticket = $this->createSingleTicket();
         $todo = [
@@ -74,15 +70,15 @@ class TicketTest extends TestCase
     }
 
     /** @test */
-    public function can_complete_and_uncomplete_todo_for_ticket(){
+    public function it_can_complete_and_uncomplete_a_todo(){
         $this->initForTesting();
         $ticket = $this->createSingleTicket();
-        $todo1 = [
+        $newTodo = [
             'ticket_id' => $ticket->id,
             'body' => 'todo body',
             'completed' => 0
         ];
-        $ticket->addTodo($todo1);
+        $ticket->addTodo($newTodo);
         $todo = $ticket->todos()->first();
         $todo->complete();
         $this->assertTrue(!! $todo->completed);
@@ -91,7 +87,7 @@ class TicketTest extends TestCase
     }
 
     /** @test */
-    public function can_assign_and_unassign_user_to_ticket(){
+    public function it_can_assign_and_unassign_a_user(){
         $this->initForTesting();
         $ticket = $this->createSingleTicket();
 
@@ -122,12 +118,8 @@ class TicketTest extends TestCase
         $this->assertEquals($ticket->messages()->first()->body ,"message body");
     }
 
-    // HELPER METHODS
-    
     protected function createSingleTicket($id = 1){
-        factory(Ticket::class, 1)->create(['id'=>$id]);
-        $ticket = Ticket::first();
-        return $ticket;
+        return factory(Ticket::class, 1)->create(['id'=>$id])->first();
     }
 
     protected function initForTesting(){

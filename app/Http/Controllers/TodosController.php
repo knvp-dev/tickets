@@ -19,7 +19,7 @@ class TodosController extends Controller
      * @param  Ticket $ticket
      * @return Todo
      */
-    public function show(Ticket $ticket){
+    public function index(Ticket $ticket){
     	return $ticket->todos;
     }
 

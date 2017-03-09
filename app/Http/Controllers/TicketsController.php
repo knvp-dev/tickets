@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Events\MessageSent;
 use App\Ticket;
 use App\User;
-use App\Message;
 use Auth;
 
 class TicketsController extends Controller
@@ -20,7 +18,7 @@ class TicketsController extends Controller
      * @return Collection
      */
     public function index(){
-       return Ticket::whereArchived(0)->with(['category','status','priority','users'])->orderBy('created_at','ASC')->get();
+       return Ticket::notArchived()->withRelations()->orderBy('created_at','ASC')->get();
     }
 
     /**
@@ -29,18 +27,18 @@ class TicketsController extends Controller
      * @return Ticket  
      */
     public function show($ticket_id){
-        return Ticket::whereId($ticket_id)->with(['category','status','priority','users','owner'])->first();
+        return Ticket::whereId($ticket_id)->withRelations()->first();
     }
 
     /**
-     * Create a new ticket, assign users to the ticket
+     * Create a new ticket, assign author to the ticket
      * @param  Request $request New Ticket data
      * @return Ticket           Return the newly created ticket
      */
     public function store(Request $request){
         $ticket = Ticket::create($request->ticket);
         $ticket->assignUser(Auth::user());
-        return Ticket::whereId($ticket->id)->with(['category','status','priority','users'])->first();
+        return Ticket::whereId($ticket->id)->withRelations()->first();
     }
 
     /**
@@ -49,29 +47,6 @@ class TicketsController extends Controller
      */
     public function update(Request $request){
         Ticket::whereId($request->id)->update($this->prepareRequestForUpdate($request)->toArray());
-    }
-
-    /**
-     * Fetch all messages for a ticket
-     * @param  Ticket $ticket
-     * @return Message
-     */
-    public function messages(Ticket $ticket){
-        return Message::where('ticket_id',$ticket->id)->with('user')->orderBy('created_at','ASC')->get();
-    }
-
-    /**
-     * Create new message for a ticket
-     * @param Ticket  $ticket
-     * @param Request $request
-     * @return  Message
-     */
-    public function addMessage(Ticket $ticket, Request $request){
-        $this->guardForUnAssignedUsers($ticket);
-        $message = $ticket->addMessage($request->message);
-        $data = Message::whereId($message->id)->with('user')->first();
-        event(new MessageSent($data));
-        return $data;
     }
 
     /**
@@ -88,7 +63,7 @@ class TicketsController extends Controller
      * @param  Ticket $ticket
      * @param  User   $user
      */
-    public function assignUserToTicket(Ticket $ticket, User $user){
+    public function assignUser(Ticket $ticket, User $user){
         $this->guardForUnAssignedUsers($ticket);
         $ticket->assignUser($user);
     }
@@ -98,7 +73,7 @@ class TicketsController extends Controller
      * @param  Ticket $ticket
      * @param  User   $user
      */
-    public function unAssignUserFromTicket(Ticket $ticket, User $user){
+    public function unAssignUser(Ticket $ticket, User $user){
         $this->guardForUnAssignedUsers($ticket);
         $ticket->unAssignUser($user);
     }
@@ -107,7 +82,7 @@ class TicketsController extends Controller
      * Complete a ticket
      * @param  Ticket $ticket
      */
-    public function completeTicket(Ticket $ticket){
+    public function complete(Ticket $ticket){
         $this->guardForUnAssignedUsers($ticket);
         $ticket->complete();
     }
@@ -116,7 +91,7 @@ class TicketsController extends Controller
      * Uncomplete a ticket
      * @param  Ticket $ticket
      */
-    public function uncompleteTicket(Ticket $ticket){
+    public function uncomplete(Ticket $ticket){
         $this->guardForUnAssignedUsers($ticket);
         $ticket->uncomplete();
     }
@@ -140,10 +115,10 @@ class TicketsController extends Controller
     }
 
     /**
-     * Remove a ticket
+     * Delete a ticket
      * @param  Ticket $ticket
      */
-    public function remove(Ticket $ticket){
+    public function delete(Ticket $ticket){
         $this->guardForUnAssignedUsers($ticket);
         $ticket->delete();
     }
@@ -163,7 +138,7 @@ class TicketsController extends Controller
     }
 
     /**
-     * Make sure the authenticated user is assigned to the ticket it calls an action for
+     * Make sure the authenticated user is assigned to the ticket
      * @param  Ticket $ticket
      */
     protected function guardForUnAssignedUsers($ticket){
