@@ -62,6 +62,7 @@
 				user.selected = 1;
 				this.selectedUsers.push(user);
 				axios.get('/ticket/'+this.ticket.id+'/assign/'+user.id);
+				Event.$emit('user-assigned', {'user': user});
 			},
 			unAssignUser(user){
 				user.selected = 0;
@@ -69,6 +70,7 @@
 					return value.id == user.id;
 				});
 				axios.get('/ticket/'+this.ticket.id+'/unassign/'+user.id);
+				Event.$emit('user-unassigned', {'user': user});
 			},
 			cancel(){
 				Event.$emit('users-assign-cancel');

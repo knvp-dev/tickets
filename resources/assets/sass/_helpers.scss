@@ -104,7 +104,7 @@
 	background: -moz-linear-gradient(-45deg, #3f4c6b 0%, #606c88 100%); /* FF3.6-15 */
 	background: -webkit-linear-gradient(-45deg, #3f4c6b 0%,#606c88 100%); /* Chrome10-25,Safari5.1-6 */
 	background: linear-gradient(135deg, #3f4c6b 0%,#606c88 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-	background-image: url(/images/header.jpg);
+	/*background-image: url(/images/header.jpg);*/
 	background-size: cover;
 	background-position-y: 40%;
 }
@@ -177,8 +177,6 @@
 .button:hover{
 	color:#ec7474;
 }
-
-
 
 a{
 	color:#ec7474;

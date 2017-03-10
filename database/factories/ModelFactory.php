@@ -35,7 +35,7 @@ $factory->define(App\Customer::class, function (Faker\Generator $faker) {
 $factory->define(App\Ticket::class, function (Faker\Generator $faker) {
     return [
         'customer_id' => App\Customer::all()->random()->id,
-        'title' => $faker->sentence($nbWords = 6),
+        'title' => $faker->sentence($nbWords = 4),
         'description' => $faker->paragraph,
         'status_id' => App\Status::all()->random()->id,
         'category_id' => App\Category::all()->random()->id,

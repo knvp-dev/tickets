@@ -1,23 +1,39 @@
 <template>
 	<div>
+
+		<div v-if="$root.AuthUser.id == owner.id">
+
+			<assign-modal v-if="userModalActive" :ticket="ticket"></assign-modal>
+
+			<div class="right-sidebar-toggle" :class="(sidebarActive) ? 'expanded' : 'collapsed'" @click="sidebarActive = !sidebarActive"><i class="fa fa-cog"></i></div>
+
+			<div class="right-sidebar owner-menu" :class="(sidebarActive) ? 'expanded' : 'collapsed'">
+				<ul class="sidebar-menu">
+					<li class="sidebar-menu-item" @click="userModalActive = !userModalActive"><i class="fa fa-users is-small-icon"></i> Edit users</li>
+					<li class="sidebar-menu-item" v-if="!ticket.completed" @click="completeTicket"><i class="fa fa-check is-small-icon"></i> Complete ticket</li>
+					<li v-else class="sidebar-menu-item" @click="unCompleteTicket"><i class="fa fa-refresh is-small-icon"></i> Reopen ticket</li>
+					<li class="sidebar-menu-item"><i class="fa fa-remove is-small-icon" @click="showConfirmationModal"></i> Remove ticket</li>
+				</ul>
+			</div>
+
+		</div>
+
 		<confirmation-modal :isActive="showConfirmation"></confirmation-modal>
 		<div class="full-width-component dark-gradient h-50">
 			<div class="container">
-				<h1 class="title">
+				<h1 class="title is-white">
 					<i v-if="!ticket.completed" class="fa fa-circle-o pr-10 is-small-icon"></i>
 					<i v-else class="fa fa-check pr-10 is-small-icon is-green"></i>
-					{{ ticket.title }} <span class="tag">{{ category.name }}</span>
-					<br>
-
+					{{ ticket.title }} <!-- <span class="tag">{{ category.name }}</span> -->
 				</h1>
 			</div>
 		</div>
 		<div class="container">
 			<section class="section">
 				<div class="ticket-detail-wrapper">
-
 					<div class="assigned-user">
 						<p v-if="users.length > 0"><span v-for="user in users" class="user-avatar user-avatar-detail"><div class="ticketdetailuser"><img :src="user.avatar" class="img-circle" alt="">{{ user.name }}</div></span></p>
+						<p v-else>No users were assigned to this ticket</p>
 					</div>
 
 					<hr>
@@ -46,11 +62,6 @@
 					<messages :ticketid="this.$route.params.id"></messages>
 				</div>
 			</div>
-			<div v-if="$root.AuthUser.id == owner.id" class="mb-20">
-				<button class="button button-red pull-right mr-10" @click="showConfirmationModal">Remove this ticket</button>
-				<button v-if="!ticket.completed" class="button button-green pull-right mr-10" @click="completeTicket">Close ticket</button>
-				<button v-else class="button is-default pull-right mr-10" @click="unCompleteTicket">Reopen ticket</button>
-			</div>
 		</div>
 	</div>
 </template>
@@ -67,6 +78,18 @@
 				this.showConfirmation = false;
 			});
 
+			Event.$on('user-assigned', (data) => {
+				this.users.push(data.user);
+			});
+
+			Event.$on('user-unassigned', (data) => {
+				this.users = _.reject(this.users, u => u.id == data.user.id);
+			});
+
+			Event.$on('users-assigned', () => {
+				this.userModalActive = false;
+			});
+
 		},
 		data(){
 			return{
@@ -76,7 +99,9 @@
 				owner: [],
 				users: [],
 				showDescriptionInput: false,
-				showConfirmation: false
+				showConfirmation: false,
+				sidebarActive: false,
+				userModalActive: false
 			}
 		},
 		computed:{
@@ -157,5 +182,56 @@
 		height: 130px;
 		min-height:130px;
 		padding: 50px;
+	}
+
+	/* SIDEBAR */
+
+	.right-sidebar{
+		width: 280px;
+		background-color: white;
+		padding: 20px;
+		position: absolute;
+		z-index: 999;
+		height: 100%;
+		top: 0px;
+		-webkit-box-shadow: -4px 0px 9px -5px rgba(0,0,0,0.38);
+		-moz-box-shadow: -4px 0px 9px -5px rgba(0,0,0,0.38);
+		box-shadow: -4px 0px 9px -5px rgba(0,0,0,0.38);
+	}
+
+	.sidebar-menu-item{
+		padding-left:0px;
+		padding: 10px 0;
+		border-bottom: 1px solid #eee;
+		transition: all .2s ease-in-out;
+	}
+
+	.sidebar-menu-item:hover {
+		cursor:pointer;
+		padding-left:10px;
+		transition: all .2s ease-in-out;
+	}
+
+	.right-sidebar-toggle{
+		position:absolute;
+		background-color: #1ba59e;
+		color:white;
+		padding: 10px 20px;
+		right:0;
+		top: 100px;
+		z-index:999;
+		margin-right:280px;
+		border-top-left-radius: 45px;
+		border-bottom-left-radius: 45px;
+	}
+
+	.collapsed{
+		right:-280px;
+		transition: all .5s ease-in-out;
+	}
+
+	.expanded{
+		right:0;
+		transition: all .5s ease-in-out;
 	}
 </style>

@@ -20,7 +20,7 @@
 
 			<hr>
 
-			<div class="todo-form ">
+			<div class="message-form">
 				<p class="control">
 					<textarea type="text" class="textarea mr-10" placeholder="Enter message" v-model="body"></textarea>
 				</p>
@@ -79,6 +79,7 @@
 				};
 			},
 			addMessageToData(message){
+				message.user = this.$root.AuthUser;
 				this.messages.push(message);
 			},
 			clearInputField(){
