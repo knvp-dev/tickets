@@ -12,8 +12,10 @@
 					<li v-for="user in users" class="user-select-list-item">
 						<img :src="user.avatar" alt="" class="img-circle" /> 
 						<span>{{ user.name }}</span>
+						<div v-if="user.id != $root.AuthUser.id">
 						<a v-show="!user.selected" class="button assign-button animate" @click="assignUser(user)"><i class="fa fa-plus icon is-small"></i></a>
 						<a v-show="user.selected" class="button success-button assign-button animate is-green" @click="unAssignUser(user)"><i class="fa fa-check icon is-small is-green"></i></a>
+						</div>
 					</li>
 				</ul>
 				<div class="button-controls">

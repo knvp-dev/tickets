@@ -29404,6 +29404,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = {
 	mounted: function mounted() {
@@ -55538,7 +55540,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "src": user.avatar,
         "alt": ""
       }
-    }), _vm._v(" "), _c('span', [_vm._v(_vm._s(user.name))]), _vm._v(" "), _c('a', {
+    }), _vm._v(" "), _c('span', [_vm._v(_vm._s(user.name))]), _vm._v(" "), (user.id != _vm.$root.AuthUser.id) ? _c('div', [_c('a', {
       directives: [{
         name: "show",
         rawName: "v-show",
@@ -55568,7 +55570,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }, [_c('i', {
       staticClass: "fa fa-check icon is-small is-green"
-    })])])
+    })])]) : _vm._e()])
   })], 2), _vm._v(" "), _c('div', {
     staticClass: "button-controls"
   }, [_c('button', {
@@ -55913,7 +55915,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           "alt": ""
         }
       })])
-    })) : _vm._e(), _vm._v(" "), (!ticket.completed) ? _c('a', {
+    })) : _vm._e(), _vm._v(" "), (ticket.owner_id == _vm.$root.AuthUser.id) ? _c('a', {
       staticClass: "button action-button animate",
       on: {
         "click": function($event) {

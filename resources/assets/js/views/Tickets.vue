@@ -88,7 +88,7 @@
                             </div>
                             <div class="list-item-right">
                                 <p v-if="ticket.users.length > 0"><span v-for="user in ticket.users" class="user-avatar" @click="assignUsers(ticket)"><div class="tooltip">{{ user.name }}</div><img :src="user.avatar" class="img-circle" alt=""></span></p>
-                                <a v-if="!ticket.completed" class="button action-button animate" @click="assignUsers(ticket)"><i class="fa fa-user-plus icon is-small"></i></a>
+                                <a v-if="ticket.owner_id == $root.AuthUser.id" class="button action-button animate" @click="assignUsers(ticket)"><i class="fa fa-user-plus icon is-small"></i></a>
                                 <!-- <a class="button assign-button animate" @click="completeTicket(ticket)"><i class="fa fa-check icon is-small"></i></a> -->
                                 <router-link :to="'/ticket/'+ticket.id" class="button action-button animate"><i class="fa fa-arrow-right icon is-small"></i></router-link>
                             </div>
