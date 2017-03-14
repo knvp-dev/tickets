@@ -4,7 +4,7 @@
 <div class="fullscreen">
     <div class="container">
         <div class="brand-icon">
-            <img src="/images/T.png" alt="">
+            <img style="width:100px;" src="/images/T.svg" alt="">
         </div>
     </div>
 

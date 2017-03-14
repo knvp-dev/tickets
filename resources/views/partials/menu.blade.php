@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="nav-left">
 			<a class="nav-item">
-				<img src="/images/T.png" alt="logo">
+				<img style="width:25px;" src="/images/T.svg" alt="logo">
 			</a>
 			@if (Auth::guest())
 			<a class="nav-item is-tab is-hidden-mobile is-active">Login</a>
