@@ -65,7 +65,6 @@ class TicketsController extends Controller
      * @param  User   $user
      */
     public function assignUser(Ticket $ticket, User $user){
-        $this->guardForUnAssignedUsers($ticket);
         $ticket->assignUser($user);
     }
 
@@ -75,7 +74,6 @@ class TicketsController extends Controller
      * @param  User   $user
      */
     public function unAssignUser(Ticket $ticket, User $user){
-        $this->guardForUnAssignedUsers($ticket);
         $ticket->unAssignUser($user);
     }
 
@@ -84,7 +82,6 @@ class TicketsController extends Controller
      * @param  Ticket $ticket
      */
     public function complete(Ticket $ticket){
-        $this->guardForUnAssignedUsers($ticket);
         $ticket->complete();
     }
 
@@ -93,7 +90,6 @@ class TicketsController extends Controller
      * @param  Ticket $ticket
      */
     public function uncomplete(Ticket $ticket){
-        $this->guardForUnAssignedUsers($ticket);
         $ticket->uncomplete();
     }
 
@@ -102,7 +98,6 @@ class TicketsController extends Controller
      * @param  Ticket $ticket
      */
     public function archive(Ticket $ticket){
-        $this->guardForUnAssignedUsers($ticket);
         $ticket->archive();
     }
 
@@ -111,7 +106,6 @@ class TicketsController extends Controller
      * @param  Ticket $ticket
      */
     public function unarchive(Ticket $ticket){
-        $this->guardForUnAssignedUsers($ticket);
         $ticket->unarchive();
     }
 
@@ -120,7 +114,6 @@ class TicketsController extends Controller
      * @param  Ticket $ticket
      */
     public function delete(Ticket $ticket){
-        $this->guardForUnAssignedUsers($ticket);
         $ticket->delete();
     }
 
@@ -136,15 +129,5 @@ class TicketsController extends Controller
         unset($data['users']);
         unset($data['owner']);
         return $data;
-    }
-
-    /**
-     * Make sure the authenticated user is assigned to the ticket
-     * @param  Ticket $ticket
-     */
-    protected function guardForUnAssignedUsers($ticket){
-        if(!Auth::user()->isAssignedToTicket($ticket)){
-            abort(403, 'Unauthorized');
-        }
     }
 }

@@ -30299,14 +30299,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         completeTicket: function completeTicket(ticket) {
             ticket.completed = 1;
             axios.get('/ticket/' + ticket.id + '/complete');
+            this.filteredTickets = _.reject(this.filteredTickets, function (t) {
+                return t == ticket;
+            });
+            this.closedTickets.push(ticket);
         },
         uncompleteTicket: function uncompleteTicket(ticket) {
             ticket.completed = 0;
             axios.get('/ticket/' + ticket.id + '/uncomplete');
+            this.closedTickets = _.reject(this.closedTickets, function (t) {
+                return t == ticket;
+            });
+            this.filteredTickets.push(ticket);
         },
         archiveTicket: function archiveTicket(ticket) {
             ticket.archived = 1;
             axios.get('/ticket/' + ticket.id + '/archive');
+            this.closedTickets = _.reject(this.closedTickets, function (t) {
+                return t == ticket;
+            });
         }
     }
 };
@@ -55900,12 +55911,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "list-item-right"
     }, [(ticket.users.length > 0) ? _c('p', _vm._l((ticket.users), function(user) {
       return _c('span', {
-        staticClass: "user-avatar",
-        on: {
-          "click": function($event) {
-            _vm.assignUsers(ticket)
-          }
-        }
+        staticClass: "user-avatar"
       }, [_c('div', {
         staticClass: "tooltip"
       }, [_vm._v(_vm._s(user.name))]), _c('img', {
@@ -55924,6 +55930,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }, [_c('i', {
       staticClass: "fa fa-user-plus icon is-small"
+    })]) : _vm._e(), _vm._v(" "), (ticket.owner_id == _vm.$root.AuthUser.id) ? _c('a', {
+      staticClass: "button action-button animate",
+      on: {
+        "click": function($event) {
+          _vm.completeTicket(ticket)
+        }
+      }
+    }, [_c('i', {
+      staticClass: "fa fa-check icon is-small"
     })]) : _vm._e(), _vm._v(" "), _c('router-link', {
       staticClass: "button action-button animate",
       attrs: {

@@ -4,8 +4,7 @@
 <div class="fullscreen">
     <div class="container">
         <div class="brand-icon">
-            <i class="fa fa-ticket"></i>
-            <p>TICKETS</p>
+            <img src="/images/T.png" alt="">
         </div>
     </div>
 

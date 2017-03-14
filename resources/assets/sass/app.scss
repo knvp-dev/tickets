@@ -65,7 +65,8 @@ h1,h2,h3,h4,p,a, input,label{
 }
 
 .fullscreen{
-    background-image:url('/images/header.jpg');
+    /*background-image:url('/images/header.jpg');*/
+    background-color:#87a3aa;
     height: 100%;
     background-size: cover;
     display:flex;
@@ -75,6 +76,7 @@ h1,h2,h3,h4,p,a, input,label{
 
 .title-bar{
     /*background-image:url('/images/header.jpg');*/
+    background-color:#87a3aa;
     height:50px;
     background-position: 0 -50%;
     background-size: cover;
@@ -108,4 +110,8 @@ h1,h2,h3,h4,p,a, input,label{
 .todo-form >.control{
     display: flex;
     width: 100%;
+}
+
+.brand-icon{
+    max-width:150px;
 }
