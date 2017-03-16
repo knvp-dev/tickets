@@ -29,9 +29,6 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Ticket::class, function (Faker\Generator $faker) {
     return [
-        'customer_id' => function() {
-            return factory('App\Customer')->create()->id;
-        },
         'title' => $faker->sentence($nbWords = 4),
         'description' => $faker->paragraph,
         'status_id' => function() {
@@ -52,13 +49,6 @@ $factory->define(App\Ticket::class, function (Faker\Generator $faker) {
         'completed' => 0,
         'archived' => 0,
         'date_closed' => null
-    ];
-});
-
-$factory->define(App\Customer::class, function (Faker\Generator $faker) {
-    return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail
     ];
 });
 

@@ -23,20 +23,31 @@ class Ticket extends Model
     	return $this->belongsToMany(User::class);
     }
 
-    public function customer(){
-    	return $this->belongsTo(Customer::class);
-    }
-
     public function priority(){
     	return $this->hasOne(Priority::class, 'id', 'priority_id');
+    }
+
+    public function setPriority(Priority $priority){
+        $this->priority_id = $priority->id;
+        $this->save();
     }
 
     public function category(){
     	return $this->hasOne(Category::class, 'id','category_id');
     }
 
+    public function setCategory(Category $category){
+        $this->category_id = $category->id;
+        $this->save();
+    }
+
     public function status(){
     	return $this->hasOne(Status::class, 'id','status_id');
+    }
+
+    public function setStatus(Status $status){
+        $this->status_id = $status->id;
+        $this->save();
     }
 
     public function todos(){

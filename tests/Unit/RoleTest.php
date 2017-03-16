@@ -18,7 +18,7 @@ class RoleTest extends TestCase
 	}
 
 	/** @test */
-	public function it_can_belong_to_many_users(){
+	public function it_can_have_many_users(){
 		$user_1 = factory(User::class)->create();
 		$user_2 = factory(User::class)->create();
 

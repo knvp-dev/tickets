@@ -21,12 +21,8 @@ class TodoTest extends TestCase
     public function it_can_be_completed(){
     	$this->todo->complete();
     	$this->assertTrue(!! $this->todo->completed);
+        $this->todo->uncomplete();
+        $this->assertFalse(!! $this->todo->completed);
     }
 
-    /** @test */
-    public function it_can_be_uncompleted(){
-    	$this->todo->complete();
-    	$this->todo->uncomplete();
-    	$this->assertFalse(!! $this->todo->completed);
-    }
 }

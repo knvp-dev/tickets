@@ -62,4 +62,20 @@ class TicketTest extends TestCase
         $this->assertInstanceOf('App\Message', $this->ticket->messages->first());
     }
 
+    /** @test */
+    public function it_can_be_completed(){
+        $this->ticket->complete();
+        $this->assertTrue(!! $this->ticket->completed);
+        $this->ticket->uncomplete();
+        $this->assertFalse(!! $this->ticket->completed);
+    }
+
+    /** @test */
+    public function it_can_be_archived(){
+        $this->ticket->archive();
+        $this->assertTrue(!! $this->ticket->archived);
+        $this->ticket->unarchive();
+        $this->assertFalse(!! $this->ticket->archived);
+    }
+
 }
