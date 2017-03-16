@@ -17,7 +17,7 @@
 					</div>
 					<div class="list-item-center">
 						<div class="list-item-center-top">
-							<router-link :to="'/ticket/'+ticket.id">{{ ticket.title }}</router-link>
+							<a :href="'/ticket/'+ticket.id">{{ ticket.title }}</a>
 						</div>
 						<div class="list-item-center-bottom">
 							{{ ticket.status.name }}

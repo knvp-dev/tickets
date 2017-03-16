@@ -19,7 +19,11 @@ class TicketsController extends Controller
      * @return Collection
      */
     public function index(){
-       return Ticket::notArchived()->withRelations()->orderBy('created_at','ASC')->get();
+       return view('pages.ticket.index');
+    }
+
+    public function tickets(){
+        return Ticket::forTeam()->notArchived()->withRelations()->orderBy('created_at','ASC')->get();
     }
 
     /**
@@ -27,8 +31,9 @@ class TicketsController extends Controller
      * @param  int $ticket_id
      * @return Ticket  
      */
-    public function show($ticket_id){
-        return Ticket::whereId($ticket_id)->withRelations()->first();
+    public function show(Ticket $ticket){
+        $ticket = Ticket::whereId($ticket->id)->withRelations()->first();
+        return view('pages.ticket.detail', compact('ticket'));
     }
 
     /**
@@ -39,6 +44,7 @@ class TicketsController extends Controller
     public function store(Request $request){
         $ticket = Ticket::create($request->ticket);
         $ticket->assignUser(Auth::user());
+        $ticket->addToTeam(session('team_id'));
         return Ticket::whereId($ticket->id)->withRelations()->first();
     }
 

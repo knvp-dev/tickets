@@ -3,7 +3,7 @@
 		<section class="section">
 			<h1 class="title">Todos</h1>
 
-			<div class="todo-form">
+			<div class="todo-form" v-if="isAuthorized">
 				<p class="control">
 					<input type="text" class="input mr-10" placeholder="Add new todo item" v-model="body">
 					<button class="button" @click="saveTodo" v-if="body != ''">Add</button>
@@ -20,7 +20,7 @@
 					<div class="list-item-left" style="width:330px;">
 						<p>{{ todo.body }}</p>
 					</div>
-					<div class="list-item-right">
+					<div class="list-item-right" v-if="isAuthorized">
 						<a class="button action-button animate" @click="(!todo.completed) ? completeTodo(todo) : uncompleteTodo(todo)">
 							<i v-if="!todo.completed" class="fa fa-check icon is-small"></i>
 							<i v-else class="fa fa-undo icon is-small"></i>
@@ -29,7 +29,6 @@
 					</div>
 				</div>
 			</div>
-
 		</section>
 	</div>
 </template>
@@ -39,7 +38,7 @@
 			this.listen();
 			this.fetchTodos();
 		},
-		props: ["ticketid"],
+		props: ["ticketid","isAuthorized"],
 		data(){
 			return{
 				todos: [],

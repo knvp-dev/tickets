@@ -41,7 +41,7 @@
 		},
 		methods:{
 			fetchUsers(){
-				axios.get('/users').then((response) => {
+				axios.get('/team/'+this.ticket.team_id+'/users').then((response) => {
 					this.users = response.data;
 
 					axios.get('/ticket/'+this.ticket.id+'/users').then((response) => {

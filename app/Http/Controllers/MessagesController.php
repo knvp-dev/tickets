@@ -27,19 +27,8 @@ class MessagesController extends Controller
      * @return  Message
      */
     public function store(Ticket $ticket, Request $request){
-    	$this->guardForUnAssignedUsers($ticket);
         $message = $ticket->addMessage($request->message);
         event(new MessageSent($message));
         return $message;
-    }
-
-    /**
-     * Make sure the authenticated user is assigned to the ticket
-     * @param  Ticket $ticket
-     */
-    protected function guardForUnAssignedUsers($ticket){
-        if(!Auth::user()->isAssignedToTicket($ticket)){
-            abort(403, 'Unauthorized');
-        }
     }
 }

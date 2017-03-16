@@ -1,7 +1,7 @@
 <template>
 	<div>
 
-		<div v-if="$root.AuthUser.id == owner.id">
+		<div v-if="$root.AuthUser.id == ticket.owner.id">
 
 			<assign-modal v-if="userModalActive" :ticket="ticket"></assign-modal>
 
@@ -32,7 +32,7 @@
 			<section class="section">
 				<div class="ticket-detail-wrapper">
 					<div class="assigned-user">
-						<p v-if="users.length > 0"><span v-for="user in users" class="user-avatar user-avatar-detail"><div class="ticketdetailuser"><img :src="user.avatar" class="img-circle" alt="">{{ user.name }}</div></span></p>
+						<p v-if="ticket.users.length > 0"><span v-for="user in ticket.users" class="user-avatar user-avatar-detail"><div class="ticketdetailuser"><img :src="user.avatar" class="img-circle" alt="">{{ user.name }}</div></span></p>
 						<p v-else>No users were assigned to this ticket</p>
 					</div>
 
@@ -56,10 +56,10 @@
 
 			<div class="columns">
 				<div class="column has-border-right">
-					<todos :ticketid="this.$route.params.id"></todos>
+					<todos :ticketid="ticket.id" :isAuthorized="userIsAuthorized"></todos>
 				</div>
 				<div class="column">
-					<messages :ticketid="this.$route.params.id"></messages>
+					<messages :ticketid="ticket.id" :isAuthorized="userIsAuthorized"></messages>
 				</div>
 			</div>
 		</div>
@@ -68,7 +68,7 @@
 <script>
 	export default{
 		mounted(){
-			this.fetchTicketDetails();
+			//this.fetchTicketDetails();
 
 			Event.$on('modal-confirmed', () => {
 				this.removeTicket();
@@ -79,11 +79,11 @@
 			});
 
 			Event.$on('user-assigned', (data) => {
-				this.users.push(data.user);
+				this.ticket.users.push(data.user);
 			});
 
 			Event.$on('user-unassigned', (data) => {
-				this.users = _.reject(this.users, u => u.id == data.user.id);
+				this.ticket.users = _.reject(this.ticket.users, u => u.id == data.user.id);
 			});
 
 			Event.$on('users-assigned', () => {
@@ -91,10 +91,10 @@
 			});
 
 		},
+		props: ['data'],
 		data(){
 			return{
-				ticket: [],
-				ticketid: this.$route.params.id,
+				ticket: JSON.parse(this.data),
 				category: [],
 				owner: [],
 				users: [],
@@ -112,18 +112,10 @@
 				return (this.ticket.description != null) ? true : false;
 			},
 			userIsAuthorized(){
-				return _.some(this.users, this.$root.AuthUser);
+				return _.some(this.ticket.users, this.$root.AuthUser);
 			}
 		},
 		methods:{
-			fetchTicketDetails(){
-				axios.get('/ticket/'+this.ticketid).then((response) => {
-					this.ticket = response.data;
-					this.category = this.ticket.category;
-					this.users = this.ticket.users;
-					this.owner = this.ticket.owner;
-				});
-			},
 			saveDescription(){
 				axios.post('/ticket/update', this.ticket).then((response) => {
 					this.showDescriptionInput = false;
@@ -134,14 +126,14 @@
 			},
 			completeTicket(){
 				this.ticket.completed = 1;
-				axios.get('/ticket/'+this.ticketid+'/complete');
+				axios.get('/ticket/'+this.ticket.id+'/complete');
 			},
 			unCompleteTicket(){
 				this.ticket.completed = 0;
-				axios.get('/ticket/'+this.ticketid+'/uncomplete');
+				axios.get('/ticket/'+this.ticket.id+'/uncomplete');
 			},
 			removeTicket(){
-				axios.get('/ticket/'+this.ticketid+'/delete').then((response) => {
+				axios.get('/ticket/'+this.ticket.id+'/delete').then((response) => {
 					this.$router.push('/');
 				});
 			}

@@ -23,7 +23,7 @@
   <body>
     <div id="app">
       @include('partials.menu')
-      <router-view></router-view>
+      @yield('content')
     </div>
 
     <!-- Scripts -->

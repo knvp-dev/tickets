@@ -115,3 +115,17 @@ h1,h2,h3,h4,p,a, input,label{
 .brand-icon{
     max-width:150px;
 }
+
+.team-list-item{
+    padding: 5px;
+    border: 1px solid white;
+    max-width: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px auto;
+}
+
+.team-list-item a{
+    color:white;
+}

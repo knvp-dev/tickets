@@ -20,7 +20,7 @@
 
 			<hr>
 
-			<div class="message-form">
+			<div class="message-form" v-if="isAuthorized">
 				<p class="control">
 					<textarea type="text" class="textarea mr-10" placeholder="Enter message" v-model="body"></textarea>
 				</p>
@@ -38,7 +38,7 @@
 			this.listen();
 			this.fetchMessages();
 		},
-		props: ['ticketid'],
+		props: ['ticketid','isAuthorized'],
 		data(){
 			return{
 				newMessage: {},

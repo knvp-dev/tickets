@@ -12,10 +12,6 @@ let routes = [
 	{
 		path: '/archive',
 		component: require('./views/Archive')
-	},
-	{
-		path: '/ticket/:id',
-		component: require('./views/TicketDetail')
 	}
 ];
 

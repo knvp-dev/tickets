@@ -24,6 +24,8 @@
                 <p class="control">
                     <button class="add-button login-submit" type="submit"><i class="fa fa-unlock"></i></button>
                 </p>
+
+                <p>Don't have an account? <a href="/register">Create one here!</a></p>
             </form>
         </div>
     </div>

@@ -18,10 +18,40 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
-        'color' => $faker->hexcolor,
         'avatar' => $faker->imageUrl($width = 200, $height = 200),
         'password' => $password ?: $password = bcrypt('secret'),
+        'role_id' => function(){
+            return factory('App\Role')->create()->id;
+        },
         'remember_token' => str_random(10),
+    ];
+});
+
+$factory->define(App\Ticket::class, function (Faker\Generator $faker) {
+    return [
+        'customer_id' => function() {
+            return factory('App\Customer')->create()->id;
+        },
+        'title' => $faker->sentence($nbWords = 4),
+        'description' => $faker->paragraph,
+        'status_id' => function() {
+            return factory('App\Status')->create()->id;
+        },
+        'category_id' => function() {
+            return factory('App\Category')->create()->id;
+        },
+        'priority_id' => function() {
+            return factory('App\Priority')->create()->id;
+        },
+        'owner_id' => function() {
+            return factory('App\User')->create()->id;
+        },
+        'team_id' => function(){
+            return factory('App\Team')->create()->id;
+        },
+        'completed' => 0,
+        'archived' => 0,
+        'date_closed' => null
     ];
 });
 
@@ -32,24 +62,11 @@ $factory->define(App\Customer::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Ticket::class, function (Faker\Generator $faker) {
-    return [
-        'customer_id' => App\Customer::all()->random()->id,
-        'title' => $faker->sentence($nbWords = 4),
-        'description' => $faker->paragraph,
-        'status_id' => App\Status::all()->random()->id,
-        'category_id' => App\Category::all()->random()->id,
-        'priority_id' => App\Priority::all()->random()->id,
-        'owner_id' => App\User::all()->random()->id,
-        'completed' => 0,
-        'archived' => 0,
-        'date_closed' => null
-    ];
-});
-
 $factory->define(App\Todo::class, function (Faker\Generator $faker) {
     return [
-        'ticket_id' => App\Ticket::all()->random()->id,
+        'ticket_id' => function() {
+            return factory('App\Ticket')->create()->id;
+        },
         'body' => $faker->sentence($nbWords = 3),
         'completed' => 0
     ];
@@ -76,8 +93,27 @@ $factory->define(App\Priority::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Message::class, function(Faker\Generator $faker){
     return [
-        'user_id' => App\User::all()->random()->id,
-        'ticket_id' => App\Ticket::all()->random()->id,
+        'user_id' => function() {
+            return factory('App\User')->create()->id;
+        },
+        'ticket_id' => function() {
+            return factory('App\Ticket')->create()->id;
+        },
         'body' => $faker->sentence($nbWords = 10),
+    ];
+});
+
+$factory->define(App\Team::class, function(Faker\Generator $faker){
+    return [
+        'title' => $faker->word,
+        'owner_id' => function() {
+            return factory('App\User')->create()->id;
+        }
+    ];
+});
+
+$factory->define(App\Role::class, function(Faker\Generator $faker){
+    return [
+        'name' => $faker->word
     ];
 });

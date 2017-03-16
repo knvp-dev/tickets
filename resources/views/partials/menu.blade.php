@@ -1,15 +1,16 @@
 <nav class="nav has-shadow">
 	<div class="container">
 		<div class="nav-left">
-			<a class="nav-item">
+			<a href="/" class="nav-item">
 				<img style="width:25px;" src="/images/T.svg" alt="logo">
 			</a>
 			@if (Auth::guest())
 			<a class="nav-item is-tab is-hidden-mobile is-active">Login</a>
 			@else
-			<router-link to="/" class="nav-item is-tab is-hidden-mobile">All tickets</router-link>
-			<router-link to="/my-tickets" class="nav-item is-tab is-hidden-mobile">Assigned to me</router-link>
-			<router-link to="/archive" class="nav-item is-tab is-hidden-mobile">Archive</router-link>
+			<a href="/teams" class="nav-item is-tab is-hidden-mobile">My teams</a>
+			<a href="/" class="nav-item is-tab is-hidden-mobile">Tickets</a>
+			{{-- <a href="/my-tickets" class="nav-item is-tab is-hidden-mobile">Assigned to me</a> --}}
+			<a href="/archive" class="nav-item is-tab is-hidden-mobile">Archive</a>
 			@endif
 		</div>
 		<span class="nav-toggle">

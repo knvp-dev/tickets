@@ -30,7 +30,6 @@ class TodosController extends Controller
      * @return Todo
      */
     public function store(Ticket $ticket, Request $request){
-    	$this->guardForUnAssignedUsers($ticket);
     	$todo = $ticket->addTodo($request->todo);
     	event(new TodoCreated($todo));
     	return $todo;
@@ -42,7 +41,6 @@ class TodosController extends Controller
      * @return [type]       [description]
      */
     public function delete(Todo $todo){
-    	$this->guardForUnAssignedUsers($todo->ticket);
     	event(new TodoDeleted($todo));
     	$todo->delete();
     }
@@ -52,7 +50,6 @@ class TodosController extends Controller
      * @param  Todo   $todo
      */
     public function complete(Todo $todo){
-     $this->guardForUnAssignedUsers($todo->ticket);
      $todo->complete();
      event(new TodoStatusChanged($todo));
     }
@@ -62,18 +59,7 @@ class TodosController extends Controller
      * @param  Todo   $todo
      */
     public function uncomplete(Todo $todo){
-     $this->guardForUnAssignedUsers($todo->ticket);
      $todo->uncomplete();
      event(new TodoStatusChanged($todo));
     }
-
-    /**
-     * Make sure the authenticated user is assigned to the ticket it calls an action for
-     * @param  Ticket $ticket
-     */
-    protected function guardForUnAssignedUsers($ticket){
-    if(!Auth::user()->isAssignedToTicket($ticket)){
-      abort(403, 'Unauthorized');
-    }
-}
 }

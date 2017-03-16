@@ -57,5 +57,7 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'assigned' => \App\Http\Middleware\IsAssignedToTicket::class,
+        'ispartofateam' => \App\Http\Middleware\IsPartOfATeam::class,
+        'ispartofteam' => \App\Http\Middleware\IsPartOfTeam::class,
     ];
 }

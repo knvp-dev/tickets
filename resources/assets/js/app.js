@@ -13,19 +13,20 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-import router from './routes';
+// import router from './routes';
 
 Vue.component('selectbox', require('./components/Selectbox.vue'));
 Vue.component('assign-modal', require('./components/AssignModal.vue'));
 Vue.component('confirmation-modal', require('./components/ConfirmationModal.vue'));
 Vue.component('todos', require('./components/Todos.vue'));
 Vue.component('messages', require('./components/Messages.vue'));
+Vue.component('ticket-detail', require('./views/TicketDetail.vue'));
+Vue.component('tickets', require('./views/Tickets.vue'));
 
 window.Event = new Vue({});
 
 const app = new Vue({
     el: '#app',
-    router,
     data(){
     	return{
     		AuthUser: {}

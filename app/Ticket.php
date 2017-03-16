@@ -47,6 +47,10 @@ class Ticket extends Model
         return $this->hasMany(Message::class);
     }
 
+    public function team(){
+        return $this->belongsTo(Team::class);
+    }
+
     public function assignUser($user){
         $this->users()->sync([$user->id], false);
     }
@@ -87,6 +91,15 @@ class Ticket extends Model
         $this->save();
     }
 
+    public function addToTeam($team_id){
+        $this->team_id = $team_id;
+        $this->save();
+    }
+
+    public function belongsToTeam($team_id){
+        return ($this->team_id == $team_id) ? true : false;
+    }
+
     public function scopeArchived($query){
         return $query->whereArchived(1);
     }
@@ -97,5 +110,9 @@ class Ticket extends Model
 
     public function scopeWithRelations($query){
         return $query->with(['category','status','priority','users','owner']);
+    }
+
+    public function scopeForTeam($query){
+        return $query->where('team_id', session('team_id'));
     }
 }
