@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class isPartOfTeam
+class IsOwnerOfTicket
 {
     /**
      * Handle an incoming request.
@@ -15,10 +15,9 @@ class isPartOfTeam
      */
     public function handle($request, Closure $next)
     {
-        if(! auth()->user()->isPartOfTeam(session('team'))){
-            return redirect('/');
+        if(! auth()->user()->ownsTicket($request->ticket)){
+            throw new \Exception(403);
         }
-
         return $next($request);
     }
 }

@@ -24,6 +24,7 @@ class CreateTicketsTable extends Migration
             $table->integer('priority_id')->default(1);
             $table->integer('completed')->default(0);
             $table->integer('archived')->default(0);
+            $table->date('deadline')->nullable();
             $table->date('date_closed')->nullable();
             $table->timestamps();
         });

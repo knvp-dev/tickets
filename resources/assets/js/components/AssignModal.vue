@@ -10,7 +10,7 @@
 					<h2 v-if="selectedUsers.length == 0" class="has-text-centered">Select users</h2>
 					<h2 v-else class="has-text-centered">{{ selectedUsers.length }} users selected</h2><br>
 					<li v-for="user in users" class="user-select-list-item">
-						<img :src="user.avatar" alt="" class="img-circle" /> 
+						<img :src="'/images/'+user.avatar" alt="" class="img-circle" /> 
 						<span>{{ user.name }}</span>
 						<div v-if="user.id != $root.AuthUser.id">
 						<a v-show="!user.selected" class="button assign-button animate" @click="assignUser(user)"><i class="fa fa-plus icon is-small"></i></a>
@@ -41,10 +41,10 @@
 		},
 		methods:{
 			fetchUsers(){
-				axios.get('/team/'+this.ticket.team_id+'/users').then((response) => {
+				axios.get('/team/'+this.ticket.team_id+'/members').then((response) => {
 					this.users = response.data;
 
-					axios.get('/ticket/'+this.ticket.id+'/users').then((response) => {
+					axios.get('/ticket/'+this.ticket.id+'/members').then((response) => {
 						this.selectedUsers = response.data;
 						let that = this;
 						_.forEach(this.selectedUsers, (val1) => {

@@ -35,32 +35,32 @@ class UserTest extends TestCase
     /** @test */
     public function it_can_own_a_team(){
     	$team = factory(Team::class)->create(['owner_id' => $this->user->id]);
-
+        $this->assertTrue($this->user->ownsTeam($team));
     	$this->assertEquals($this->user->name, $team->owner->name);
     	$this->assertInstanceOf('App\User', $team->owner);
     }
 
     /** @test */
-    public function it_can_be_part_of_a_team(){
+    public function it_can_be_a_member_of_a_team(){
     	$team = factory(Team::class)->create();
-    	$team->addUser($this->user);
+    	$team->addMember($this->user);
     	$this->assertTrue($this->user->isPartOfATeam($team));
     }
 
     /** @test */
-    public function it_can_be_part_of_a_specific_team(){
+    public function it_can_be_a_member_of_a_specific_team(){
     	$team = factory(Team::class)->create();
-    	$team->addUser($this->user);
+    	$team->addMember($this->user);
     	$this->assertTrue($this->user->isPartOfTeam($team));
     }
 
     /** @test */
-    public function it_can_be_part_of_many_teams(){
+    public function it_can_be_a_member_of_many_teams(){
     	$team_1 = factory(Team::class)->create();
     	$team_2 = factory(Team::class)->create();
 
-    	$team_1->addUser($this->user);
-    	$team_2->addUser($this->user);
+    	$team_1->addMember($this->user);
+    	$team_2->addMember($this->user);
 
     	$this->assertCount(2, $this->user->teams);
     }

@@ -22,9 +22,6 @@ class TicketTest extends TestCase
         parent::setUp();
 
         $this->ticket = factory(Ticket::class)->create();
-        factory(Todo::class)->create(['ticket_id' => $this->ticket->id]);
-        factory(Message::class)->create(['ticket_id' => $this->ticket->id]);
-        factory(User::class)->create();
     }
 
     /** @test */
@@ -54,11 +51,13 @@ class TicketTest extends TestCase
 
     /** @test */
     public function it_can_have_todos(){
+        factory(Todo::class)->create(['ticket_id' => $this->ticket->id]);
         $this->assertInstanceOf('App\Todo', $this->ticket->todos->first());
     }
 
 	/** @test */
     public function it_can_have_messages(){
+        factory(Message::class)->create(['ticket_id' => $this->ticket->id]);
         $this->assertInstanceOf('App\Message', $this->ticket->messages->first());
     }
 

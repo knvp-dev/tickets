@@ -29,13 +29,25 @@ const app = new Vue({
     el: '#app',
     data(){
     	return{
-    		AuthUser: {}
+    		AuthUser: {},
+            activeTeam: ''
     	}
     },
     created(){
     	axios.get('/user').then((response) => {
 			this.$root.AuthUser = response.data;
     	});
+
+        axios.get('/activeteam').then((response) => {
+            this.$root.activeTeam = response.data;
+        });
+
+        for(i = 0; i < $('.ticket-item').length ; i++){
+            let count = $('.ticket-item').eq(i).find('ul li').length;
+            for (j = 0; j < count; j++) {
+                $('.ticket-item').eq(i).find('.ticket-member').eq(j).css('left','calc('+j+' * -20px)');
+            }
+        }
     }
 });
 

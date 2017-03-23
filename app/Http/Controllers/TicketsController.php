@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 
 use App\Ticket;
 use App\User;
+use App\Team;
 use Auth;
 
 class TicketsController extends Controller
 {
+
     public function __construct(){
     	$this->middleware('auth');
     }
@@ -19,7 +21,8 @@ class TicketsController extends Controller
      * @return Collection
      */
     public function index(){
-       return view('pages.ticket.index');
+       $team = Team::whereId(session('team_id'))->first();
+       return view('pages.ticket.index', compact('team'));
     }
 
     public function tickets(){
@@ -41,10 +44,9 @@ class TicketsController extends Controller
      * @param  Request $request New Ticket data
      * @return Ticket           Return the newly created ticket
      */
-    public function store(Request $request){
-        $ticket = Ticket::create($request->ticket);
-        $ticket->assignUser(Auth::user());
-        $ticket->addToTeam(session('team_id'));
+    public function store(Team $team){
+        $ticket = $team->addticket(request()->all());
+        $ticket->assignUser(auth()->user());
         return Ticket::whereId($ticket->id)->withRelations()->first();
     }
 

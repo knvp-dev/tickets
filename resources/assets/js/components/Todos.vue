@@ -64,13 +64,13 @@
 				});
 			},
 			remove(todo){
-				axios.delete('/todo/'+todo.id+'/delete').then((response) => {
+				axios.delete('/ticket/'+this.ticketid+'/todo/'+todo.id+'/delete').then((response) => {
 					this.removeTodoFromData(todo.id);
 				});
 			},
 			saveTodo(){
 				this.buildUpTodo();
-				axios.post('/ticket/'+this.ticketid+'/todo/save', {'todo': this.todo})
+				axios.post('/ticket/'+this.ticketid+'/todo/save', this.todo)
 				.then((response) => {
 					this.addTodoToData(response.data);
 					this.clearInputField();
@@ -90,11 +90,11 @@
 			},
 			completeTodo(todo){
 				todo.completed = 1;
-				axios.get('/todo/'+todo.id+'/complete');
+				axios.get('/ticket/'+this.ticketid+'/todo/'+todo.id+'/complete');
 			},
 			uncompleteTodo(todo){
 				todo.completed = 0;
-				axios.get('/todo/'+todo.id+'/uncomplete');
+				axios.get('/ticket/'+this.ticketid+'/todo/'+todo.id+'/uncomplete');
 			}
 		}
 	}

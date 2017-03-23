@@ -87,7 +87,7 @@
                                 </div>
                             </div>
                             <div class="list-item-right">
-                                <p v-if="ticket.users.length > 0"><span v-for="user in ticket.users" class="user-avatar" ><div class="tooltip">{{ user.name }}</div><img :src="user.avatar" class="img-circle" alt=""></span></p>
+                                <p v-if="ticket.users.length > 0"><span v-for="user in ticket.users" class="user-avatar" ><div class="tooltip">{{ user.name }}</div><img :src="'/images/'+user.avatar" class="img-circle" alt=""></span></p>
                                 <a v-if="ticket.owner_id == $root.AuthUser.id" class="button action-button animate" @click="assignUsers(ticket)"><i class="fa fa-user-plus icon is-small"></i></a>
                                 <a v-if="ticket.owner_id == $root.AuthUser.id" class="button action-button animate" @click="completeTicket(ticket)"><i class="fa fa-check icon is-small"></i></a>
                                 <a :href="'/ticket/'+ticket.id" class="button action-button animate"><i class="fa fa-arrow-right icon is-small"></i></a>
@@ -233,6 +233,7 @@
                     }
                 },
                 saveTicket(){
+
                     // Build up ticket data object
                     let newTicket = {
                         title: this.ticketTitle,
@@ -243,7 +244,7 @@
 
                     // Validate the new ticket data, create the ticket an add the new ticket to tickets array
                     if(this.validate()){
-                        axios.post('/ticket/save', {'ticket': newTicket}).then((response) => {
+                        axios.post('/team/' + this.$root.activeTeam + '/ticket/save', newTicket).then((response) => {
                             this.tickets.push(response.data);
                             this.selectedTicket = response.data;
                             this.ticketTitle = '';

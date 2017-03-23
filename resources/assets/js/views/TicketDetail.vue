@@ -9,10 +9,39 @@
 
 			<div class="right-sidebar owner-menu" :class="(sidebarActive) ? 'expanded' : 'collapsed'">
 				<ul class="sidebar-menu">
-					<li class="sidebar-menu-item" @click="userModalActive = !userModalActive"><i class="fa fa-users is-small-icon"></i> Edit users</li>
-					<li class="sidebar-menu-item" v-if="!ticket.completed" @click="completeTicket"><i class="fa fa-check is-small-icon"></i> Complete ticket</li>
-					<li v-else class="sidebar-menu-item" @click="unCompleteTicket"><i class="fa fa-refresh is-small-icon"></i> Reopen ticket</li>
-					<li class="sidebar-menu-item"><i class="fa fa-remove is-small-icon" @click="showConfirmationModal"></i> Remove ticket</li>
+					<li class="has-text-centered mb-20" v-if="editDeadline">
+						<i class="fa fa-clock-o is-small-icon"></i> 
+						<span>Set deadline:</span>
+						<div class="deadline-form is-flex">
+							<input class="input mr-10" type="date" placeholder="deadline" 
+							v-model="ticket.deadline">
+							<button class="button action-button" @click="updateDeadline"><i class="fa fa-check is-small-icon"></i></button>
+						</div>
+					</li>
+					<li v-else>
+						<i class="fa fa-clock-o is-small-icon"></i> 
+						deadline: 
+						<span v-if="ticket.deadline != null" class="tag is-danger">{{ ticket.deadline }}</span>
+						<span v-else>No deadline</span>
+						<button class="button action-button pull-right" @click="editDeadline = !editDeadline"><i class="fa fa-cog is-small-icon"></i></button>
+					</li>
+					<hr>
+					<li class="sidebar-menu-item" @click="userModalActive = !userModalActive">
+						<i class="fa fa-users is-small-icon"></i> 
+						Edit users
+					</li>
+					<li class="sidebar-menu-item" v-if="!ticket.completed" @click="completeTicket">
+						<i class="fa fa-check is-small-icon"></i> 
+						Complete ticket
+					</li>
+					<li v-else class="sidebar-menu-item" @click="unCompleteTicket">
+						<i class="fa fa-refresh is-small-icon"></i> 
+						Reopen ticket
+					</li>
+					<li class="sidebar-menu-item">
+						<i class="fa fa-remove is-small-icon" @click="showConfirmationModal"></i> 
+						Remove ticket
+					</li>
 				</ul>
 			</div>
 
@@ -32,8 +61,14 @@
 			<section class="section">
 				<div class="ticket-detail-wrapper">
 					<div class="assigned-user">
-						<p v-if="ticket.users.length > 0"><span v-for="user in ticket.users" class="user-avatar user-avatar-detail"><div class="ticketdetailuser"><img :src="user.avatar" class="img-circle" alt="">{{ user.name }}</div></span></p>
+						<p v-if="ticket.users.length > 0"><span v-for="user in ticket.users" class="user-avatar user-avatar-detail"><div class="ticketdetailuser"><img :src="'/images/'+user.avatar" class="img-circle" alt="">{{ user.name }}</div></span></p>
 						<p v-else>No users were assigned to this ticket</p>
+					</div>
+
+					<hr>
+
+					<div>Deadline: <span v-if="ticket.deadline != null" class="tag is-danger">{{ ticket.deadline }}</span>
+						<span v-else>No deadline</span>
 					</div>
 
 					<hr>
@@ -98,6 +133,8 @@
 				category: [],
 				owner: [],
 				users: [],
+				deadline: null,
+				editDeadline: false,
 				showDescriptionInput: false,
 				showConfirmation: false,
 				sidebarActive: false,
@@ -135,6 +172,11 @@
 			removeTicket(){
 				axios.get('/ticket/'+this.ticket.id+'/delete').then((response) => {
 					this.$router.push('/');
+				});
+			},
+			updateDeadline(){
+				axios.post('/ticket/update', this.ticket).then((response) => {
+					this.editDeadline = false;
 				});
 			}
 		}

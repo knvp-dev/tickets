@@ -48,6 +48,7 @@ $factory->define(App\Ticket::class, function (Faker\Generator $faker) {
         },
         'completed' => 0,
         'archived' => 0,
+        'deadline' => null,
         'date_closed' => null
     ];
 });

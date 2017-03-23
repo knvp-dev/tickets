@@ -23,10 +23,10 @@ class TeamTest extends TestCase
     }
 
     /** @test */
-    public function it_can_have_many_users(){
-    	$this->team->addUser(factory(User::class)->create());
-    	$this->team->addUser(factory(User::class)->create());
+    public function it_can_have_many_members(){
+    	$this->team->addMember(factory(User::class)->create());
+    	$this->team->addMember(factory(User::class)->create());
 
-    	$this->assertCount(2, $this->team->users);
+    	$this->assertCount(2, $this->team->members);
     }
 }

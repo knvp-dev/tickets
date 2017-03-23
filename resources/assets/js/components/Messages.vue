@@ -6,7 +6,7 @@
 			<div class="message-list">
 				<div class="message-box slideInTop animated" v-for="message in messages">
 					<div class="message-author">
-						<img :src="message.user.avatar" class="img-circle" alt="">
+						<img :src="'/images/'+message.user.avatar" class="img-circle" alt="">
 						<p>{{ message.user.name }}</p>
 					</div>
 					<div class="message-box">
@@ -66,7 +66,7 @@
 			},
 			sendMessage(){
 				this.buildUpMessage();
-				axios.post('/ticket/'+this.ticketid+'/messages/create', {'message': this.newMessage})
+				axios.post('/ticket/'+this.ticketid+'/messages/create', this.newMessage)
 				.then((response) => {
 					this.addMessageToData(response.data);
 					this.clearInputField();

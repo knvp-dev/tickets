@@ -26,8 +26,8 @@ class MessagesController extends Controller
      * @param Request $request
      * @return  Message
      */
-    public function store(Ticket $ticket, Request $request){
-        $message = $ticket->addMessage($request->message);
+    public function store(Ticket $ticket){
+        $message = $ticket->addMessage(request()->all());
         event(new MessageSent($message));
         return $message;
     }

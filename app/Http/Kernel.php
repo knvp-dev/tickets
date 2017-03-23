@@ -59,5 +59,7 @@ class Kernel extends HttpKernel
         'assigned' => \App\Http\Middleware\IsAssignedToTicket::class,
         'ispartofateam' => \App\Http\Middleware\IsPartOfATeam::class,
         'ispartofteam' => \App\Http\Middleware\IsPartOfTeam::class,
+        'isownerofteam' => \App\Http\Middleware\IsOwnerOfTeam::class,
+        'isownerofticket' => \App\Http\Middleware\IsOwnerOfTicket::class,
     ];
 }

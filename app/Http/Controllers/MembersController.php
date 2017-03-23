@@ -5,14 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Team;
-use Auth;
 
-class TeamsController extends Controller
+class MembersController extends Controller
 {
-
-    public function __construct(){
-        $this->middleware('auth');
-    }
     /**
      * Display a listing of the resource.
      *
@@ -20,21 +15,7 @@ class TeamsController extends Controller
      */
     public function index()
     {
-        $teams = Auth::user()->teams;
-        return view('auth.team', compact('teams'));
-    }
-
-    public function setActiveTeam(Team $team){
-        session(['team_id' => $team->id]);
-        return redirect('/');
-    }
-
-    public function getActiveTeam(){
-        return session('team_id');
-    }
-
-    public function members(Team $team){
-        return $team->members;
+        //
     }
 
     /**
@@ -53,21 +34,9 @@ class TeamsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Team $team)
     {
-        if( ! Team::whereTitle($request->title)->exists()){
-            $team = Team::create([
-                'title' => $request->title,
-                'owner_id' => auth()->id()
-                ]);
-
-            $team->addMember(auth()->user());
-            $this->setActiveTeam($team);
-
-            return redirect('/');
-        }
-
-        return redirect()->back()->withErrors(['A team with this name already exists.']);
+        $team->addMember(request('member'));
     }
 
     /**

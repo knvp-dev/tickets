@@ -15,12 +15,20 @@ class Team extends Model
 		return $this->hasOne(User::class, 'id', 'owner_id');
 	}
 
-    public function users(){
+    public function members(){
     	return $this->belongsToMany(User::class);
     }
 
-    public function addUser(User $user){
-    	return $this->users()->sync([$user->id], false);
+    public function tickets(){
+        return $this->hasMany(Ticket::class);
+    }
+
+    public function addMember(User $user){
+    	return $this->members()->sync([$user->id], false);
+    }
+
+    public function addTicket($ticket){
+        return $this->tickets()->create($ticket);
     }
 
 }

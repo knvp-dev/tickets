@@ -25,7 +25,7 @@ class User extends Authenticatable
     	return $this->hasMany(Message::class);
     }
 
-    public function isAssignedToTicket(Ticket $ticket){
+    public function isAssignedToTicket($ticket){
         return !! $this->tickets->find($ticket);
     }
 
@@ -33,7 +33,7 @@ class User extends Authenticatable
         return ($this->teams()->count() > 0) ? true : false;
     }
 
-    public function isPartOfTeam(Team $team){
+    public function isPartOfTeam($team){
         return !! $this->teams->find($team);
     }
 
@@ -48,6 +48,14 @@ class User extends Authenticatable
     public function setRole(Role $role){
         $this->role_id = $role->id;
         $this->save();
+    }
+
+    public function ownsTeam(Team $team){
+        return ($this->id == $team->owner_id) ? true : false;
+    }
+
+    public function ownsTicket(Ticket $ticket){
+        return ($this->id == $ticket->owner_id) ? true : false;
     }
     
 }

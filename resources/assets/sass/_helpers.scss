@@ -228,3 +228,45 @@ a:hover{
 .mr-10{
 	margin-right:10px;
 }
+
+h1.is-uppercase{
+	font-size:1.2em;
+	margin: 20px auto;
+    margin-bottom: 40px!important;
+}
+
+.is-uppercase{
+	text-transform: uppercase;
+}
+
+.input{
+	background-color:white!important;
+}
+
+.input:focus, .input:active{          
+	border-color:$default-blue!important;
+}
+
+.is-text-blue{
+	color:$default-blue;
+}
+
+.blue-button{
+	background-color:$default-blue;
+	color:white;
+	display:flex;
+	border:none;
+	padding:5px;
+	width:100%;
+	max-width:250px;
+	text-align: center;
+	margin:20px 0 20px 0;
+}
+
+.small-link{
+	font-size:.8em;
+}
+
+.is-flex{
+	align-items: flex-start;
+}

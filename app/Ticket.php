@@ -102,11 +102,6 @@ class Ticket extends Model
         $this->save();
     }
 
-    public function addToTeam($team_id){
-        $this->team_id = $team_id;
-        $this->save();
-    }
-
     public function belongsToTeam($team_id){
         return ($this->team_id == $team_id) ? true : false;
     }

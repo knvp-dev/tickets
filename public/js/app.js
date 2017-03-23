@@ -26189,7 +26189,7 @@ module.exports = function(module) {
 /* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
-
+/* WEBPACK VAR INJECTION */(function($) {
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -26217,24 +26217,37 @@ Vue.component('tickets', __webpack_require__(165));
 window.Event = new Vue({});
 
 var app = new Vue({
-  el: '#app',
-  data: function data() {
-    return {
-      AuthUser: {}
-    };
-  },
-  created: function created() {
-    var _this = this;
+    el: '#app',
+    data: function data() {
+        return {
+            AuthUser: {},
+            activeTeam: ''
+        };
+    },
+    created: function created() {
+        var _this = this;
 
-    axios.get('/user').then(function (response) {
-      _this.$root.AuthUser = response.data;
-    });
-  }
+        axios.get('/user').then(function (response) {
+            _this.$root.AuthUser = response.data;
+        });
+
+        axios.get('/activeteam').then(function (response) {
+            _this.$root.activeTeam = response.data;
+        });
+
+        for (i = 0; i < $('.ticket-item').length; i++) {
+            var count = $('.ticket-item').eq(i).find('ul li').length;
+            for (j = 0; j < count; j++) {
+                $('.ticket-item').eq(i).find('.ticket-member').eq(j).css('left', 'calc(' + j + ' * -20px)');
+            }
+        }
+    }
 });
 
 Vue.directive('diff-for-humans', function (el, binding) {
-  el.innerHTML = moment(binding.value).fromNow();
+    el.innerHTML = moment(binding.value).fromNow();
 });
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
 /* 124 */
@@ -27136,10 +27149,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		fetchUsers: function fetchUsers() {
 			var _this = this;
 
-			axios.get('/team/' + this.ticket.team_id + '/users').then(function (response) {
+			axios.get('/team/' + this.ticket.team_id + '/members').then(function (response) {
 				_this.users = response.data;
 
-				axios.get('/ticket/' + _this.ticket.id + '/users').then(function (response) {
+				axios.get('/ticket/' + _this.ticket.id + '/members').then(function (response) {
 					_this.selectedUsers = response.data;
 					var that = _this;
 					_.forEach(_this.selectedUsers, function (val1) {
@@ -27290,7 +27303,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			var _this3 = this;
 
 			this.buildUpMessage();
-			axios.post('/ticket/' + this.ticketid + '/messages/create', { 'message': this.newMessage }).then(function (response) {
+			axios.post('/ticket/' + this.ticketid + '/messages/create', this.newMessage).then(function (response) {
 				_this3.addMessageToData(response.data);
 				_this3.clearInputField();
 			});
@@ -27444,7 +27457,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		remove: function remove(todo) {
 			var _this3 = this;
 
-			axios.delete('/todo/' + todo.id + '/delete').then(function (response) {
+			axios.delete('/ticket/' + this.ticketid + '/todo/' + todo.id + '/delete').then(function (response) {
 				_this3.removeTodoFromData(todo.id);
 			});
 		},
@@ -27452,7 +27465,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			var _this4 = this;
 
 			this.buildUpTodo();
-			axios.post('/ticket/' + this.ticketid + '/todo/save', { 'todo': this.todo }).then(function (response) {
+			axios.post('/ticket/' + this.ticketid + '/todo/save', this.todo).then(function (response) {
 				_this4.addTodoToData(response.data);
 				_this4.clearInputField();
 			});
@@ -27473,11 +27486,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		completeTodo: function completeTodo(todo) {
 			todo.completed = 1;
-			axios.get('/todo/' + todo.id + '/complete');
+			axios.get('/ticket/' + this.ticketid + '/todo/' + todo.id + '/complete');
 		},
 		uncompleteTodo: function uncompleteTodo(todo) {
 			todo.completed = 0;
-			axios.get('/todo/' + todo.id + '/uncomplete');
+			axios.get('/ticket/' + this.ticketid + '/todo/' + todo.id + '/uncomplete');
 		}
 	}
 };
@@ -27488,6 +27501,41 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -27592,6 +27640,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			category: [],
 			owner: [],
 			users: [],
+			deadline: null,
+			editDeadline: false,
 			showDescriptionInput: false,
 			showConfirmation: false,
 			sidebarActive: false,
@@ -27634,6 +27684,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 			axios.get('/ticket/' + this.ticket.id + '/delete').then(function (response) {
 				_this3.$router.push('/');
+			});
+		},
+		updateDeadline: function updateDeadline() {
+			var _this4 = this;
+
+			axios.post('/ticket/update', this.ticket).then(function (response) {
+				_this4.editDeadline = false;
 			});
 		}
 	}
@@ -27900,7 +27957,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             // Validate the new ticket data, create the ticket an add the new ticket to tickets array
             if (this.validate()) {
-                axios.post('/ticket/save', { 'ticket': newTicket }).then(function (response) {
+                axios.post('/team/' + this.$root.activeTeam + '/ticket/save', newTicket).then(function (response) {
                     _this5.tickets.push(response.data);
                     _this5.selectedTicket = response.data;
                     _this5.ticketTitle = '';
@@ -52981,7 +53038,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_c('img', {
       staticClass: "img-circle",
       attrs: {
-        "src": user.avatar,
+        "src": '/images/' + user.avatar,
         "alt": ""
       }
     }), _vm._v(" "), _c('span', [_vm._v(_vm._s(user.name))]), _vm._v(" "), (user.id != _vm.$root.AuthUser.id) ? _c('div', [_c('a', {
@@ -53061,7 +53118,54 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     class: (_vm.sidebarActive) ? 'expanded' : 'collapsed'
   }, [_c('ul', {
     staticClass: "sidebar-menu"
-  }, [_c('li', {
+  }, [(_vm.editDeadline) ? _c('li', {
+    staticClass: "has-text-centered mb-20"
+  }, [_c('i', {
+    staticClass: "fa fa-clock-o is-small-icon"
+  }), _vm._v(" "), _c('span', [_vm._v("Set deadline:")]), _vm._v(" "), _c('div', {
+    staticClass: "deadline-form is-flex"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.ticket.deadline),
+      expression: "ticket.deadline"
+    }],
+    staticClass: "input mr-10",
+    attrs: {
+      "type": "date",
+      "placeholder": "deadline"
+    },
+    domProps: {
+      "value": _vm._s(_vm.ticket.deadline)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.ticket.deadline = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('button', {
+    staticClass: "button action-button",
+    on: {
+      "click": _vm.updateDeadline
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-check is-small-icon"
+  })])])]) : _c('li', [_c('i', {
+    staticClass: "fa fa-clock-o is-small-icon"
+  }), _vm._v(" \n\t\t\t\t\tdeadline: \n\t\t\t\t\t"), (_vm.ticket.deadline != null) ? _c('span', {
+    staticClass: "tag is-danger"
+  }, [_vm._v(_vm._s(_vm.ticket.deadline))]) : _c('span', [_vm._v("No deadline")]), _vm._v(" "), _c('button', {
+    staticClass: "button action-button pull-right",
+    on: {
+      "click": function($event) {
+        _vm.editDeadline = !_vm.editDeadline
+      }
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-cog is-small-icon"
+  })])]), _vm._v(" "), _c('hr'), _vm._v(" "), _c('li', {
     staticClass: "sidebar-menu-item",
     on: {
       "click": function($event) {
@@ -53070,28 +53174,28 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('i', {
     staticClass: "fa fa-users is-small-icon"
-  }), _vm._v(" Edit users")]), _vm._v(" "), (!_vm.ticket.completed) ? _c('li', {
+  }), _vm._v(" \n\t\t\t\t\tEdit users\n\t\t\t\t")]), _vm._v(" "), (!_vm.ticket.completed) ? _c('li', {
     staticClass: "sidebar-menu-item",
     on: {
       "click": _vm.completeTicket
     }
   }, [_c('i', {
     staticClass: "fa fa-check is-small-icon"
-  }), _vm._v(" Complete ticket")]) : _c('li', {
+  }), _vm._v(" \n\t\t\t\t\tComplete ticket\n\t\t\t\t")]) : _c('li', {
     staticClass: "sidebar-menu-item",
     on: {
       "click": _vm.unCompleteTicket
     }
   }, [_c('i', {
     staticClass: "fa fa-refresh is-small-icon"
-  }), _vm._v(" Reopen ticket")]), _vm._v(" "), _c('li', {
+  }), _vm._v(" \n\t\t\t\t\tReopen ticket\n\t\t\t\t")]), _vm._v(" "), _c('li', {
     staticClass: "sidebar-menu-item"
   }, [_c('i', {
     staticClass: "fa fa-remove is-small-icon",
     on: {
       "click": _vm.showConfirmationModal
     }
-  }), _vm._v(" Remove ticket")])])])], 1) : _vm._e(), _vm._v(" "), _c('confirmation-modal', {
+  }), _vm._v(" \n\t\t\t\t\tRemove ticket\n\t\t\t\t")])])])], 1) : _vm._e(), _vm._v(" "), _c('confirmation-modal', {
     attrs: {
       "isActive": _vm.showConfirmation
     }
@@ -53121,11 +53225,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_c('img', {
       staticClass: "img-circle",
       attrs: {
-        "src": user.avatar,
+        "src": '/images/' + user.avatar,
         "alt": ""
       }
     }), _vm._v(_vm._s(user.name))])])
-  })) : _c('p', [_vm._v("No users were assigned to this ticket")])]), _vm._v(" "), _c('hr'), _vm._v(" "), (_vm.hasNoDescription && _vm.userIsAuthorized) ? _c('a', {
+  })) : _c('p', [_vm._v("No users were assigned to this ticket")])]), _vm._v(" "), _c('hr'), _vm._v(" "), _c('div', [_vm._v("Deadline: "), (_vm.ticket.deadline != null) ? _c('span', {
+    staticClass: "tag is-danger"
+  }, [_vm._v(_vm._s(_vm.ticket.deadline))]) : _c('span', [_vm._v("No deadline")])]), _vm._v(" "), _c('hr'), _vm._v(" "), (_vm.hasNoDescription && _vm.userIsAuthorized) ? _c('a', {
     on: {
       "click": function($event) {
         _vm.showDescriptionInput = true
@@ -53337,7 +53443,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }, [_vm._v(_vm._s(user.name))]), _c('img', {
         staticClass: "img-circle",
         attrs: {
-          "src": user.avatar,
+          "src": '/images/' + user.avatar,
           "alt": ""
         }
       })])
@@ -53582,7 +53688,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_c('img', {
       staticClass: "img-circle",
       attrs: {
-        "src": message.user.avatar,
+        "src": '/images/' + message.user.avatar,
         "alt": ""
       }
     }), _vm._v(" "), _c('p', [_vm._v(_vm._s(message.user.name))])]), _vm._v(" "), _c('div', {
