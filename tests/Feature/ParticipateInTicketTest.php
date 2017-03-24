@@ -17,7 +17,7 @@ class ParticipateInTicketTest extends TestCase
     	$this->owner = create('App\User');
     	$this->team = create('App\Team', ['owner_id' => $this->owner->id]);
     	$this->ticket = create('App\Ticket', ['owner_id' => $this->owner->id]);
-    	$this->ticket->assignUser($this->owner);
+    	$this->ticket->assignMember($this->owner);
     }
 
     /** @test */
@@ -25,7 +25,7 @@ class ParticipateInTicketTest extends TestCase
     	$this->loginAsOwner();
     	$this->addTeamMember();
     	$this->get('/ticket/' . $this->ticket->id . '/assign/' . $this->new_team_member->id);
-    	$this->assertCount(2, $this->ticket->users);
+    	$this->assertCount(2, $this->ticket->members);
     }
 
     /** @test */
@@ -89,7 +89,7 @@ class ParticipateInTicketTest extends TestCase
     function loginAsMember(){
     	$this->member = create('App\User');
     	$this->team->addMember($this->member);
-    	$this->ticket->assignUser($this->member);
+    	$this->ticket->assignMember($this->member);
     	$this->be($this->member);
     }
 

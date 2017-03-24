@@ -117,12 +117,12 @@
 		position:relative;
 	}
 
-	.message-date{
+	/*.message-date{
 		position:absolute;
 		right:5px;
 		bottom: -20px;
 		color: #b5b5b5;
-	}
+	}*/
 
 	.message-box{
 		margin-bottom:50px;

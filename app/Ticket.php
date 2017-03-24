@@ -19,7 +19,7 @@ class Ticket extends Model
         return $this->hasOne(User::class, 'id', 'owner_id');
     }
 
-    public function users(){
+    public function members(){
     	return $this->belongsToMany(User::class);
     }
 
@@ -62,16 +62,16 @@ class Ticket extends Model
         return $this->belongsTo(Team::class);
     }
 
-    public function assignUser($user){
-        $this->users()->sync([$user->id], false);
+    public function assignMember($member){
+        $this->members()->sync([$member->id], false);
     }
 
-    public function unAssignUser($user){
-        $this->users()->detach($user);
+    public function unAssignMember($member){
+        $this->members()->detach($member);
     }
 
-    public function amountOfUsers(){
-        return $this->users()->count();
+    public function amountOfMembers(){
+        return $this->members()->count();
     }
 
     public function addTodo($todo){
@@ -115,7 +115,7 @@ class Ticket extends Model
     }
 
     public function scopeWithRelations($query){
-        return $query->with(['category','status','priority','users','owner']);
+        return $query->with(['category','status','priority','members','owner']);
     }
 
     public function scopeForTeam($query){

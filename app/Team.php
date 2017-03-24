@@ -23,6 +23,10 @@ class Team extends Model
         return $this->hasMany(Ticket::class);
     }
 
+    public function categories(){
+        return $this->hasMany(Category::class);
+    }
+
     public function addMember(User $user){
     	return $this->members()->sync([$user->id], false);
     }

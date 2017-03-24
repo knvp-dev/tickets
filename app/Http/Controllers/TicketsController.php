@@ -12,6 +12,8 @@ use Auth;
 class TicketsController extends Controller
 {
 
+    protected $team;
+
     public function __construct(){
     	$this->middleware('auth');
     }
@@ -26,7 +28,7 @@ class TicketsController extends Controller
     }
 
     public function tickets(){
-        return Ticket::forTeam()->notArchived()->withRelations()->orderBy('created_at','ASC')->get();
+        return Ticket::forTeam()->notArchived()->withRelations()->orderBy('created_at','DESC')->get();
     }
 
     /**
@@ -44,10 +46,17 @@ class TicketsController extends Controller
      * @param  Request $request New Ticket data
      * @return Ticket           Return the newly created ticket
      */
-    public function store(Team $team){
-        $ticket = $team->addticket(request()->all());
-        $ticket->assignUser(auth()->user());
-        return Ticket::whereId($ticket->id)->withRelations()->first();
+    public function store(){
+        $team = Team::whereId(session('team_id'))->first();
+        $new_ticket = [
+            'title' => request('title'),
+            'owner_id' => auth()->id(),
+            'priority_id' => request('priority'),
+            'category_id' => request('category')
+        ];
+        $ticket = $team->addticket($new_ticket);
+        $ticket->assignMember(auth()->user());
+        return back();
     }
 
     /**
@@ -63,8 +72,8 @@ class TicketsController extends Controller
      * @param  Ticket $ticket
      * @return User
      */
-    public function assignedUsers(Ticket $ticket){
-        return $ticket->users;
+    public function assignedMembers(Ticket $ticket){
+        return $ticket->members;
     }
 
     /**
@@ -72,8 +81,8 @@ class TicketsController extends Controller
      * @param  Ticket $ticket
      * @param  User   $user
      */
-    public function assignUser(Ticket $ticket, User $user){
-        $ticket->assignUser($user);
+    public function assignMember(Ticket $ticket, User $user){
+        $ticket->assignMember($user);
     }
 
     /**
@@ -81,8 +90,8 @@ class TicketsController extends Controller
      * @param  Ticket $ticket
      * @param  User   $user
      */
-    public function unAssignUser(Ticket $ticket, User $user){
-        $ticket->unAssignUser($user);
+    public function unAssignMember(Ticket $ticket, User $user){
+        $ticket->unAssignMember($user);
     }
 
     /**
@@ -134,7 +143,7 @@ class TicketsController extends Controller
         unset($data['category']);
         unset($data['status']);
         unset($data['priority']);
-        unset($data['users']);
+        unset($data['members']);
         unset($data['owner']);
         return $data;
     }

@@ -72,7 +72,8 @@ $factory->define(App\Status::class, function (Faker\Generator $faker) {
 $factory->define(App\Category::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->word,
-        'color' => $faker->hexcolor
+        'slug' => $faker->word,
+        'team_id' => Team::class
     ];
 });
 
