@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Ticket;
 use App\User;
 use App\Team;
+use App\Category;
 use Auth;
 
 class TicketsController extends Controller
@@ -22,9 +23,15 @@ class TicketsController extends Controller
      * Return all tickets that are not archived and order by date of creation
      * @return Collection
      */
-    public function index(){
+    public function index(Category $category){
+        if ($category->exists) {
+            $tickets = $category->tickets()->latest()->get();
+        }else{
+            $tickets = Ticket::forTeam()->latest()->get();
+        }
        $team = Team::whereId(session('team_id'))->first();
-       return view('pages.ticket.index', compact('team'));
+       $categories = Category::forTeam()->get();
+       return view('pages.ticket.index', compact('team', 'tickets', 'categories', 'category'));
     }
 
     public function tickets(){
@@ -36,7 +43,7 @@ class TicketsController extends Controller
      * @param  int $ticket_id
      * @return Ticket  
      */
-    public function show(Ticket $ticket){
+    public function show($categoryId, Ticket $ticket){
         $ticket = Ticket::whereId($ticket->id)->withRelations()->first();
         return view('pages.ticket.detail', compact('ticket'));
     }
@@ -47,13 +54,23 @@ class TicketsController extends Controller
      * @return Ticket           Return the newly created ticket
      */
     public function store(){
+
+        $this->validate(request(),[
+            'title' => 'required',
+            'priority_id' => 'required',
+            'category_id' => 'required'
+        ]);
+
         $team = Team::whereId(session('team_id'))->first();
+        
         $new_ticket = [
             'title' => request('title'),
+            'slug' => $this->prettyUrl(request('title')),
             'owner_id' => auth()->id(),
-            'priority_id' => request('priority'),
-            'category_id' => request('category')
+            'priority_id' => request('priority_id'),
+            'category_id' => request('category_id')
         ];
+        
         $ticket = $team->addticket($new_ticket);
         $ticket->assignMember(auth()->user());
         return back();
@@ -72,26 +89,8 @@ class TicketsController extends Controller
      * @param  Ticket $ticket
      * @return User
      */
-    public function assignedMembers(Ticket $ticket){
+    public function members($categoryId, Ticket $ticket){
         return $ticket->members;
-    }
-
-    /**
-     * Assign a user to a ticket
-     * @param  Ticket $ticket
-     * @param  User   $user
-     */
-    public function assignMember(Ticket $ticket, User $user){
-        $ticket->assignMember($user);
-    }
-
-    /**
-     * Unassign a user from a ticket
-     * @param  Ticket $ticket
-     * @param  User   $user
-     */
-    public function unAssignMember(Ticket $ticket, User $user){
-        $ticket->unAssignMember($user);
     }
 
     /**
@@ -146,5 +145,17 @@ class TicketsController extends Controller
         unset($data['members']);
         unset($data['owner']);
         return $data;
+    }
+
+    protected function prettyUrl($string) {
+        //Lower case everything
+        $string = strtolower($string);
+        //Make alphanumeric (removes all other characters)
+        $string = preg_replace("/[^a-z0-9_\s-]/", "", $string);
+        //Clean up multiple dashes or whitespaces
+        $string = preg_replace("/[\s-]+/", " ", $string);
+        //Convert whitespaces and underscore to dash
+        $string = preg_replace("/[\s_]/", "-", $string);
+        return $string;
     }
 }

@@ -19,8 +19,8 @@ class TodosController extends Controller
      * @param  Ticket $ticket
      * @return Todo
      */
-    public function index(Ticket $ticket){
-    	return $ticket->todos;
+    public function index($categoryId, Ticket $ticket){
+    	return $ticket->todos->first();
     }
 
     /**
@@ -30,9 +30,14 @@ class TodosController extends Controller
      * @return Todo
      */
     public function store(Ticket $ticket, Request $request){
+        
+        $this->validate($request, [
+            'body' => 'required'
+        ]);
+
     	$todo = $ticket->addTodo(request()->all());
     	event(new TodoCreated($todo));
-    	return $todo;
+    	return back();
     }
 
     /**
@@ -43,6 +48,7 @@ class TodosController extends Controller
     public function delete($ticketId, Todo $todo){
     	event(new TodoDeleted($todo));
     	$todo->delete();
+        return back();
     }
 
     /**
@@ -52,6 +58,7 @@ class TodosController extends Controller
     public function complete($ticketId, Todo $todo){
      $todo->complete();
      event(new TodoStatusChanged($todo));
+     return back();
     }
 
     /**
@@ -61,5 +68,6 @@ class TodosController extends Controller
     public function uncomplete($ticketId, Todo $todo){
      $todo->uncomplete();
      event(new TodoStatusChanged($todo));
+     return back();
     }
 }

@@ -24,21 +24,21 @@ class ParticipateInTicketTest extends TestCase
     function a_ticket_owner_can_assign_other_team_members_to_a_ticket(){
     	$this->loginAsOwner();
     	$this->addTeamMember();
-    	$this->get('/ticket/' . $this->ticket->id . '/assign/' . $this->new_team_member->id);
+    	$this->get('/ticket/' . $this->ticket->slug . '/assign/' . $this->new_team_member->id);
     	$this->assertCount(2, $this->ticket->members);
     }
 
     /** @test */
     function a_ticket_owner_can_complete_a_ticket(){
     	$this->loginAsOwner();
-    	$this->get('/ticket/' . $this->ticket->id . '/complete');
+    	$this->get('/ticket/' . $this->ticket->slug . '/complete');
     	$this->assertEquals(1, Ticket::first()->completed);
     }
 
     /** @test */
     function a_ticket_owner_can_delete_a_ticket(){
     	$this->loginAsOwner();
-    	$this->delete('/ticket/' . $this->ticket->id . '/delete');
+    	$this->delete('/ticket/' . $this->ticket->slug . '/delete');
     	$this->assertCount(0, Ticket::all());
     }
 
@@ -46,14 +46,14 @@ class ParticipateInTicketTest extends TestCase
     function a_ticket_member_can_not_delete_a_ticket(){
     	$this->expectException('\Exception');
     	$this->loginAsMember();
-    	$response = $this->delete('/ticket/' . $this->ticket->id . '/delete');
+    	$response = $this->delete('/ticket/' . $this->ticket->slug . '/delete');
     }
 
     /** @test */
     function a_ticket_member_can_add_a_todo_to_a_ticket(){
     	$this->loginAsMember();
     	$todo = make('App\Todo');
-    	$this->post('/ticket/' . $this->ticket->id . '/todo/save', $todo->toArray());
+    	$this->post('/ticket/' . $this->ticket->slug . '/todo/save', $todo->toArray());
     	$this->assertCount(1, $this->ticket->todos);
     }
 
@@ -61,7 +61,7 @@ class ParticipateInTicketTest extends TestCase
     function a_ticket_member_can_add_a_message_to_a_ticket(){
     	$this->loginAsMember();
     	$message = make('App\Message');
-    	$this->post('/ticket/' . $this->ticket->id . '/messages/create', $message->toArray());
+    	$this->post('/ticket/' . $this->ticket->slug . '/messages/create', $message->toArray());
     	$this->assertCount(1, $this->ticket->messages);
     }
 

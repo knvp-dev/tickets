@@ -13,22 +13,23 @@
 
 Auth::routes();
 
-Route::get('/', 'TicketsController@index')->middleware('ispartofateam');
-// Route::get('/api/tickets', 'TicketsController@tickets')->middleware('ispartofateam');
-Route::post('/ticket/save', 'TicketsController@store');
-Route::post('/ticket/update', 'TicketsController@update');
-Route::get('/ticket/{ticket}', 'TicketsController@show');
-Route::get('/ticket/{ticket}/members', 'TicketsController@assignedUsers');
-Route::get('/ticket/{ticket}/messages', 'MessagesController@index');
-Route::get('/ticket/{ticket}/todos', 'TodosController@index');
+Route::get('/tickets', 'TicketsController@index')->middleware('ispartofateam');
+Route::get('/tickets/{category}', 'TicketsController@index');
+Route::get('/tickets/{category}/{ticket}', 'TicketsController@show');
+Route::get('/tickets/{category}/{ticket}/members', 'TicketMembersController@index');
+Route::get('/tickets/{category}/{ticket}/messages', 'MessagesController@index');
+Route::get('/tickets/{category}/{ticket}/todos', 'TodosController@index');
 Route::get('/archive/tickets', 'ArchiveController@index');
 
-Route::post('/team/{team}/members/add', 'MembersController@store')->middleware('isownerofteam');
+Route::post('/team/{team}/members/add', 'TeamMembersController@store')->middleware('isownerofteam');
+
+Route::post('/ticket/save', 'TicketsController@store');
+Route::post('/ticket/update', 'TicketsController@update');
 
 Route::group(['middleware' => 'assigned'], function(){
-	Route::get('/ticket/{ticket}/assign/{user}', 'TicketsController@assignMember')
+	Route::get('/ticket/{ticket}/assign/{user}', 'TicketMembersController@store')
 		->middleware('isownerofticket');
-	Route::get('/ticket/{ticket}/unassign/{user}', 'TicketsController@unAssignMember')
+	Route::get('/ticket/{ticket}/unassign/{user}', 'TicketMembersController@destroy')
 		->middleware('isownerofticket');
 	Route::get('/ticket/{ticket}/complete', 'TicketsController@complete');
 	Route::get('/ticket/{ticket}/uncomplete', 'TicketsController@uncomplete');
@@ -43,25 +44,12 @@ Route::group(['middleware' => 'assigned'], function(){
 	Route::delete('/ticket/{ticket}/todo/{todo}/delete', 'TodosController@delete');
 });
 
-Route::get('/user', function(){
-	return Auth::user();
-});
-
-Route::get('/team/{team}/members', 'TeamsController@members');
-
-Route::get('categories', function(){
-	return App\Category::all();
-});
-
-Route::get('priorities', function(){
-	return App\Priority::all();
-});
-
-Route::get('/activeteam', 'TeamsController@getActiveTeam');
 
 // TEAM
 
 Route::get('/teams', 'TeamsController@index');
 Route::post('/team/create', 'TeamsController@store');
-
+Route::get('/team/{team}/members', 'TeamMembersController@index');
+Route::post('/invitation/accept', 'InvitationsController@accept');
+Route::post('/team/{team}/invitation/create', 'InvitationsController@store');
 Route::get('/team/choose/{team}', 'TeamsController@setActiveTeam');

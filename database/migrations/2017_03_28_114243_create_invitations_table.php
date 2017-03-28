@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTodosTable extends Migration
+class CreateInvitationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateTodosTable extends Migration
      */
     public function up()
     {
-        Schema::create('todos', function (Blueprint $table) {
+        Schema::create('invitations', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('ticket_id');
-            $table->text('body');
-            $table->integer('completed')->default(0);
+            $table->integer('team_id');
+            $table->string('email');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateTodosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('todos');
+        Schema::dropIfExists('invitations');
     }
 }

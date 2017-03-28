@@ -30,6 +30,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 $factory->define(App\Ticket::class, function (Faker\Generator $faker) {
     return [
         'title' => $faker->sentence($nbWords = 4),
+        'slug' => $faker->word,
         'description' => $faker->paragraph,
         'status_id' => function() {
             return factory('App\Status')->create()->id;

@@ -9,6 +9,24 @@
     </div>
 
     <div class="container">
+    @if($invitations->count() > 0)
+        <div class="team-list floating-panel">
+            <h1 class="title has-text-centered is-uppercase is-text-blue">Invitations</h1>
+            <ul class="panel-list">
+            @foreach($invitations as $invite)
+                <li class="panel-list-item">
+                    <p>{{ $invite->team->owner->name }} invited you to join his team:</p>
+                    <p>{{ $invite->team->title }}</p>
+                    <form action="/invitation/accept" method="post">
+                    {{ csrf_field() }}
+                        <input type="hidden" name="invitation_id" value="{{ $invite->id }}">
+                        <button type="submit" class="button blue-button">Accept</button>
+                    </form>
+                </li>
+            @endforeach
+            </ul>
+        </div>
+        @endif
     @if($teams->count() > 0)
         <div class="team-list floating-panel">
             <h1 class="title has-text-centered is-uppercase is-text-blue">Select a team</h1>

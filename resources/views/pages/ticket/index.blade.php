@@ -8,14 +8,15 @@
 			<h1>Team members</h1>
 		</div>
 		<ul class="team-members">
+			@foreach($team->members as $member)
 			<li class="team-member">
-				<img class="member-badge" src="/images/default.jpg" alt="">
+				<img class="member-badge" src="/images/{{ $member->avatar }}" alt="">
 			</li>
-			<li class="team-member">
-				<img class="member-badge" src="/images/default.jpg" alt="">
-			</li>
+			@endforeach
 		</ul>
-		<button class="button white-button">Manage team members</button>
+		@if(auth()->id() == $team->owner->id)
+			<a href="/team/{{ $team->id }}/members" class="button white-button">Manage team members</a>
+		@endif
 	</div>
 </div>
 
@@ -32,7 +33,7 @@
 			</p>
 			<div class="control">
 				<div class="select is-fullwidth">
-					<select name="category">
+					<select name="category_id">
 						<option value="" disabled selected>Category</option>
 						@foreach($team->categories as $category)
 						<option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -42,10 +43,10 @@
 			</div>
 			<div class="control">
 				<div class="select is-fullwidth">
-					<select name="priority">
+					<select name="priority_id">
 						<option value="" disabled selected>Priority</option>
 						@foreach(App\Priority::all() as $priority)
-						<option value="{{ $priority->id }}">{{ $priority->name }}</option>
+							<option value="{{ $priority->id }}">{{ $priority->name }}</option>
 						@endforeach
 					</select>
 				</div>
@@ -63,28 +64,14 @@
 		<ul class="panel-list">
 			<li class="panel-list-item">
 				<i class="fa fa-circle list-bullet"></i>
-				<a href="/">Webdevelopment</a>
+				<a href="/tickets">All tickets</a>
 			</li>
-			<li class="panel-list-item">
-				<i class="fa fa-circle list-bullet"></i>
-				<a href="/">Copywriting</a>
-			</li>
-			<li class="panel-list-item">
-				<i class="fa fa-circle list-bullet"></i>
-				<a href="/">Webdevelopment</a>
-			</li>
-			<li class="panel-list-item">
-				<i class="fa fa-circle list-bullet"></i>
-				<a href="/">Copywriting</a>
-			</li>
-			<li class="panel-list-item">
-				<i class="fa fa-circle list-bullet"></i>
-				<a href="/">Webdevelopment</a>
-			</li>
-			<li class="panel-list-item">
-				<i class="fa fa-circle list-bullet"></i>
-				<a href="/">Copywriting</a>
-			</li>
+			@foreach($categories as $category)
+				<li class="panel-list-item">
+					<i class="fa fa-circle list-bullet"></i>
+					<a href="/tickets/{{ $category->slug }}">{{ $category->name }}</a>
+				</li>
+			@endforeach
 		</ul>
 	</div>
 
@@ -93,7 +80,8 @@
 		<div class="tickets">
 			<div class="tickets-list">
 				<ul>
-				@foreach($team->tickets as $ticket)
+				@if(count($tickets))
+				@foreach($tickets as $ticket)
 					<li class="ticket-item">
 						<div class="ticket-info">
 							<i class="fa fa-check is-small-icon ticket-status-icon status-active"></i>
@@ -107,20 +95,20 @@
 						<ul class="ticket-members">
 							@foreach($ticket->members as $member)
 								<li class="ticket-member">
-									<img class="member-badge" src="/images/default.jpg" alt="">
+									<img class="member-badge" src="/images/{{ $member->avatar }}" alt="">
 								</li>
 							@endforeach
 						</ul>
 						<span class="member-control">
-							<a href="/">
-								<i class="fa fa-plus rounded-icon-button is-small-icon"></i>
-							</a>
-							<a href="/ticket/1">
+							<a href="{{ $ticket->path() }}">
 								<i class="fa fa-arrow-right rounded-icon-button is-small-icon"></i>
 							</a>
 						</span>
 					</li>
 					@endforeach
+					@else
+					<p class="has-text-centered">There are no tickets</p>
+					@endif
 				</ul>
 			</div>
 		</div>

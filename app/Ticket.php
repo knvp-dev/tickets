@@ -15,6 +15,14 @@ class Ticket extends Model
 {
     protected $guarded = [];
 
+    public function getRouteKeyName(){
+        return 'slug';
+    }
+
+    public function path(){
+        return "/tickets/" . $this->category->slug . "/" . $this->slug;
+    }
+
     public function owner(){
         return $this->hasOne(User::class, 'id', 'owner_id');
     }
@@ -51,11 +59,11 @@ class Ticket extends Model
     }
 
     public function todos(){
-    	return $this->hasMany(Todo::class);
+    	return $this->hasMany(Todo::class)->orderBy('created_at', 'desc');
     }
 
     public function messages(){
-        return $this->hasMany(Message::class);
+        return $this->hasMany(Message::class)->orderBy('created_at', 'asc');
     }
 
     public function team(){

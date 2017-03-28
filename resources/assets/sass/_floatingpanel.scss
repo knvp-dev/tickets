@@ -137,6 +137,7 @@ ticket list
 
 .message-item{
 	display: flex;
+	margin-bottom: 10px;
 }
 
 .message-box{
@@ -155,13 +156,13 @@ ticket list
 	padding:5px;
 }
 
-.message-item:nth-child(even){
+/*.message-item:nth-child(even){
 	flex-direction: row-reverse;
 	&.message-box{
 		border-top-left-radius: 10px;
 		border-top-right-radius: 0;
 	}
-}
+}*/
 
 .message-date{
 	position:absolute;

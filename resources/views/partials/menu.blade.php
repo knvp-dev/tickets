@@ -8,7 +8,7 @@
 			<a class="nav-item is-tab is-hidden-mobile is-active">Login</a>
 			@else
 			<a href="/teams" class="nav-item is-tab is-hidden-mobile">My teams</a>
-			<a href="/" class="nav-item is-tab is-hidden-mobile">Tickets</a>
+			<a href="/tickets" class="nav-item is-tab is-hidden-mobile">Tickets</a>
 			<a href="/archive" class="nav-item is-tab is-hidden-mobile">Archive</a>
 			@endif
 		</div>

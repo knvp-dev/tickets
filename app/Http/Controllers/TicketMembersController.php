@@ -4,18 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\User;
 use App\Team;
+use App\Ticket;
 
-class MembersController extends Controller
+class TicketMembersController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($categoryId, Ticket $ticket)
     {
-        //
+        $teamMembers = $ticket->team->members()->whereNotIn('id', $ticket->members->pluck('id'))->get();
+        return view('pages.ticket.members', compact('teamMembers', 'ticket'));
     }
 
     /**
@@ -34,9 +37,10 @@ class MembersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Team $team)
+    public function store(Ticket $ticket, User $user)
     {
-        $team->addMember(request('member'));
+        $ticket->assignMember($user);
+        return back();
     }
 
     /**
@@ -79,8 +83,29 @@ class MembersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Ticket $ticket, User $user)
     {
-        //
+        $ticket->unAssignMember($user);
+        return back();
+    }
+
+    /**
+     * Assign a user to a ticket
+     * @param  Ticket $ticket
+     * @param  User   $user
+     */
+    public function assignMember(Ticket $ticket, User $user){
+        $ticket->assignMember($user);
+        return back();
+    }
+
+    /**
+     * Unassign a user from a ticket
+     * @param  Ticket $ticket
+     * @param  User   $user
+     */
+    public function unAssignMember(Ticket $ticket, User $user){
+        $ticket->unAssignMember($user);
+        return back();
     }
 }

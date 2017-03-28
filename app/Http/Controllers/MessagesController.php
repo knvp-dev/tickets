@@ -16,7 +16,7 @@ class MessagesController extends Controller
      * @param  Ticket $ticket
      * @return Message
      */
-    public function index(Ticket $ticket){
+    public function index($categoryId, Ticket $ticket){
         return Message::where('ticket_id',$ticket->id)->with('user')->orderBy('created_at','ASC')->get();
     }
 
@@ -27,8 +27,18 @@ class MessagesController extends Controller
      * @return  Message
      */
     public function store(Ticket $ticket){
-        $message = $ticket->addMessage(request()->all());
+
+        $this->validate(request(), [
+            'body' => 'required'
+        ]);
+
+        $new_message = [
+            'user_id' => auth()->id(),
+            'body' => request('body')
+        ];
+        
+        $message = $ticket->addMessage($new_message);
         event(new MessageSent($message));
-        return $message;
+        return back();
     }
 }

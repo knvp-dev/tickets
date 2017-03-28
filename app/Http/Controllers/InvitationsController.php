@@ -4,16 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Team;
 use App\Invitation;
-use Auth;
+use App\Team;
+use App\User;
 
-class TeamsController extends Controller
+class InvitationsController extends Controller
 {
-
-    public function __construct(){
-        $this->middleware('auth');
-    }
     /**
      * Display a listing of the resource.
      *
@@ -21,22 +17,7 @@ class TeamsController extends Controller
      */
     public function index()
     {
-        $teams = Auth::user()->teams;
-        $invitations = Invitation::whereEmail(auth()->user()->email)->get();
-        return view('auth.team', compact('teams', 'invitations'));
-    }
-
-    public function setActiveTeam(Team $team){
-        session(['team_id' => $team->id]);
-        return redirect('/tickets');
-    }
-
-    public function getActiveTeam(){
-        return session('team_id');
-    }
-
-    public function members(Team $team){
-        return $team->members;
+        //
     }
 
     /**
@@ -55,26 +36,28 @@ class TeamsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Team $team)
     {
-
-        $this->validate($request, [
-            'title' => 'required'
+        $this->validate(request(), [
+            'email' => 'required|email'
         ]);
 
-        if( ! Team::whereTitle($request->title)->exists()){
-            $team = Team::create([
-                'title' => $request->title,
-                'owner_id' => auth()->id()
-                ]);
+        $invitation = Invitation::create([
+            'team_id' => $team->id,
+            'email' => request('email')
+        ]);
 
-            $team->addMember(auth()->user());
-            $this->setActiveTeam($team);
+        return back();
 
-            return redirect('/tickets');
-        }
+        // send mail
+    }
 
-        return redirect()->back()->withErrors(['A team with this name already exists.']);
+    public function accept(){
+        $invite = Invitation::whereId(request('invitation_id'))->first();
+        $user = User::whereEmail($invite->email)->first();
+        $invite->team->addMember($user);
+        $invite->delete();
+        return back();
     }
 
     /**

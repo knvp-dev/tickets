@@ -44,6 +44,14 @@ a{
     }
 }
 
+a.button{
+    font-weight: normal;
+
+    &:hover{
+        color:white!important;
+    };
+}
+
 a.nav-item{
     font-weight: normal!important;
 }
@@ -154,4 +162,23 @@ a.nav-item{
 
 .team-list-item a{
     color:white;
+}
+
+.head-title{
+    margin:20px;
+}
+
+.message-content{
+    width:100%;
+}
+
+.member-list-item{
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom:10px;
+}
+
+.member-name{
+    margin-right:auto;
+    margin-left:20px;
 }

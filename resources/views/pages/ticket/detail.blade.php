@@ -6,32 +6,31 @@
 
 
 <div class="container">
-	<h1 class="title">My first ticket</h1>
+	<h1 class="title head-title">My first ticket</h1>
 </div>
 
 <div class="container is-flex">
 	<div class="floating-panel has-text-centered fill-space">
-{{-- 	<h1 class="title is-uppercase is-text-blue">My first ticket</h1> --}}
 	<div class="ticket-details">
 	<div class="ticket-details-block">
 			<h1>Created at</h1>
-			<p>12-05-2014</p>
+			<p>{{ $ticket->created_at->diffForHumans() }}</p>
 		</div>
 		<div class="ticket-details-block">
 			<h1>Category</h1>
-			<p>Webdevelopment</p>
+			<p>{{ $ticket->category->name }}</p>
 		</div>
 		<div class="ticket-details-block">
 			<h1>Priority</h1>
-			<p>Normal</p>
+			<p>{{ $ticket->priority->name }}</p>
 		</div>
 		<div class="ticket-details-block">
 			<h1>Members</h1>
-			<p>3 / 5</p>
+			<p>{{ $ticket->members->count() }} / {{ $ticket->team->size }}</p>
 		</div>
 		<div class="ticket-details-block">
 			<h1>Status</h1>
-			<p>Ticket is ongoing</p>
+			<p>Ticket is {{ $ticket->status }}</p>
 		</div>
 		</div>
 	</div>
@@ -43,74 +42,77 @@
 			<h1>Ticket members</h1>
 		</div>
 		<ul class="team-members">
-			<li class="team-member">
-				<img class="member-badge" src="/images/default.jpg" alt="">
-			</li>
-			<li class="team-member">
-				<img class="member-badge" src="/images/default.jpg" alt="">
-			</li>
+			@foreach($ticket->members as $member)
+				<li class="team-member">
+					<img class="member-badge" src="/images/{{ $member->avatar }}" alt="">
+				</li>
+			@endforeach
 		</ul>
-		<button class="button white-button">Manage ticket members</button>
+
+		@if(auth()->user()->ownsTicket($ticket))
+			<a href="{{ $ticket->path() }}/members" class="button white-button">Manage ticket members</a>
+		@endif
 	</div>
 </div>
 
 <div class="container is-flex">
 	<div class="floating-panel has-text-centered fill-space">
-		<h1 class="title is-uppercase is-text-blue">Todos </h1>
-		<div class="todo-form">
-			<input type="text" class="input" name="task" placeholder="New task">
-			<button class="button white-button">Add task</button>
-		</div>
-		<hr>
+		<h1 class="title is-uppercase is-text-blue">Todos</h1>
+		@if(auth()->user()->isAssignedToTicket($ticket))
+			<form class="todo-form" method="post" action="/ticket/{{ $ticket->slug }}/todo/save">
+				{{ csrf_field() }}
+				<input type="text" class="input" name="body" placeholder="New task">
+				<button type="submit" class="button white-button">Add task</button>
+			</form>
+			<hr>
+		@endif
 		<ul class="todo-list">
+		@foreach($ticket->todos as $todo)
 			<li class="todo-item is-flex">
-				<i class="fa fa-circle-o is-small-icon ticket-status-icon status-idle"></i>
+				@if(! $todo->completed)
+					<i class="fa fa-circle-o is-small-icon ticket-status-icon status-idle"></i>
+				@else
+					<i class="fa fa-check is-small-icon ticket-status-icon status-active"></i>
+				@endif
 				<div class="todo-content">
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing</p>
-					<span class="has-lighter-text">Completed 4 weeks ago</span>
+					<p>{{ $todo->body }}</p>
+					<span class="has-lighter-text">Added {{ $todo->created_at->diffForHumans() }}</span>
 				</div>
-				<div class="todo-controls">
-					<a href="/">
-					<i class="fa fa-check rounded-icon-button is-small-icon"></i>
-					</a>
-					<a href="/">
-						<i class="fa fa-remove rounded-icon-button is-small-icon"></i>
-					</a>
-				</div>
+				@if(auth()->user()->isAssignedToTicket($ticket))
+					<div class="todo-controls">
+						<a href="/ticket/{{ $ticket->id }}/todo/{{ $todo->id }}/complete">
+							<i class="fa fa-check rounded-icon-button is-small-icon"></i>
+						</a>
+						<a href="/">
+							<i class="fa fa-remove rounded-icon-button is-small-icon"></i>
+						</a>
+					</div>
+				@endif
 			</li>
-			<li class="todo-item is-flex">
-				<i class="fa fa-check is-small-icon ticket-status-icon status-active"></i>
-				<div class="todo-content">
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing</p>
-					<span class="has-lighter-text">Completed 4 weeks ago</span>
-				</div>
-				<div class="todo-controls">
-					<a href="/">
-					<i class="fa fa-refresh rounded-icon-button is-small-icon"></i>
-					</a>
-					<a href="/">
-						<i class="fa fa-remove rounded-icon-button is-small-icon"></i>
-					</a>
-				</div>
-			</li>
+			@endforeach
 		</ul>
 	</div>
 	<div class="floating-panel has-text-centered fill-space">
 		<h1 class="title is-uppercase is-text-blue">Messages</h1>
-		<div class="message-form">
-			<input class="input" type="text" name="message" placeholder="Message">
-			<button class="button white-button">send</button>
-		</div>
-		<hr>
+		@if(auth()->user()->isAssignedToTicket($ticket))
+			<form class="message-form" method="post" action="/ticket/{{ $ticket->slug }}/messages/create">
+			{{ csrf_field() }}
+				<input class="input" type="text" name="body" placeholder="Message">
+				<button class="button white-button">send</button>
+			</form>
+			<hr>
+		@endif
 		<ul class="message-list">
-			<li class="message-item">
-				<img src="/images/default.jpg" class="member-badge" />
-				<div class="message-content">
-					<div class="message-box">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod.
-						<span class="message-date">2 days ago</span>
+			@foreach($ticket->messages as $message)
+				<li class="message-item">
+					<img src="/images/{{ $message->user->avatar }}" class="member-badge" />
+					<div class="message-content">
+						<div class="message-box">{{ $message->body }}
+							<span class="message-date">{{ $message->created_at->diffForHumans() }}</span>
+						</div>
 					</div>
-				</div>
-			</li>
+				</li>
+			@endforeach
 		</ul>
 	</div>
 </div>

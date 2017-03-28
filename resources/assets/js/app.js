@@ -15,13 +15,13 @@ require('./bootstrap');
 
 // import router from './routes';
 
-Vue.component('selectbox', require('./components/Selectbox.vue'));
-Vue.component('assign-modal', require('./components/AssignModal.vue'));
-Vue.component('confirmation-modal', require('./components/ConfirmationModal.vue'));
-Vue.component('todos', require('./components/Todos.vue'));
-Vue.component('messages', require('./components/Messages.vue'));
-Vue.component('ticket-detail', require('./views/TicketDetail.vue'));
-Vue.component('tickets', require('./views/Tickets.vue'));
+// Vue.component('selectbox', require('./components/Selectbox.vue'));
+// Vue.component('assign-modal', require('./components/AssignModal.vue'));
+// Vue.component('confirmation-modal', require('./components/ConfirmationModal.vue'));
+// Vue.component('todos', require('./components/Todos.vue'));
+// Vue.component('messages', require('./components/Messages.vue'));
+// Vue.component('ticket-detail', require('./views/TicketDetail.vue'));
+// Vue.component('tickets', require('./views/Tickets.vue'));
 
 window.Event = new Vue({});
 
@@ -34,13 +34,13 @@ const app = new Vue({
     	}
     },
     created(){
-    	axios.get('/user').then((response) => {
-			this.$root.AuthUser = response.data;
-    	});
+   //  	axios.get('/user').then((response) => {
+			// this.$root.AuthUser = response.data;
+   //  	});
 
-        axios.get('/activeteam').then((response) => {
-            this.$root.activeTeam = response.data;
-        });
+   //      axios.get('/activeteam').then((response) => {
+   //          this.$root.activeTeam = response.data;
+   //      });
 
         for(i = 0; i < $('.ticket-item').length ; i++){
             let count = $('.ticket-item').eq(i).find('ul li').length;
