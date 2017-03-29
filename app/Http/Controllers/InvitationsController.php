@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Mail;
+use App\Mail\TeamInvitation;
 use App\Invitation;
 use App\Team;
 use App\User;
@@ -42,14 +43,25 @@ class InvitationsController extends Controller
             'email' => 'required|email'
         ]);
 
+        if(Invitation::whereEmail(request('email'))->where('team_id', $team->id)->exists())
+        {
+            return back()->withErrors(['This email adress is already invited.']);
+        }else{
+            if($team->members->pluck('email')->contains(request('email'))){
+                return back()->withErrors(['This user is already part of your team.']);
+            }
+        }
+
         $invitation = Invitation::create([
             'team_id' => $team->id,
             'email' => request('email')
         ]);
 
-        return back();
+        $email = new TeamInvitation($invitation);
+        Mail::to(request('email'))->send($email);
 
-        // send mail
+        return back();
+        
     }
 
     public function accept(){
@@ -100,8 +112,9 @@ class InvitationsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Invitation $invitation)
     {
-        //
+        $invitation->delete();
+        return back();
     }
 }

@@ -28,7 +28,7 @@
 		<form action="/ticket/save" method="post">
 			{{ csrf_field() }}
 			<p class="control">
-				<input class="input" type="text" name="title" value="{{ old('name') }}" placeholder="Title" required autofocus>
+				<input class="input" type="text" name="title" value="{{ old('title') }}" placeholder="Title" required autofocus>
 				<span class="help is-danger">{{ $errors->first('title') }}</span>
 			</p>
 			<div class="control">
@@ -39,6 +39,7 @@
 						<option value="{{ $category->id }}">{{ $category->name }}</option>
 						@endforeach
 					</select>
+					<span class="help is-danger">{{ $errors->first('category') }}</span>
 				</div>
 			</div>
 			<div class="control">
@@ -49,6 +50,7 @@
 							<option value="{{ $priority->id }}">{{ $priority->name }}</option>
 						@endforeach
 					</select>
+					<span class="help is-danger">{{ $errors->first('priority') }}</span>
 				</div>
 			</div>
 
@@ -84,7 +86,11 @@
 				@foreach($tickets as $ticket)
 					<li class="ticket-item">
 						<div class="ticket-info">
+						@if($ticket->completed)
 							<i class="fa fa-check is-small-icon ticket-status-icon status-active"></i>
+							@else
+							<i class="fa fa-circle-o is-small-icon ticket-status-icon status-idle"></i>
+							@endif
 							<div class="ticket-item-info">
 								<h1 class="ticket-title">{{ $ticket->title }}</h1>
 								<span>

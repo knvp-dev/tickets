@@ -35,4 +35,8 @@ class Team extends Model
         return $this->tickets()->create($ticket);
     }
 
+    public function invitations(){
+        return $this->hasMany(Invitation::class);
+    }
+
 }

@@ -49,7 +49,8 @@ Route::group(['middleware' => 'assigned'], function(){
 
 Route::get('/teams', 'TeamsController@index');
 Route::post('/team/create', 'TeamsController@store');
-Route::get('/team/{team}/members', 'TeamMembersController@index');
+Route::get('/team/{team}/members', 'TeamMembersController@index')->middleware('isownerofteam');
 Route::post('/invitation/accept', 'InvitationsController@accept');
-Route::post('/team/{team}/invitation/create', 'InvitationsController@store');
+Route::get('/invitation/{invitation}/cancel', 'InvitationsController@destroy');
+Route::post('/team/{team}/invitation/create', 'InvitationsController@store')->middleware('isownerofteam');
 Route::get('/team/choose/{team}', 'TeamsController@setActiveTeam');

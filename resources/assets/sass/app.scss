@@ -164,10 +164,6 @@ a.nav-item{
     color:white;
 }
 
-.head-title{
-    margin:20px;
-}
-
 .message-content{
     width:100%;
 }
@@ -181,4 +177,11 @@ a.nav-item{
 .member-name{
     margin-right:auto;
     margin-left:20px;
+}
+
+.is-head{
+    padding:20px;
+    padding-bottom:0;
+    justify-content: space-between;
+    align-items: center;
 }

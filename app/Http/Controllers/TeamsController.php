@@ -71,6 +71,8 @@ class TeamsController extends Controller
             $team->addMember(auth()->user());
             $this->setActiveTeam($team);
 
+            $team->categories()->create(['name' => 'General', 'slug' => 'general']);
+
             return redirect('/tickets');
         }
 
