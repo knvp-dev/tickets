@@ -110,3 +110,12 @@ $factory->define(App\Role::class, function(Faker\Generator $faker){
         'name' => $faker->word
     ];
 });
+
+$factory->define(App\Invitation::class, function(Faker\Generator $faker){
+    return [
+        'team_id' => function() {
+            return factory('App\Team')->create()->id;
+        },
+        'email' => $faker->email
+    ];
+});

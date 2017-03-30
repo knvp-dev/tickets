@@ -21,8 +21,6 @@ Route::get('/tickets/{category}/{ticket}/messages', 'MessagesController@index');
 Route::get('/tickets/{category}/{ticket}/todos', 'TodosController@index');
 Route::get('/archive/tickets', 'ArchiveController@index');
 
-Route::post('/team/{team}/members/add', 'TeamMembersController@store')->middleware('isownerofteam');
-
 Route::post('/ticket/save', 'TicketsController@store');
 Route::post('/ticket/update', 'TicketsController@update');
 
@@ -50,7 +48,9 @@ Route::group(['middleware' => 'assigned'], function(){
 Route::get('/teams', 'TeamsController@index');
 Route::post('/team/create', 'TeamsController@store');
 Route::get('/team/{team}/members', 'TeamMembersController@index')->middleware('isownerofteam');
+Route::post('/team/{team}/members/add', 'TeamMembersController@store')->middleware('isownerofteam');
+Route::get('/team/{team}/members/{user}/remove', 'TeamMembersController@destroy')->middleware('isownerofteam');
 Route::post('/invitation/accept', 'InvitationsController@accept');
-Route::get('/invitation/{invitation}/cancel', 'InvitationsController@destroy');
+Route::get('/team/{team}/invitation/{invitation}/cancel', 'InvitationsController@destroy')->middleware('isownerofteam');
 Route::post('/team/{team}/invitation/create', 'InvitationsController@store')->middleware('isownerofteam');
 Route::get('/team/choose/{team}', 'TeamsController@setActiveTeam');

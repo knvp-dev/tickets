@@ -3,8 +3,8 @@
 @section('content')
 
 
-<div class="container">
-	<h1 class="title head-title">{{ $ticket->title }} members</h1>
+<div class="container is-head">
+	<h1 class="title">{{ $ticket->title }} members</h1>
 </div>
 
 <div class="container is-flex">
@@ -26,6 +26,7 @@
 
 	<div class="floating-panel fill-space">
 		<h1 class="title is-text-blue is-uppercase">Team members</h1>
+		@if(count($teamMembers))
 		<ul>
 			@foreach($teamMembers as $teamMember)
 				<li class="is-flex member-list-item">
@@ -35,6 +36,10 @@
 				</li>
 			@endforeach
 		</ul>
+		@else
+			<p class="has-text-centered">All team members have been assigned to this ticket.</p>
+			<a class="button blue-button button-centered" href="/team/{{ $ticket->team->id }}/members">Invite more people to your team!</a>
+		@endif
 	</div>
 </div>
 </div>

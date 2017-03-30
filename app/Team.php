@@ -31,12 +31,28 @@ class Team extends Model
     	return $this->members()->sync([$user->id], false);
     }
 
+    public function removeMember(User $user){
+        return $this->members()->detach($user);
+    }
+
     public function addTicket($ticket){
         return $this->tickets()->create($ticket);
     }
 
     public function invitations(){
         return $this->hasMany(Invitation::class);
+    }
+
+    public function currentSizeOfTeam(){
+        return $this->members()->count() + $this->invitations()->count();
+    }
+
+    public function maximumSize(){
+        return $this->size;
+    }
+
+    public function hasReachedMaximumSize(){
+        return ($this->currentSizeOfTeam() >= $this->maximumSize()) ? true : false;
     }
 
 }

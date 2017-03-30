@@ -39,6 +39,10 @@ class InvitationsController extends Controller
      */
     public function store(Team $team)
     {
+       if($team->hasReachedMaximumSize()){
+            return back()->withErrors(['Your team has reached the maximum size, upgrade to invite more members to your team!']);
+       }
+
         $this->validate(request(), [
             'email' => 'required|email'
         ]);
@@ -112,7 +116,7 @@ class InvitationsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Invitation $invitation)
+    public function destroy(Team $team, Invitation $invitation)
     {
         $invitation->delete();
         return back();

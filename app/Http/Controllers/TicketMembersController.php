@@ -89,23 +89,4 @@ class TicketMembersController extends Controller
         return back();
     }
 
-    /**
-     * Assign a user to a ticket
-     * @param  Ticket $ticket
-     * @param  User   $user
-     */
-    public function assignMember(Ticket $ticket, User $user){
-        $ticket->assignMember($user);
-        return back();
-    }
-
-    /**
-     * Unassign a user from a ticket
-     * @param  Ticket $ticket
-     * @param  User   $user
-     */
-    public function unAssignMember(Ticket $ticket, User $user){
-        $ticket->unAssignMember($user);
-        return back();
-    }
 }

@@ -3,8 +3,8 @@
 @section('content')
 
 
-<div class="container">
-	<h1 class="title head-title">{{ $team->title }} members</h1>
+<div class="container is-head">
+	<h1 class="title">{{ $team->title }}: members</h1>
 </div>
 
 <div class="container is-flex">
@@ -16,7 +16,7 @@
 				<img src="/images/{{ $teamMember->avatar }}" class="member-badge" alt="">
 				<p class="member-name">{{ $teamMember->name }}</p>
 				@if($teamMember->id != $team->owner->id)
-				<a href="/" class="button white-button">Remove from team</a>
+				<a href="/team/{{ $team->id }}/members/{{ $teamMember->id }}/remove" class="button white-button">Remove from team</a>
 				@endif
 			</li>
 			@endforeach
@@ -47,7 +47,7 @@
 					@foreach($team->invitations as $invitation)
 					<li class="is-flex member-list-item">
 						<p class="member-name">{{ $invitation->email }}</p>
-						<a href="/invitation/{{ $invitation->id }}/cancel" class="button white-button">Cancel invitation</a>
+						<a href="/team/{{ $team->id }}/invitation/{{ $invitation->id }}/cancel" class="button white-button">Cancel invitation</a>
 					</li>
 					@endforeach
 				</ul>
