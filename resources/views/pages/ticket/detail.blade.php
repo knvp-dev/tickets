@@ -3,15 +3,15 @@
 @section('content')
 
 <div class="container is-flex is-head">
-	<h1 class="title">My first ticket</h1>
+	<h1 class="title">{{ $ticket->title }}</h1>
 	@if($ticket->owner->id == auth()->id())
 	<div>
 		@if(!$ticket->completed)
-		<a href="/" class="button white-button">Close ticket</a>
+		<a href="/ticket/{{ $ticket->slug }}/complete" class="button white-button">Close ticket</a>
 		@else
-		<a href="/" class="button white-button">Reopen ticket</a>
+		<a href="/ticket/{{ $ticket->slug }}/uncomplete" class="button white-button">Reopen ticket</a>
 		@endif
-		<a href="/" class="button white-button">Delete ticket</a>
+		<a href="/ticket/{{ $ticket->slug }}/delete" class="button white-button">Delete ticket</a>
 	</div>
 	@endif
 </div>
@@ -37,7 +37,7 @@
 			</div>
 			<div class="ticket-details-block">
 				<h1>Status</h1>
-				<p>Ticket is {{ $ticket->status }}</p>
+				<p>Ticket is {{ $ticket->status->name }}</p>
 			</div>
 		</div>
 	</div>
@@ -87,10 +87,10 @@
 				</div>
 				@if(auth()->user()->isAssignedToTicket($ticket))
 				<div class="todo-controls">
-					<a href="/ticket/{{ $ticket->id }}/todo/{{ $todo->id }}/complete">
+					<a href="/ticket/{{ $ticket->slug }}/todo/{{ $todo->id }}/complete">
 						<i class="fa fa-check rounded-icon-button is-small-icon"></i>
 					</a>
-					<a href="/">
+					<a href="/ticket/{{ $ticket->slug}}/todo/{{ $todo->id}}/delete">
 						<i class="fa fa-remove rounded-icon-button is-small-icon"></i>
 					</a>
 				</div>

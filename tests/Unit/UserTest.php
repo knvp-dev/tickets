@@ -65,15 +65,4 @@ class UserTest extends TestCase
     	$this->assertCount(2, $this->user->teams);
     }
 
-    /** @test */
-    public function it_can_be_given_a_different_role(){
-        $role = factory(Role::class)->create();
-        $this->user->setRole($role);
-        $this->assertEquals($this->user->role->id, $role->id);
-    }
-
-    /** @test */
-    public function it_has_a_role(){
-        $this->assertInstanceOf(Role::class, $this->user->role);
-    }
 }

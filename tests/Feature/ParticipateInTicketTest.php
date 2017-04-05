@@ -18,6 +18,7 @@ class ParticipateInTicketTest extends TestCase
     	$this->team = create('App\Team', ['owner_id' => $this->owner->id]);
     	$this->ticket = create('App\Ticket', ['owner_id' => $this->owner->id]);
     	$this->ticket->assignMember($this->owner);
+        session(['team_id' => $this->team->id]);
     }
 
     /** @test */
@@ -38,7 +39,7 @@ class ParticipateInTicketTest extends TestCase
     /** @test */
     function a_ticket_owner_can_delete_a_ticket(){
     	$this->loginAsOwner();
-    	$this->delete('/ticket/' . $this->ticket->slug . '/delete');
+    	$this->get('/ticket/' . $this->ticket->slug . '/delete');
     	$this->assertCount(0, Ticket::all());
     }
 
@@ -46,7 +47,7 @@ class ParticipateInTicketTest extends TestCase
     function a_ticket_member_can_not_delete_a_ticket(){
     	$this->expectException('\Exception');
     	$this->loginAsMember();
-    	$response = $this->delete('/ticket/' . $this->ticket->slug . '/delete');
+    	$response = $this->get('/ticket/' . $this->ticket->slug . '/delete');
     }
 
     /** @test */
@@ -69,7 +70,7 @@ class ParticipateInTicketTest extends TestCase
     function a_ticket_member_can_complete_a_todo(){
     	$this->loginAsMember();
     	$todo = create('App\Todo', ['ticket_id' => $this->ticket->id]);
-    	$this->get('/ticket/' . $this->ticket->id . '/todo/' . $todo->id . '/complete');
+    	$this->get('/ticket/' . $this->ticket->slug . '/todo/' . $todo->id . '/complete');
     	$this->assertEquals(1, Todo::first()->completed);
     }
 
@@ -77,7 +78,7 @@ class ParticipateInTicketTest extends TestCase
     function a_ticket_member_can_delete_a_todo(){
     	$this->loginAsMember();
     	$todo = create('App\Todo', ['ticket_id' => $this->ticket->id]);
-    	$this->delete('/ticket/' . $this->ticket->id . '/todo/' . $todo->id . '/delete');
+    	$this->get('/ticket/' . $this->ticket->slug . '/todo/' . $todo->id . '/delete');
     	$this->assertCount(0, $this->ticket->todos);
     }
 

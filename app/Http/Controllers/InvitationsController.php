@@ -58,7 +58,8 @@ class InvitationsController extends Controller
 
         $invitation = Invitation::create([
             'team_id' => $team->id,
-            'email' => request('email')
+            'email' => request('email'),
+            'token' => str_random()
         ]);
 
         $email = new TeamInvitation($invitation);
@@ -69,7 +70,7 @@ class InvitationsController extends Controller
     }
 
     public function accept(){
-        $invite = Invitation::whereId(request('invitation_id'))->first();
+        $invite = Invitation::whereToken(request('token'))->first();
         $user = User::whereEmail($invite->email)->first();
         $invite->team->addMember($user);
         $invite->delete();

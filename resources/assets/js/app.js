@@ -22,7 +22,7 @@ require('./bootstrap');
 // Vue.component('messages', require('./components/Messages.vue'));
 // Vue.component('ticket-detail', require('./views/TicketDetail.vue'));
 // Vue.component('tickets', require('./views/Tickets.vue'));
-
+Vue.component('CheckoutForm', require('./components/CheckoutForm.vue'));
 window.Event = new Vue({});
 
 const app = new Vue({

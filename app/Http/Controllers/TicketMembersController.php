@@ -40,7 +40,7 @@ class TicketMembersController extends Controller
     public function store(Ticket $ticket, User $user)
     {
         $ticket->assignMember($user);
-        return back();
+        return back()->with('message', $user->name . ' was added to this ticket');
     }
 
     /**

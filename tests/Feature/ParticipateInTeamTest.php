@@ -89,7 +89,7 @@ class ParticipateInTeamTest extends TestCase
     function a_invited_user_can_accept_an_invitation(){
         $this->login();
         $invitation = create('App\Invitation', ['team_id' => $this->team->id, 'email' => $this->user->email]);
-        $this->post('/invitation/accept', ['invitation_id' => $invitation->id]);
+        $this->post('/invitation/accept', ['token' => $invitation->token]);
         $this->assertCount(2, $this->team->members);
     }
 

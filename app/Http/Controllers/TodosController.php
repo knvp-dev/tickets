@@ -45,9 +45,9 @@ class TodosController extends Controller
      * @param  Todo   $todo [description]
      * @return [type]       [description]
      */
-    public function delete($ticketId, Todo $todo){
+    public function destroy(Ticket $ticket, Todo $todo){
     	event(new TodoDeleted($todo));
-    	$todo->delete();
+    	$ticket->todos()->delete($todo);
         return back();
     }
 
@@ -55,7 +55,7 @@ class TodosController extends Controller
      * Complete a todo
      * @param  Todo   $todo
      */
-    public function complete($ticketId, Todo $todo){
+    public function complete(Ticket $ticket, Todo $todo){
      $todo->complete();
      event(new TodoStatusChanged($todo));
      return back();
@@ -65,7 +65,7 @@ class TodosController extends Controller
      * Uncomplete a todo
      * @param  Todo   $todo
      */
-    public function uncomplete($ticketId, Todo $todo){
+    public function uncomplete(Ticket $ticket, Todo $todo){
      $todo->uncomplete();
      event(new TodoStatusChanged($todo));
      return back();

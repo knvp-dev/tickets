@@ -19,7 +19,7 @@
                     <p>{{ $invite->team->title }}</p>
                     <form action="/invitation/accept" method="post">
                     {{ csrf_field() }}
-                        <input type="hidden" name="invitation_id" value="{{ $invite->id }}">
+                        <input type="hidden" name="token" value="{{ $invite->token }}">
                         <button type="submit" class="button blue-button">Accept</button>
                     </form>
                 </li>

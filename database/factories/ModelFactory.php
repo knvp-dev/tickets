@@ -20,9 +20,6 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->unique()->safeEmail,
         'avatar' => $faker->imageUrl($width = 200, $height = 200),
         'password' => $password ?: $password = bcrypt('secret'),
-        'role_id' => function(){
-            return factory('App\Role')->create()->id;
-        },
         'remember_token' => str_random(10),
     ];
 });
@@ -116,6 +113,7 @@ $factory->define(App\Invitation::class, function(Faker\Generator $faker){
         'team_id' => function() {
             return factory('App\Team')->create()->id;
         },
-        'email' => $faker->email
+        'email' => $faker->email,
+        'token' => str_random()
     ];
 });

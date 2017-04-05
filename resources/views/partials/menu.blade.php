@@ -22,7 +22,7 @@
 			<a class="nav-item is-tab is-hidden-mobile is-active">Login</a>
 			@else
 			<a href="/tickets" class="nav-item is-tab is-hidden-tablet">Tickets</a>
-			<a class="nav-item is-tab">
+			<a href="/profile" class="nav-item is-tab">
 				<figure class="image is-16x16" style="margin-right: 8px;">
 					<img class="img-circle" src="/images/{{ Auth::user()->avatar }}">
 				</figure>

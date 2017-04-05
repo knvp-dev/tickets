@@ -19,7 +19,10 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('avatar')->default("default.jpg");
             $table->string('password');
-            $table->integer('role_id')->default(1);
+            $table->string('stripe_id')->nullable();
+            $table->boolean('stripe_active')->default(false);
+            $table->string('stripe_subscription')->nullable();
+            $table->timestamp('subscription_end_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

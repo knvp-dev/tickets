@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Filters\TicketFilters;
 use App\Ticket;
 use App\User;
 use App\Team;
@@ -16,26 +16,20 @@ class TicketsController extends Controller
     protected $team;
 
     public function __construct(){
-    	$this->middleware('auth');
+    	$this->middleware(['auth', 'teamsession']);
     }
 
     /**
      * Return all tickets that are not archived and order by date of creation
      * @return Collection
      */
-    public function index(Category $category){
-        if ($category->exists) {
-            $tickets = $category->tickets()->latest()->get();
-        }else{
-            $tickets = Ticket::forTeam()->latest()->get();
-        }
-       $team = Team::whereId(session('team_id'))->first();
-       $categories = Category::forTeam()->get();
-       return view('pages.ticket.index', compact('team', 'tickets', 'categories', 'category'));
-    }
-
-    public function tickets(){
-        return Ticket::forTeam()->notArchived()->withRelations()->orderBy('created_at','DESC')->get();
+    public function index(Category $category, TicketFilters $filters){
+        $tickets = Ticket::filter($filters);
+        if ($category->exists) $tickets = $category->tickets();
+        $tickets = $tickets->get();
+        $team = Team::whereId(session('team_id'))->first();
+        $categories = Category::forTeam()->get();
+        return view('pages.ticket.index', compact('team', 'tickets', 'categories', 'category'));
     }
 
     /**
@@ -59,21 +53,21 @@ class TicketsController extends Controller
             'title' => 'required',
             'priority_id' => 'required',
             'category_id' => 'required'
-        ]);
+            ]);
 
         $team = Team::whereId(session('team_id'))->first();
         
         $new_ticket = [
-            'title' => request('title'),
-            'slug' => $this->prettyUrl(request('title')),
-            'owner_id' => auth()->id(),
-            'priority_id' => request('priority_id'),
-            'category_id' => request('category_id')
+        'title' => request('title'),
+        'slug' => $this->prettyUrl(request('title')),
+        'owner_id' => auth()->id(),
+        'priority_id' => request('priority_id'),
+        'category_id' => request('category_id')
         ];
         
         $ticket = $team->addticket($new_ticket);
         $ticket->assignMember(auth()->user());
-        return back();
+        return back()->with('message', 'Ticket created successfully!');
     }
 
     /**
@@ -99,6 +93,7 @@ class TicketsController extends Controller
      */
     public function complete(Ticket $ticket){
         $ticket->complete();
+        return back();
     }
 
     /**
@@ -107,6 +102,7 @@ class TicketsController extends Controller
      */
     public function uncomplete(Ticket $ticket){
         $ticket->uncomplete();
+        return back();
     }
 
     /**
@@ -131,6 +127,7 @@ class TicketsController extends Controller
      */
     public function delete(Ticket $ticket){
         $ticket->delete();
+        return redirect('/tickets');
     }
 
     /**

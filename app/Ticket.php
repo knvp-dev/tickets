@@ -129,4 +129,8 @@ class Ticket extends Model
     public function scopeForTeam($query){
         return $query->where('team_id', session('team_id'));
     }
+
+    public function scopeFilter($query, $filters){
+        return $filters->apply($query);
+    }
 }
