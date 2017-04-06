@@ -40,6 +40,8 @@
             </ul>
         </div>
         @endif
+
+        @if(count(auth()->user()->teams) < 1 || auth()->user()->isSubscibed())
         <div class="login-form floating-panel has-text-centered">
             <h1 class="title has-text-centered is-uppercase is-text-blue">Create a new team</h1>
             <form class="form-horizontal" role="form" method="POST" action="{{ url('/team/create') }}">
@@ -53,6 +55,13 @@
                 </p>
             </form>
         </div>
+        @else
+        <div class="team-list floating-panel">
+            <h1 class="title has-text-centered is-uppercase is-text-blue">Subscribe</h1>
+            <p class="has-text-centered">Subscribe to create more teams</p>
+            <checkout-form :plans="{{ $plans }}"></checkout-form>
+        </div>
+        @endif
     </div>
 </div>
 @endsection

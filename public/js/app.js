@@ -26786,6 +26786,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = {
 	props: ['plans'],
@@ -51655,13 +51659,25 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.stripeEmail = $event.target.value
       }
     }
-  }), _vm._v(" "), _c('select', {
+  }), _vm._v(" "), _c('div', {
+    staticClass: "field"
+  }, [_c('p', {
+    staticClass: "control button-centered is-expanded"
+  }, [_c('span', {
+    staticClass: "select",
+    staticStyle: {
+      "width": "100%"
+    }
+  }, [_c('select', {
     directives: [{
       name: "model",
       rawName: "v-model",
       value: (_vm.plan),
       expression: "plan"
     }],
+    staticStyle: {
+      "width": "100%"
+    },
     attrs: {
       "name": "plans"
     },
@@ -51680,8 +51696,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       domProps: {
         "value": plan.id
       }
-    }, [_vm._v("\n\t\t\t" + _vm._s(plan.name) + " — €" + _vm._s(plan.price / 100) + "\n\t\t")])
-  })), _vm._v(" "), _c('button', {
+    }, [_vm._v("\n\t\t\t\t\t\t" + _vm._s(plan.name) + " — €" + _vm._s(plan.price / 100) + "/month\n\t\t\t\t\t")])
+  }))])])]), _vm._v(" "), _c('button', {
+    staticClass: "button blue-button button-centered",
     attrs: {
       "type": "submit"
     },

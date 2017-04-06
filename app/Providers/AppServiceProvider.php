@@ -17,6 +17,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         Stripe::setApiKey(config('services.stripe.secret'));
+        view()->share('plans', \App\Plan::all());
     }
 
     /**

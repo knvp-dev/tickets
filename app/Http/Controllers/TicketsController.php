@@ -24,7 +24,7 @@ class TicketsController extends Controller
      * @return Collection
      */
     public function index(Category $category, TicketFilters $filters){
-        $tickets = Ticket::filter($filters);
+        $tickets = Ticket::forTeam()->filter($filters);
         if ($category->exists) $tickets = $category->tickets();
         $tickets = $tickets->get();
         $team = Team::whereId(session('team_id'))->first();

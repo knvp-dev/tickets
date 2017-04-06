@@ -17,6 +17,8 @@
   <script>
     window.Laravel = {!! json_encode([
       'csrfToken' => csrf_token(),
+      'stripeKey' => config('services.stripe.key'),
+      'user' => auth()->user(),
       ]) !!};
     </script>
   </head>
@@ -26,6 +28,7 @@
     </div>
 
     <!-- Scripts -->
+    <script src="https://checkout.stripe.com/checkout.js"></script>
     <script src="/js/app.js"></script>
   </body>
   </html>

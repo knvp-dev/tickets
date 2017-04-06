@@ -2,14 +2,18 @@
 	<form action="/subscribe" method="post">
 		<input type="hidden" name="stripeToken" v-model="stripeToken">
 		<input type="hidden" name="stripeEmail" v-model="stripeEmail">
-	
-		<select name="plans" v-model="plan">
-			<option v-for="plan in plans" :value="plan.id">
-				{{ plan.name }} &mdash; €{{ plan.price / 100 }}
-			</option>
-		</select>
-
-		<button type="submit" @click.prevent="subscribe">Subscribe</button>
+		<div class="field">
+		<p class="control button-centered is-expanded">
+				<span class="select" style="width:100%;">
+					<select name="plans" v-model="plan" style="width:100%;">
+						<option v-for="plan in plans" :value="plan.id">
+							{{ plan.name }} &mdash; €{{ plan.price / 100 }}/month
+						</option>
+					</select>
+				</span>
+			</p>
+		</div>
+		<button type="submit" class="button blue-button button-centered" @click.prevent="subscribe">Subscribe</button>
 
 		<p v-show="status">{{ status }}</p>
 	</form>
@@ -38,12 +42,12 @@
 					this.stripeToken = token.id;
 					this.stripeEmail = token.email;
 					axios.post('/subscription', this.$data)
-						.then((response) => {
-							this.status = response.data.status;
-						})
-						.catch((error) => {
-							this.status = error.response.data.status;
-						});
+					.then((response) => {
+						this.status = response.data.status;
+					})
+					.catch((error) => {
+						this.status = error.response.data.status;
+					});
 				}
 			})
 		},
