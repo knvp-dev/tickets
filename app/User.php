@@ -17,6 +17,10 @@ class User extends Authenticatable
     protected $guarded = [];
     protected $hidden = ['password', 'remember_token',];
 
+    protected $dates = [
+        'subscription_end_at'
+    ];
+
     public function tickets(){
     	return $this->belongsToMany(Ticket::class);
     }

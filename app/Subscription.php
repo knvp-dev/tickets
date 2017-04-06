@@ -4,6 +4,7 @@ namespace App;
 use Carbon\Carbon;
 use Stripe\Customer;
 use Stripe\Subscription as StripeSubscription;
+use Stripe\Plan as StripePlan;
 
 class Subscription
 {
@@ -23,11 +24,11 @@ class Subscription
 
         $subscriptionId = $customer->subscriptions->data[0]->id;
 
-        $this->user->activate($customer->id, $subscriptionId);
+        $this->user->activate($customer->id, $subscriptionId, $plan);
 	}
 
 	public function cancel($atPeriodEnd = true){
-		$customer = Customer::retrieve($this->user->stripe_id);
+		$customer = $this->retrieveStripeCustomer();
 		$subscription = $customer->cancelSubscription(['at_period_end' => $atPeriodEnd]);
 		$endDate = Carbon::createFromTimestamp($subscription->current_period_end);
 		$this->user->deactivate($endDate);
@@ -37,7 +38,24 @@ class Subscription
 		return $this->cancel(false);
 	}
 
+	public function resume(){
+		$subscription = $this->retrieveStripeSubscription();
+		$subscription->plan = $this->user->stripe_plan;
+
+		$subscription->save();
+
+		$this->user->activate();
+	}
+
+	public function retrieveStripeCustomer(){
+		return Customer::retrieve($this->user->stripe_id);
+	}
+
 	public function retrieveStripeSubscription(){
 		return StripeSubscription::retrieve($this->user->stripe_subscription);
+	}
+
+	public function retrieveStripePlan(){
+		return StripePlan::retrieve($this->user->stripe_plan);
 	}
 }

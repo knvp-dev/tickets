@@ -20,4 +20,16 @@ class SubscriptionsController extends Controller
     		'status' => 'Thanks for subscribing'
     	];
     }
+
+    public function update(){
+        auth()->user()->subscription()->resume();
+
+        return back();
+    }
+
+    public function destroy(){
+        auth()->user()->subscription()->cancel();
+
+        return back();
+    }
 }

@@ -37,7 +37,7 @@
 				token: (token) => {
 					this.stripeToken = token.id;
 					this.stripeEmail = token.email;
-					axios.post('/subscribe', this.$data)
+					axios.post('/subscription', this.$data)
 						.then((response) => {
 							this.status = response.data.status;
 						})

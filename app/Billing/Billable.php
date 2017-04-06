@@ -1,16 +1,18 @@
 <?php 
 namespace App\Billing;
 
+use Carbon\Carbon;
 use App\Subscription;
 use App\Billing\Payment;
 
 trait Billable{
 
-	public function activate($customerId, $subscriptionId){
+	public function activate($customerId = null, $subscriptionId = null, $plan = null){
         return $this->update([
-            'stripe_id' => $customerId,
-            'stripe_subscription' => $subscriptionId,
+            'stripe_id' => $customerId ?? $this->stripe_id,
+            'stripe_subscription' => $subscriptionId ?? $this->stripe_subscription,
             'stripe_active' => true,
+            'stripe_plan' => $plan->name ?? $this->stripe_plan,
             'subscription_end_at' => null
         ]);
     }
@@ -34,6 +36,18 @@ trait Billable{
 
     public function isSubscibed(){
         return !! $this->stripe_active;
+    }
+
+    public function isActive(){
+    	return $this->isSubscibed() || $this->isOnGracePeriod();
+    }
+
+    public function isOnGracePeriod(){
+    	if(! $endsAt = $this->subscription_end_at){
+    		return false;
+    	}
+
+    	return Carbon::now()->lt(Carbon::instance($endsAt));
     }
 
     public function payments(){

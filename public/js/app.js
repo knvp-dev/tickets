@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "./";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 147);
+/******/ 	return __webpack_require__(__webpack_require__.s = 151);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1884,7 +1884,7 @@ function loadLocale(name) {
             module && module.exports) {
         try {
             oldLocale = globalLocale._abbr;
-            __webpack_require__(144)("./" + name);
+            __webpack_require__(145)("./" + name);
             // because defineLocale currently also sets the global locale, we
             // want to undo that for lazy loaded locales
             getSetGlobalLocale(oldLocale);
@@ -25865,7 +25865,7 @@ module.exports = function(module) {
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(140);
+__webpack_require__(141);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -25882,7 +25882,7 @@ __webpack_require__(140);
 // Vue.component('messages', require('./components/Messages.vue'));
 // Vue.component('ticket-detail', require('./views/TicketDetail.vue'));
 // Vue.component('tickets', require('./views/Tickets.vue'));
-Vue.component('CheckoutForm', __webpack_require__(156));
+Vue.component('CheckoutForm', __webpack_require__(147));
 window.Event = new Vue({});
 
 var app = new Vue({
@@ -26768,11 +26768,86 @@ module.exports = function spread(callback) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = {
+	props: ['plans'],
+	data: function data() {
+		return {
+			stripeEmail: '',
+			stripeToken: '',
+			plan: 1,
+			status: false
+		};
+	},
+	created: function created() {
+		var _this = this;
+
+		this.stripe = StripeCheckout.configure({
+			key: Laravel.stripeKey,
+			image: "https://stripe.com/img/documentation/checkout/marketplace.png",
+			locale: "auto",
+			panelLabel: "Subscribe for",
+			email: Laravel.user.email,
+			currency: "eur",
+			token: function token(_token) {
+				_this.stripeToken = _token.id;
+				_this.stripeEmail = _token.email;
+				axios.post('/subscription', _this.$data).then(function (response) {
+					_this.status = response.data.status;
+				}).catch(function (error) {
+					_this.status = error.response.data.status;
+				});
+			}
+		});
+	},
+
+	methods: {
+		subscribe: function subscribe() {
+			var plan = this.findPlanById(this.plan);
+
+			this.stripe.open({
+				name: plan.name,
+				description: plan.description,
+				zipCode: false,
+				amount: plan.price
+			});
+		},
+		findPlanById: function findPlanById(id) {
+			return this.plans.find(function (plan) {
+				return plan.id == id;
+			});
+		}
+	}
+};
+
+/***/ }),
+/* 141 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* WEBPACK VAR INJECTION */(function(__webpack_provided_window_dot_jQuery) {Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_echo__ = __webpack_require__(142);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_echo__ = __webpack_require__(143);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_echo___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_laravel_echo__);
 
-window._ = __webpack_require__(143);
+window._ = __webpack_require__(144);
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -26782,7 +26857,7 @@ window._ = __webpack_require__(143);
 
 window.$ = __webpack_provided_window_dot_jQuery = __webpack_require__(2);
 
-__webpack_require__(141);
+__webpack_require__(142);
 
 /**
  * Vue is a modern JavaScript library for building interactive web interfaces
@@ -26790,7 +26865,7 @@ __webpack_require__(141);
  * and simple, leaving you to focus on building your next great project.
  */
 
-window.Vue = __webpack_require__(146);
+window.Vue = __webpack_require__(150);
 
 // import VueRouter from 'vue-router';
 // Vue.use(VueRouter);
@@ -26827,7 +26902,7 @@ window.Echo = new __WEBPACK_IMPORTED_MODULE_0_laravel_echo___default.a({
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
 
 /***/ }),
-/* 141 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/*!
@@ -29211,7 +29286,7 @@ if (typeof jQuery === 'undefined') {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 142 */
+/* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {var asyncGenerator = function () {
@@ -29897,7 +29972,7 @@ var Echo = function () {
         }
         if (this.options.broadcaster == 'pusher') {
             if (!window['Pusher']) {
-                window['Pusher'] = __webpack_require__(145);
+                window['Pusher'] = __webpack_require__(146);
             }
             this.connector = new PusherConnector(this.options);
         } else if (this.options.broadcaster == 'socket.io') {
@@ -29978,7 +30053,7 @@ module.exports = Echo;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 143 */
+/* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -47070,7 +47145,7 @@ module.exports = Echo;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(118), __webpack_require__(119)(module)))
 
 /***/ }),
-/* 144 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -47305,11 +47380,11 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 144;
+webpackContext.id = 145;
 
 
 /***/ }),
-/* 145 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -51444,7 +51519,197 @@ return /******/ (function(modules) { // webpackBootstrap
 ;
 
 /***/ }),
-/* 146 */
+/* 147 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(148)(
+  /* script */
+  __webpack_require__(140),
+  /* template */
+  __webpack_require__(149),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/webdeveloper/valet_code/v54/resources/assets/js/components/CheckoutForm.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] CheckoutForm.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-60d3e783", Component.options)
+  } else {
+    hotAPI.reload("data-v-60d3e783", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 148 */
+/***/ (function(module, exports) {
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  scopeId,
+  cssModules
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  // inject cssModules
+  if (cssModules) {
+    var computed = options.computed || (options.computed = {})
+    Object.keys(cssModules).forEach(function (key) {
+      var module = cssModules[key]
+      computed[key] = function () { return module }
+    })
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 149 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('form', {
+    attrs: {
+      "action": "/subscribe",
+      "method": "post"
+    }
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.stripeToken),
+      expression: "stripeToken"
+    }],
+    attrs: {
+      "type": "hidden",
+      "name": "stripeToken"
+    },
+    domProps: {
+      "value": _vm._s(_vm.stripeToken)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.stripeToken = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.stripeEmail),
+      expression: "stripeEmail"
+    }],
+    attrs: {
+      "type": "hidden",
+      "name": "stripeEmail"
+    },
+    domProps: {
+      "value": _vm._s(_vm.stripeEmail)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.stripeEmail = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.plan),
+      expression: "plan"
+    }],
+    attrs: {
+      "name": "plans"
+    },
+    on: {
+      "change": function($event) {
+        _vm.plan = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        })[0]
+      }
+    }
+  }, _vm._l((_vm.plans), function(plan) {
+    return _c('option', {
+      domProps: {
+        "value": plan.id
+      }
+    }, [_vm._v("\n\t\t\t" + _vm._s(plan.name) + " — €" + _vm._s(plan.price / 100) + "\n\t\t")])
+  })), _vm._v(" "), _c('button', {
+    attrs: {
+      "type": "submit"
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.subscribe($event)
+      }
+    }
+  }, [_vm._v("Subscribe")]), _vm._v(" "), _c('p', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.status),
+      expression: "status"
+    }]
+  }, [_vm._v(_vm._s(_vm.status))])])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-60d3e783", module.exports)
+  }
+}
+
+/***/ }),
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -60020,285 +60285,12 @@ module.exports = Vue$3;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(118)))
 
 /***/ }),
-/* 147 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(120);
 module.exports = __webpack_require__(121);
 
-
-/***/ }),
-/* 148 */,
-/* 149 */,
-/* 150 */,
-/* 151 */,
-/* 152 */,
-/* 153 */,
-/* 154 */,
-/* 155 */,
-/* 156 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(157)(
-  /* script */
-  __webpack_require__(158),
-  /* template */
-  __webpack_require__(159),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "/Users/webdeveloper/valet_code/v54/resources/assets/js/components/CheckoutForm.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] CheckoutForm.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-60d3e783", Component.options)
-  } else {
-    hotAPI.reload("data-v-60d3e783", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 157 */
-/***/ (function(module, exports) {
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  scopeId,
-  cssModules
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  // inject cssModules
-  if (cssModules) {
-    var computed = options.computed || (options.computed = {})
-    Object.keys(cssModules).forEach(function (key) {
-      var module = cssModules[key]
-      computed[key] = function () { return module }
-    })
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
-/* 158 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = {
-	props: ['plans'],
-	data: function data() {
-		return {
-			stripeEmail: '',
-			stripeToken: '',
-			plan: 1,
-			status: false
-		};
-	},
-	created: function created() {
-		var _this = this;
-
-		this.stripe = StripeCheckout.configure({
-			key: Laravel.stripeKey,
-			image: "https://stripe.com/img/documentation/checkout/marketplace.png",
-			locale: "auto",
-			panelLabel: "Subscribe for",
-			email: Laravel.user.email,
-			currency: "eur",
-			token: function token(_token) {
-				_this.stripeToken = _token.id;
-				_this.stripeEmail = _token.email;
-				axios.post('/subscribe', _this.$data).then(function (response) {
-					_this.status = response.data.status;
-				}).catch(function (error) {
-					_this.status = error.response.data.status;
-				});
-			}
-		});
-	},
-
-	methods: {
-		subscribe: function subscribe() {
-			var plan = this.findPlanById(this.plan);
-
-			this.stripe.open({
-				name: plan.name,
-				description: plan.description,
-				zipCode: false,
-				amount: plan.price
-			});
-		},
-		findPlanById: function findPlanById(id) {
-			return this.plans.find(function (plan) {
-				return plan.id == id;
-			});
-		}
-	}
-};
-
-/***/ }),
-/* 159 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('form', {
-    attrs: {
-      "action": "/subscribe",
-      "method": "post"
-    }
-  }, [_c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.stripeToken),
-      expression: "stripeToken"
-    }],
-    attrs: {
-      "type": "hidden",
-      "name": "stripeToken"
-    },
-    domProps: {
-      "value": _vm._s(_vm.stripeToken)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.stripeToken = $event.target.value
-      }
-    }
-  }), _vm._v(" "), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.stripeEmail),
-      expression: "stripeEmail"
-    }],
-    attrs: {
-      "type": "hidden",
-      "name": "stripeEmail"
-    },
-    domProps: {
-      "value": _vm._s(_vm.stripeEmail)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.stripeEmail = $event.target.value
-      }
-    }
-  }), _vm._v(" "), _c('select', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.plan),
-      expression: "plan"
-    }],
-    attrs: {
-      "name": "plans"
-    },
-    on: {
-      "change": function($event) {
-        _vm.plan = Array.prototype.filter.call($event.target.options, function(o) {
-          return o.selected
-        }).map(function(o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val
-        })[0]
-      }
-    }
-  }, _vm._l((_vm.plans), function(plan) {
-    return _c('option', {
-      domProps: {
-        "value": plan.id
-      }
-    }, [_vm._v("\n\t\t\t" + _vm._s(plan.name) + " — €" + _vm._s(plan.price / 100) + "\n\t\t")])
-  })), _vm._v(" "), _c('button', {
-    attrs: {
-      "type": "submit"
-    },
-    on: {
-      "click": function($event) {
-        $event.preventDefault();
-        _vm.subscribe($event)
-      }
-    }
-  }, [_vm._v("Subscribe")]), _vm._v(" "), _c('p', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (_vm.status),
-      expression: "status"
-    }]
-  }, [_vm._v(_vm._s(_vm.status))])])
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-60d3e783", module.exports)
-  }
-}
 
 /***/ })
 /******/ ]);
