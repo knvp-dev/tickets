@@ -35,27 +35,12 @@ class Ticket extends Model
     	return $this->hasOne(Priority::class, 'id', 'priority_id');
     }
 
-    public function setPriority(Priority $priority){
-        $this->priority_id = $priority->id;
-        $this->save();
-    }
-
     public function category(){
     	return $this->hasOne(Category::class, 'id','category_id');
     }
 
-    public function setCategory(Category $category){
-        $this->category_id = $category->id;
-        $this->save();
-    }
-
     public function status(){
     	return $this->hasOne(Status::class, 'id','status_id');
-    }
-
-    public function setStatus(Status $status){
-        $this->status_id = $status->id;
-        $this->save();
     }
 
     public function todos(){
@@ -121,12 +106,7 @@ class Ticket extends Model
     }
 
     public function progressInPercent(){
-        if(count($this->todos) > 0){
-            return (count($this->completedTodos()) / count($this->todos)) * 100;
-        }
-
-        return 0;
-        
+        return ($this->todos()->count() > 0) ? (count($this->completedTodos()) / $this->todos()->count()) * 100 : 0;
     }
 
     public function belongsToTeam($team_id){

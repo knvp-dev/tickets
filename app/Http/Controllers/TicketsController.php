@@ -74,8 +74,10 @@ class TicketsController extends Controller
      * Update a ticket's information
      * @param  Request $request
      */
-    public function update(Request $request){
-        Ticket::whereId($request->id)->update($this->prepareRequestForUpdate($request)->toArray());
+    public function update(){
+        Ticket::whereId($request->id)->update(request()->all());
+
+        return back();
     }
 
     /**
@@ -125,23 +127,9 @@ class TicketsController extends Controller
      * Delete a ticket
      * @param  Ticket $ticket
      */
-    public function delete(Ticket $ticket){
+    public function destroy(Ticket $ticket){
         $ticket->delete();
         return redirect('/tickets');
-    }
-
-    /**
-     * Unset all relationship data from request
-     * @param  Array $data
-     * @return Array
-     */
-    public function prepareRequestForUpdate($data){
-        unset($data['category']);
-        unset($data['status']);
-        unset($data['priority']);
-        unset($data['members']);
-        unset($data['owner']);
-        return $data;
     }
 
     protected function prettyUrl($string) {

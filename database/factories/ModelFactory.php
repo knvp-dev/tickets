@@ -57,6 +57,8 @@ $factory->define(App\Todo::class, function (Faker\Generator $faker) {
             return factory('App\Ticket')->create()->id;
         },
         'body' => $faker->sentence($nbWords = 3),
+        'user_id' => 1,
+        'completed_by' => null,
         'completed' => 0
     ];
 });
@@ -71,6 +73,7 @@ $factory->define(App\Category::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->word,
         'slug' => $faker->word,
+        'color' => $faker->hexColor(),
         'team_id' => Team::class
     ];
 });

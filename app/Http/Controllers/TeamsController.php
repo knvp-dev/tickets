@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
+use Auth;
 use App\Team;
 use App\Invitation;
-use Auth;
+use Illuminate\Http\Request;
 
 class TeamsController extends Controller
 {
@@ -70,7 +69,11 @@ class TeamsController extends Controller
             $team->addMember(auth()->user());
             $this->setActiveTeam($team);
 
-            $team->categories()->create(['name' => 'General', 'slug' => 'general']);
+            $team->categories()->create([
+                'name' => 'General',
+                'slug' => 'general',
+                'color' => '#ce5a5a'
+            ]);
 
             return redirect('/tickets');
         }

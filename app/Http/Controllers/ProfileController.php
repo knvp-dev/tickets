@@ -16,8 +16,7 @@ class ProfileController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $plans = Plan::all();
-        return view('pages.profile.index', compact('user','plans'));
+        return view('pages.profile.index', compact('user'));
     }
 
     /**

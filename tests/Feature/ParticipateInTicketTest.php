@@ -39,8 +39,9 @@ class ParticipateInTicketTest extends TestCase
     /** @test */
     function a_ticket_owner_can_delete_a_ticket(){
     	$this->loginAsOwner();
+        create('App\Ticket', ['owner_id' => $this->owner->id]);
     	$this->get('/ticket/' . $this->ticket->slug . '/delete');
-    	$this->assertCount(0, Ticket::all());
+    	$this->assertCount(1, Ticket::all());
     }
 
     /** @test */
@@ -77,9 +78,10 @@ class ParticipateInTicketTest extends TestCase
     /** @test */
     function a_ticket_member_can_delete_a_todo(){
     	$this->loginAsMember();
-    	$todo = create('App\Todo', ['ticket_id' => $this->ticket->id]);
+    	$todo = create('App\Todo', ['ticket_id' => $this->ticket->id, 'user_id' => $this->member->id]);
+        $todo2 = create('App\Todo', ['ticket_id' => $this->ticket->id, 'user_id' => $this->member->id]);
     	$this->get('/ticket/' . $this->ticket->slug . '/todo/' . $todo->id . '/delete');
-    	$this->assertCount(0, $this->ticket->todos);
+    	$this->assertCount(1, $this->ticket->todos);
     }
 
     protected function addTeamMember(){
