@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Ticket;
+use App\User;
 
 class Todo extends Model
 {
@@ -22,5 +23,17 @@ class Todo extends Model
     public function uncomplete(){
     	$this->completed = 0;
     	$this->save();
+    }
+
+    public function author(){
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function scopeCompletedByUser($query, User $user){
+        return $query->where('completed_by', $user->id);
+    }
+
+    public function scopeIsCompleted($query){
+        return $query->where('completed',1);
     }
 }

@@ -92,11 +92,13 @@ class Ticket extends Model
 
     public function complete(){
         $this->completed = 1;
+        $this->status_id = 2;
         $this->save();
     }
 
     public function uncomplete(){
         $this->completed = 0;
+        $this->status_id = 1;
         $this->save();
     }
 
@@ -108,6 +110,23 @@ class Ticket extends Model
     public function unarchive(){
         $this->archived = 0;
         $this->save();
+    }
+
+    public function completedTodos(){
+        return $this->todos()->isCompleted()->get();
+    }
+
+    public function completedTodosForUser(){
+        return $this->todos()->completedByUser(auth()->user())->get();
+    }
+
+    public function progressInPercent(){
+        if(count($this->todos) > 0){
+            return (count($this->completedTodos()) / count($this->todos)) * 100;
+        }
+
+        return 0;
+        
     }
 
     public function belongsToTeam($team_id){

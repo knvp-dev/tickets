@@ -35,7 +35,7 @@ return [
 
         'sqlite_testing' => [
             'driver' => 'sqlite',
-            'database' => ':memory:',
+            'database' => 'database/testing.sqlite',
             'prefix' => '',
         ],
 

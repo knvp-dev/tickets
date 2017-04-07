@@ -39,6 +39,10 @@
 				<h1>Status</h1>
 				<p>Ticket is {{ $ticket->status->name }}</p>
 			</div>
+			<div class="ticket-details-block">
+				<h1>Progress</h1>
+				<p>{{ $ticket->progressInPercent() }}%</p>
+			</div>
 		</div>
 	</div>
 </div>
@@ -64,6 +68,7 @@
 
 <div class="container is-flex">
 	<div class="floating-panel has-text-centered fill-space">
+	<progress class="is-primary progress progress-sticky-top is-small" value="{{ $ticket->progressInPercent() }}" max="100">15%</progress>
 		<h1 class="title is-uppercase is-text-blue">Todos</h1>
 		@if(auth()->user()->isAssignedToTicket($ticket))
 		<form class="todo-form" method="post" action="/ticket/{{ $ticket->slug }}/todo/save">

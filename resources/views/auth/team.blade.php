@@ -41,7 +41,7 @@
         </div>
         @endif
 
-        @if(count(auth()->user()->teams) < 1 || auth()->user()->isSubscibed())
+        @if(count(auth()->user()->teams) < 1 || auth()->user()->isSubscribed())
         <div class="login-form floating-panel has-text-centered">
             <h1 class="title has-text-centered is-uppercase is-text-blue">Create a new team</h1>
             <form class="form-horizontal" role="form" method="POST" action="{{ url('/team/create') }}">

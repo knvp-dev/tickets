@@ -53,4 +53,12 @@ class User extends Authenticatable
         return ($this->id == $ticket->owner_id) ? true : false;
     }
 
+    public function todos(){
+        return $this->hasMany(Todo::class);
+    }
+
+    public function completedTodos(){
+        return count(Todo::completedByUser($this)->get());
+    }
+
 }

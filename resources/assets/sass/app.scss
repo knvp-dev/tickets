@@ -193,3 +193,57 @@ a.nav-item{
 .user-card{
     width:300px;
 }
+
+.narrow-tag{
+    height: 1.5em;
+    vertical-align: middle;
+    margin-right: 15px;
+}
+
+.is-aligned{
+    flex-direction: row;
+    align-items:center;
+}
+
+.flex-aligned-right{
+    justify-content: space-between;
+    margin-left:auto;
+}
+
+.mr-10{
+    margin-right:10px;
+}
+
+.table-row{
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.is-stacked{
+    flex-direction: column;
+}
+
+.progress-sticky-top{
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 0;
+}
+
+.small-text{
+    font-size: .8em;
+    padding-top: 5px;
+}
+
+.is-medium-icon{
+    font-size: 1.2em;
+    color: #5d5d5d;
+    padding: 4px;
+}
+
+h1.ticket-title{
+    max-width: 100%;
+}

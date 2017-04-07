@@ -34,12 +34,12 @@ trait Billable{
         return static::where('stripe_id', $stripe_id)->firstOrFail();
     }
 
-    public function isSubscibed(){
+    public function isSubscribed(){
         return !! $this->stripe_active;
     }
 
     public function isActive(){
-    	return $this->isSubscibed() || $this->isOnGracePeriod();
+    	return $this->isSubscribed() || $this->isOnGracePeriod();
     }
 
     public function isOnGracePeriod(){

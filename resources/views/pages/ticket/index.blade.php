@@ -70,7 +70,7 @@
 			</li>
 			@foreach($categories as $category)
 				<li class="panel-list-item">
-					<i class="fa fa-circle list-bullet"></i>
+					<i class="fa fa-circle list-bullet" style="color:{{ $category->color }}"></i>
 					<a href="/tickets/{{ $category->slug }}">{{ $category->name }}</a>
 				</li>
 			@endforeach
@@ -94,7 +94,7 @@
 							<div class="ticket-item-info">
 								<h1 class="ticket-title">{{ $ticket->title }}</h1>
 								<span>
-									<p>created {{ $ticket->created_at->diffForHumans() }} by {{ $ticket->owner->name }}</p>
+									<p class="small-text"><span class="tag narrow-tag" style="background-color:{{  $ticket->category->color }};color:white;">{{ $ticket->category->name }}</span>created {{ $ticket->created_at->diffForHumans() }} by {{ $ticket->owner->name }} </p>
 								</span>
 							</div>
 						</div>

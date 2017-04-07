@@ -35,7 +35,12 @@ class TodosController extends Controller
             'body' => 'required'
         ]);
 
-    	$todo = $ticket->addTodo(request()->all());
+        $todo = [
+            'body' => request('body'),
+            'user_id' => auth()->id(),
+        ];
+
+    	$todo = $ticket->addTodo($todo);
     	event(new TodoCreated($todo));
     	return back();
     }
@@ -47,7 +52,7 @@ class TodosController extends Controller
      */
     public function destroy(Ticket $ticket, Todo $todo){
     	event(new TodoDeleted($todo));
-    	$ticket->todos()->delete($todo);
+    	$ticket->todos()->find($todo)->delete();
         return back();
     }
 
