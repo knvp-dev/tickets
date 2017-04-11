@@ -26,7 +26,7 @@ class TicketsController extends Controller
     public function index(Category $category, TicketFilters $filters){
         $tickets = Ticket::forTeam()->filter($filters);
         if ($category->exists) $tickets = $category->tickets();
-        $tickets = $tickets->get();
+        $tickets = $tickets->paginate(10);
         $team = Team::whereId(session('team_id'))->first();
         $categories = Category::forTeam()->get();
         return view('pages.ticket.index', compact('team', 'tickets', 'categories', 'category'));
@@ -59,7 +59,7 @@ class TicketsController extends Controller
         
         $new_ticket = [
         'title' => request('title'),
-        'slug' => $this->prettyUrl(request('title')),
+        'slug' => sluggify(request('title')),
         'owner_id' => auth()->id(),
         'priority_id' => request('priority_id'),
         'category_id' => request('category_id')
@@ -130,17 +130,5 @@ class TicketsController extends Controller
     public function destroy(Ticket $ticket){
         $ticket->delete();
         return redirect('/tickets');
-    }
-
-    protected function prettyUrl($string) {
-        //Lower case everything
-        $string = strtolower($string);
-        //Make alphanumeric (removes all other characters)
-        $string = preg_replace("/[^a-z0-9_\s-]/", "", $string);
-        //Clean up multiple dashes or whitespaces
-        $string = preg_replace("/[\s-]+/", " ", $string);
-        //Convert whitespaces and underscore to dash
-        $string = preg_replace("/[\s_]/", "-", $string);
-        return $string;
     }
 }

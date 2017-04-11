@@ -17,6 +17,7 @@ class Todo extends Model
 
     public function complete(){
     	$this->completed = 1;
+        $this->completed_by = auth()->id();
     	$this->save();
     }
 
@@ -35,5 +36,9 @@ class Todo extends Model
 
     public function scopeIsCompleted($query){
         return $query->where('completed',1);
+    }
+
+    public function resolver(){
+        return $this->hasOne(User::class, 'id', 'completed_by');
     }
 }

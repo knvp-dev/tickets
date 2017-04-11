@@ -16,7 +16,12 @@ class ProfileController extends Controller
     public function index()
     {
         $user = auth()->user();
-        return view('pages.profile.index', compact('user'));
+
+        return view('pages.profile.index', [
+            'user' => $user,
+            'payments' => $user->payments()->paginate(5),
+            'teams' => $user->teams()->paginate(5)
+        ]);
     }
 
     /**

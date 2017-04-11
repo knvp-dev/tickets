@@ -247,3 +247,33 @@ a.nav-item{
 h1.ticket-title{
     max-width: 100%;
 }
+
+.flex{
+    display: flex;
+    align-items: center;
+    flex:1;
+}
+
+ul.pagination{
+    margin-top:20px;
+    justify-content: center;
+    >li{
+        padding:5px 10px;
+        margin:2px;
+        border:1px solid #eee;
+
+        &.active{
+            background-color:$default-blue;
+            color:white;
+        }
+
+        &.disabled{
+            display:none;
+        }
+    }
+}
+
+.mh-250{
+    max-height:250px;
+    overflow-y:scroll;
+}

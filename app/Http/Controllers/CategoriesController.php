@@ -2,18 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
-use App\Team;
-use App\Invitation;
 use Illuminate\Http\Request;
+use App\Team;
+use App\Category;
 
-class TeamsController extends Controller
+class CategoriesController extends Controller
 {
-
-    public function __construct(){
-        $this->middleware('auth');
-    }
-    
     /**
      * Display a listing of the resource.
      *
@@ -21,22 +15,7 @@ class TeamsController extends Controller
      */
     public function index()
     {
-        $teams = auth()->user()->teams;
-        $invitations = Invitation::whereEmail(auth()->user()->email)->get();
-        return view('auth.team', compact('teams', 'invitations'));
-    }
-
-    public function setActiveTeam(Team $team){
-        session(['team_id' => $team->id]);
-        return redirect('/tickets');
-    }
-
-    public function getActiveTeam(){
-        return session('team_id');
-    }
-
-    public function members(Team $team){
-        return $team->members;
+        //
     }
 
     /**
@@ -55,31 +34,20 @@ class TeamsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Team $team)
     {
-        $this->validate($request, [
-            'title' => 'required'
-        ]);
+        
 
-        if( ! Team::whereTitle($request->title)->exists()){
-            $team = Team::create([
-                'title' => $request->title,
-                'owner_id' => auth()->id()
-                ]);
-
-            $team->addMember(auth()->user());
-            $this->setActiveTeam($team);
-
+        if(! Category::where('team_id', $team->id)->where('name', request('category_name'))->exists())
+        {
             $team->categories()->create([
-                'name' => 'General',
-                'slug' => 'general',
-                'color' => '#ce5a5a'
+                'name' => request('category_name'),
+                'slug' => sluggify(request('category_name')),
+                'color' => hex_color()
             ]);
-
-            return redirect('/tickets');
         }
 
-        return redirect()->back()->withErrors(['A team with this name already exists.']);
+        return back();
     }
 
     /**

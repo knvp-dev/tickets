@@ -33,7 +33,7 @@
 			</div>
 			<div class="ticket-details-block">
 				<h1>Members</h1>
-				<p>{{ $ticket->members->count() }} / {{ $ticket->team->size }}</p>
+				<p>{{ $ticket->members_count }} / {{ $ticket->team->size }}</p>
 			</div>
 			<div class="ticket-details-block">
 				<h1>Status</h1>
@@ -88,7 +88,11 @@
 				@endif
 				<div class="todo-content">
 					<p>{{ $todo->body }}</p>
+					@if(! $todo->completed)
 					<span class="has-lighter-text">Added {{ $todo->created_at->diffForHumans() }}</span>
+					@else
+					<span class="has-lighter-text">Completed by {{ $todo->resolver->name }}</span>
+					@endif
 				</div>
 				@if(auth()->user()->isAssignedToTicket($ticket))
 				<div class="todo-controls">
@@ -114,7 +118,7 @@
 		</form>
 		<hr>
 		@endif
-		<ul class="message-list">
+		<ul class="message-list mh-250">
 			@foreach($ticket->messages as $message)
 			<li class="message-item">
 				<img src="/images/{{ $message->user->avatar }}" class="member-badge" />

@@ -56,6 +56,7 @@ Route::post('/invitation/accept', 'InvitationsController@accept');
 Route::get('/team/{team}/invitation/{invitation}/cancel', 'InvitationsController@destroy')->middleware('isownerofteam');
 Route::post('/team/{team}/invitation/create', 'InvitationsController@store')->middleware('isownerofteam');
 Route::get('/team/choose/{team}', 'TeamsController@setActiveTeam');
+Route::post('/team/{team}/categories/create', 'CategoriesController@store');
 
 Route::post('/subscription', 'SubscriptionsController@store');
 Route::patch('/subscription', 'SubscriptionsController@update');

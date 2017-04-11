@@ -45,6 +45,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Team::class);
     }
 
+    public function getTeamsCountAttribute(){
+        return $this->teams()->count();
+    }
+
     public function ownsTeam(Team $team){
         return ($this->id == $team->owner_id) ? true : false;
     }

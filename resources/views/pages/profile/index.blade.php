@@ -12,7 +12,7 @@
 				<a href="/" class="button white-button">Change avatar</a>
 				<h1>{{ $user->name }}</h1>
 				<ul>
-					<li>Member in {{ $user->teams->count() }} team(s)</li>
+					<li>Member in {{ $user->teams_count }} team(s)</li>
 					<li>Active plan: {{ $user->stripe_plan ?? 'free' }}</li>
 				</ul>
 			</div>
@@ -54,7 +54,7 @@
 		<div class="floating-panel">
 			<h1 class="title has-text-centered is-text-blue is-uppercase">Teams</h1>
 			<ul>
-				@foreach(auth()->user()->teams as $team)
+				@foreach($teams as $team)
 				<li class="table-row is-flex is-aligned">
 					<p><i class="fa fa-users is-medium-icon mr-10"></i>{{ $team->title }}</p>
 					@if(session('team_id') != $team->id)
@@ -65,18 +65,20 @@
 				</li>
 				@endforeach
 			</ul>
+			{{ $teams->links() }}
 		</div>
 		@if(count(auth()->user()->payments))
 		<div class="floating-panel">
 			<h1 class="title has-text-centered is-text-blue is-uppercase">Payments</h1>
 			<ul>
-				@foreach(auth()->user()->payments as $payment)
+				@foreach($payments as $payment)
 				<li class="table-row is-flex is-aligned">
-					<p><i class="fa fa-credit-card is-medium-icon mr-10"></i>A payment was made {{ $payment->created_at->diffForHumans() }} </p>
+					<p><i class="fa fa-credit-card is-medium-icon mr-10"></i>A payment was made on {{ $payment->created_at->format('d-m-Y') }} </p>
 					<p class="flex-aligned-right"><strong>€{{ number_format($payment->amount / 100, 2) }}</strong></p>
 				</li>
 				@endforeach
 			</ul>
+			{{ $payments->links() }}
 		</div>
 		@endif
 

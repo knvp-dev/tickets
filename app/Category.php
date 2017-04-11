@@ -19,6 +19,10 @@ class Category extends Model
     	return $this->hasMany(Ticket::class);
     }
 
+    public function getTicketsCountAttribute(){
+        return $this->tickets()->count();
+    }
+
     public function team(){
     	return $this->hasOne(Team::class);
     }

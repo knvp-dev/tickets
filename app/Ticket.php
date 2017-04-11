@@ -31,6 +31,10 @@ class Ticket extends Model
     	return $this->belongsToMany(User::class);
     }
 
+    public function getMembersCountAttribute(){
+        return $this->members()->count();
+    }
+
     public function priority(){
     	return $this->hasOne(Priority::class, 'id', 'priority_id');
     }
