@@ -17,7 +17,13 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         Stripe::setApiKey(config('services.stripe.secret'));
-        view()->share('plans', \App\Plan::all());
+
+        \View::composer('*', function($view){
+            $plans = \Cache::rememberForever('plans', function(){
+                return \App\Plan::all();
+            });
+            $view->with('plans', $plans);
+        });
     }
 
     /**
@@ -27,6 +33,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        if($this->app->isLocal()){
+            $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
+        }
     }
 }

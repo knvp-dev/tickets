@@ -78,7 +78,7 @@
 				<i class="fa fa-circle list-bullet"></i>
 				<a href="/tickets">All tickets</a>
 			</li>
-			@foreach($categories as $category)
+			@foreach($team->categories as $category)
 			<li class="panel-list-item is-flex">
 				<div class="flex">
 					<i class="fa fa-circle list-bullet" style="color:{{ $category->color }}"></i>

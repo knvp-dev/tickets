@@ -24,12 +24,20 @@ class TicketsController extends Controller
      * @return Collection
      */
     public function index(Category $category, TicketFilters $filters){
-        $tickets = Ticket::forTeam()->filter($filters);
+        $tickets = Ticket::forTeam()
+                         ->with('owner','category','members')
+                         ->filter($filters)
+                         ->orderBy('created_at', 'desc');
+
         if ($category->exists) $tickets = $category->tickets();
+
         $tickets = $tickets->paginate(10);
-        $team = Team::whereId(session('team_id'))->first();
-        $categories = Category::forTeam()->get();
-        return view('pages.ticket.index', compact('team', 'tickets', 'categories', 'category'));
+
+        $team = Team::whereId(session('team_id'))
+                     ->with('categories')
+                     ->first();
+
+        return view('pages.ticket.index', compact('team', 'tickets'));
     }
 
     /**

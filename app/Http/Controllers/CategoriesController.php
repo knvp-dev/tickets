@@ -36,7 +36,9 @@ class CategoriesController extends Controller
      */
     public function store(Team $team)
     {
-        
+        $this->validate(request(), [
+            'category_name' => 'required'
+        ]);
 
         if(! Category::where('team_id', $team->id)->where('name', request('category_name'))->exists())
         {

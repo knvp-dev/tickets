@@ -71,6 +71,7 @@ class ParticipateInTeamTest extends TestCase
 
     /** @test */
     function a_team_owner_can_invite_people_to_his_team(){
+        $this->expectException('Swift_TransportException');
         $this->loginAsOwner();
         $invitation = make('App\Invitation');
         $this->post('/team/' . $this->team->id .'/invitation/create', $invitation->toArray());
@@ -91,6 +92,17 @@ class ParticipateInTeamTest extends TestCase
         $invitation = create('App\Invitation', ['team_id' => $this->team->id, 'email' => $this->user->email]);
         $this->post('/invitation/accept', ['token' => $invitation->token]);
         $this->assertCount(2, $this->team->members);
+    }
+
+    /** @test */
+    function a_member_can_add_a_new_category(){
+        $this->loginAsMember();
+
+        $category = ['category_name' => 'new category'];
+
+        $this->post('/team/' . $this->team->id . '/categories/create', $category);
+
+        $this->assertCount(1, $this->team->categories);
     }
 
     protected function login(){

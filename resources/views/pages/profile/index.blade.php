@@ -22,7 +22,7 @@
 
 			<h1 class="title is-uppercase has-text-centered is-text-blue">Subscription</h1>
 
-			@if(auth()->user()->isOnGracePeriod())
+			@if($user->isOnGracePeriod())
 
 			<p>subscription will expire on {{ $user->subscription_end_at->format('Y-m-d') }}</p>
 			<form action="/subscription" method="post">
@@ -32,8 +32,8 @@
 			</form>
 			@endif
 
-			@if(auth()->user()->isSubscribed())
-			<p>you are currently subscribed to the <strong>{{ $user->stripe_plan }}</strong> plan for <strong>€{{ number_format(auth()->user()->subscription()->retrieveStripePlan()->amount / 100,2) }}/month</strong>.</p>
+			@if($user->isSubscribed())
+			<p>you are currently subscribed to the <strong>{{ $user->stripe_plan }}</strong> plan for <strong>€{{ number_format($user->subscription()->retrieveStripePlan()->amount / 100,2) }}/month</strong>.</p>
 			<form action="/subscription" method="post">
 				{{ method_field('DELETE') }}
 				{{ csrf_field() }}
@@ -42,7 +42,7 @@
 			</form>
 			@endif
 
-			@if(! auth()->user()->isSubscribed() && ! auth()->user()->isOnGracePeriod())
+			@if(! $user->isSubscribed() && ! $user->isOnGracePeriod())
 			<p>You are currently not on a subscription</p>
 			<checkout-form :plans="{{ $plans }}"></checkout-form>
 			@endif
@@ -67,7 +67,7 @@
 			</ul>
 			{{ $teams->links() }}
 		</div>
-		@if(count(auth()->user()->payments))
+		@if(count($user->payments))
 		<div class="floating-panel">
 			<h1 class="title has-text-centered is-text-blue is-uppercase">Payments</h1>
 			<ul>

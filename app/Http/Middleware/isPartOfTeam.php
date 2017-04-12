@@ -15,7 +15,7 @@ class isPartOfTeam
      */
     public function handle($request, Closure $next)
     {
-        if(! auth()->user()->isPartOfTeam(session('team'))){
+        if(! auth()->user()->isPartOfTeam(session('team_id'))){
             return redirect('/');
         }
 

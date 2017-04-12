@@ -19,8 +19,8 @@ class ProfileController extends Controller
 
         return view('pages.profile.index', [
             'user' => $user,
-            'payments' => $user->payments()->paginate(5),
-            'teams' => $user->teams()->paginate(5)
+            'payments' => $user->payments()->paginate(5, ['*'], 'payments'),
+            'teams' => $user->teams()->paginate(5, ['*'], 'teams')
         ]);
     }
 

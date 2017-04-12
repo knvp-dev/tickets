@@ -52,7 +52,7 @@ class Ticket extends Model
     }
 
     public function messages(){
-        return $this->hasMany(Message::class)->orderBy('created_at', 'asc');
+        return $this->hasMany(Message::class)->orderBy('created_at', 'asc')->with('user');
     }
 
     public function team(){
@@ -110,7 +110,8 @@ class Ticket extends Model
     }
 
     public function progressInPercent(){
-        return ($this->todos()->count() > 0) ? (count($this->completedTodos()) / $this->todos()->count()) * 100 : 0;
+        $todos_count = $this->todos()->count();
+        return ($todos_count > 0) ? (count($this->completedTodos()) / $todos_count) * 100 : 0;
     }
 
     public function belongsToTeam($team_id){
@@ -126,7 +127,7 @@ class Ticket extends Model
     }
 
     public function scopeWithRelations($query){
-        return $query->with(['category','status','priority','members','owner']);
+        return $query->with('category','status','priority','members','owner');
     }
 
     public function scopeForTeam($query){

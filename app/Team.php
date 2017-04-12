@@ -24,7 +24,7 @@ class Team extends Model
     }
 
     public function categories(){
-        return $this->hasMany(Category::class);
+        return $this->hasMany(Category::class)->withCount('tickets');
     }
 
     public function addMember(User $user){
