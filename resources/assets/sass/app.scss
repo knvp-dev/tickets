@@ -277,3 +277,12 @@ ul.pagination{
     max-height:250px;
     overflow-y:scroll;
 }
+
+.invite-list-item{
+    display: flex;
+    flex-direction: column;
+}
+
+.p10{
+    padding:10px;
+}

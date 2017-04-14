@@ -34,7 +34,7 @@ class User extends Authenticatable
     }
 
     public function isPartOfATeam(){
-        return ($this->teams()->count() > 0) ? true : false;
+        return ($this->teams->count() > 0) ? true : false;
     }
 
     public function isPartOfTeam($team){
@@ -46,7 +46,7 @@ class User extends Authenticatable
     }
 
     public function getTeamsCountAttribute(){
-        return $this->teams()->count();
+        return $this->teams->count();
     }
 
     public function ownsTeam(Team $team){

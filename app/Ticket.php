@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasMembers;
 use App\User;
 use App\Priority;
 use App\Customer;
@@ -13,7 +14,11 @@ use App\Message;
 
 class Ticket extends Model
 {
+    use HasMembers;
+
     protected $guarded = [];
+
+    protected $with = ['category', 'owner', 'members'];
 
     public function getRouteKeyName(){
         return 'slug';
@@ -25,14 +30,6 @@ class Ticket extends Model
 
     public function owner(){
         return $this->hasOne(User::class, 'id', 'owner_id');
-    }
-
-    public function members(){
-    	return $this->belongsToMany(User::class);
-    }
-
-    public function getMembersCountAttribute(){
-        return $this->members()->count();
     }
 
     public function priority(){
@@ -52,23 +49,11 @@ class Ticket extends Model
     }
 
     public function messages(){
-        return $this->hasMany(Message::class)->orderBy('created_at', 'asc')->with('user');
+        return $this->hasMany(Message::class)->orderBy('created_at', 'asc');
     }
 
     public function team(){
         return $this->belongsTo(Team::class);
-    }
-
-    public function assignMember($member){
-        $this->members()->sync([$member->id], false);
-    }
-
-    public function unAssignMember($member){
-        $this->members()->detach($member);
-    }
-
-    public function amountOfMembers(){
-        return $this->members()->count();
     }
 
     public function addTodo($todo){
@@ -102,15 +87,15 @@ class Ticket extends Model
     }
 
     public function completedTodos(){
-        return $this->todos()->isCompleted()->get();
+        return $this->todos->where('completed', 1);
     }
 
     public function completedTodosForUser(){
-        return $this->todos()->completedByUser(auth()->user())->get();
+        return $this->todos->where('completed_by', auth()->id());
     }
 
     public function progressInPercent(){
-        $todos_count = $this->todos()->count();
+        $todos_count = $this->todos->count();
         return ($todos_count > 0) ? (count($this->completedTodos()) / $todos_count) * 100 : 0;
     }
 
@@ -124,10 +109,6 @@ class Ticket extends Model
 
     public function scopeNotArchived($query){
         return $query->whereArchived(0);
-    }
-
-    public function scopeWithRelations($query){
-        return $query->with('category','status','priority','members','owner');
     }
 
     public function scopeForTeam($query){

@@ -44,7 +44,7 @@ class Team extends Model
     }
 
     public function currentSizeOfTeam(){
-        return $this->members()->count() + $this->invitations()->count();
+        return $this->members->count() + $this->invitations->count();
     }
 
     public function maximumSize(){

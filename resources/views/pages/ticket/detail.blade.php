@@ -4,7 +4,7 @@
 
 <div class="container is-flex is-head">
 	<h1 class="title">{{ $ticket->title }}</h1>
-	@if($ticket->owner->id == auth()->id())
+	@if($ticket->owner->id || $ticket->team->owner->id == $user->id)
 	<div>
 		@if(!$ticket->completed)
 		<a href="/ticket/{{ $ticket->slug }}/complete" class="button white-button">Close ticket</a>
@@ -60,7 +60,7 @@
 			@endforeach
 		</ul>
 
-		@if(auth()->user()->ownsTicket($ticket))
+		@if($user->ownsTicket($ticket))
 		<a href="{{ $ticket->path() }}/members" class="button white-button">Manage ticket members</a>
 		@endif
 	</div>
@@ -68,9 +68,9 @@
 
 <div class="container is-flex">
 	<div class="floating-panel has-text-centered fill-space">
-	<progress class="is-primary progress progress-sticky-top is-small" value="{{ $ticket->progressInPercent() }}" max="100">15%</progress>
+	<progress class="is-primary progress progress-sticky-top is-small" value="{{ $ticket->progressInPercent() }}" max="100">{{ $ticket->progressInPercent() }}</progress>
 		<h1 class="title is-uppercase is-text-blue">Todos</h1>
-		@if(auth()->user()->isAssignedToTicket($ticket))
+		@if($user->isAssignedToTicket($ticket))
 		<form class="todo-form" method="post" action="/ticket/{{ $ticket->slug }}/todo/save">
 			{{ csrf_field() }}
 			<input type="text" class="input" name="body" placeholder="New task">
@@ -94,7 +94,7 @@
 					<span class="has-lighter-text">Completed by {{ $todo->resolver->name }}</span>
 					@endif
 				</div>
-				@if(auth()->user()->isAssignedToTicket($ticket))
+				@if($user->isAssignedToTicket($ticket))
 				<div class="todo-controls">
 					<a href="/ticket/{{ $ticket->slug }}/todo/{{ $todo->id }}/complete">
 						<i class="fa fa-check rounded-icon-button is-small-icon"></i>
@@ -110,7 +110,7 @@
 	</div>
 	<div class="floating-panel has-text-centered fill-space">
 		<h1 class="title is-uppercase is-text-blue">Messages</h1>
-		@if(auth()->user()->isAssignedToTicket($ticket))
+		@if($user->isAssignedToTicket($ticket))
 		<form class="message-form" method="post" action="/ticket/{{ $ticket->slug }}/messages/create">
 			{{ csrf_field() }}
 			<input class="input" type="text" name="body" placeholder="Message">

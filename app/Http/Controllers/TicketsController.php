@@ -25,7 +25,6 @@ class TicketsController extends Controller
      */
     public function index(Category $category, TicketFilters $filters){
         $tickets = Ticket::forTeam()
-                         ->with('owner','category','members')
                          ->filter($filters)
                          ->orderBy('created_at', 'desc');
 
@@ -34,7 +33,6 @@ class TicketsController extends Controller
         $tickets = $tickets->paginate(10);
 
         $team = Team::whereId(session('team_id'))
-                     ->with('categories')
                      ->first();
 
         return view('pages.ticket.index', compact('team', 'tickets'));
@@ -46,8 +44,10 @@ class TicketsController extends Controller
      * @return Ticket  
      */
     public function show($categoryId, Ticket $ticket){
-        $ticket = Ticket::whereId($ticket->id)->withRelations()->first();
-        return view('pages.ticket.detail', compact('ticket'));
+        return view('pages.ticket.detail', [
+            'ticket' => $ticket,
+            'user' => auth()->user()
+        ]);
     }
 
     /**
@@ -84,17 +84,7 @@ class TicketsController extends Controller
      */
     public function update(){
         Ticket::whereId($request->id)->update(request()->all());
-
         return back();
-    }
-
-    /**
-     * Return all users assigned to a ticket
-     * @param  Ticket $ticket
-     * @return User
-     */
-    public function members($categoryId, Ticket $ticket){
-        return $ticket->members;
     }
 
     /**
