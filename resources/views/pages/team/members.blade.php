@@ -13,7 +13,7 @@
 		<ul>
 			@foreach($team->members as $teamMember)
 			<li class="is-flex member-list-item">
-				<img src="/images/{{ $teamMember->avatar }}" class="member-badge" alt="">
+				<img src="{{ $teamMember->getAvatarUrl() }}" class="member-badge" alt="">
 				<p class="member-name">{{ $teamMember->name }}</p>
 				@if($teamMember->id != $team->owner->id)
 				<a href="/team/{{ $team->id }}/members/{{ $teamMember->id }}/remove" class="button white-button">Remove from team</a>

@@ -14,7 +14,7 @@
 		<ul>
 			@foreach($ticket->members as $ticketMember)
 				<li class="is-flex member-list-item">
-					<img src="/images/{{ $ticketMember->avatar }}" class="member-badge" alt="">
+					<img src="{{ $ticketMember->getAvatarUrl() }}" class="member-badge" alt="">
 					<p class="member-name">{{ $ticketMember->name }}</p>
 					@if($ticketMember->id != auth()->id())
 						<a href="/ticket/{{ $ticket->slug }}/unassign/{{ $ticketMember->id }}" class="button white-button">Remove from ticket</a>
@@ -30,7 +30,7 @@
 		<ul>
 			@foreach($teamMembers as $teamMember)
 				<li class="is-flex member-list-item">
-					<img src="/images/{{ $teamMember->avatar }}" class="member-badge" alt="">
+					<img src="{{ $teamMember->getAvatarUrl() }}" class="member-badge" alt="">
 					<p class="member-name">{{ $teamMember->name }}</p>
 					<a href="/ticket/{{ $ticket->slug }}/assign/{{ $teamMember->id }}" class="button white-button">Add to ticket</a>
 				</li>
