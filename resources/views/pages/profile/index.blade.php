@@ -7,9 +7,14 @@
 	<div class="is-stacked">
 
 		<div class="user-card floating-panel">
-			<img src="/images/{{ $user->avatar }}"  alt="">
+			<img src="{{ auth()->user()->getAvatarUrl() }}"  alt="">
 			<div class="user-card-info">
-				<a href="/" class="button white-button">Change avatar</a>
+				<form action="/avatar" method="post" enctype="multipart/form-data">
+					{{ csrf_field() }}
+					<input type="file" name="avatar"></input>
+					<button type="submit" class="button white-button">Change avatar</button>
+				</form>
+				
 				<h1>{{ $user->name }}</h1>
 				<ul>
 					<li>Member in {{ $user->teams_count }} team(s)</li>

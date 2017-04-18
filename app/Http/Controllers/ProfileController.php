@@ -8,6 +8,10 @@ use App\Plan;
 
 class ProfileController extends Controller
 {
+    public function __construct(){
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -42,7 +46,14 @@ class ProfileController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $file = request()->file('avatar');
+        $ext = $file->guessClientExtension();
+
+        $file->storeAs('avatars/' . auth()->id(), 'avatar.' . $ext, 'public');
+
+        auth()->user()->setAvatar('avatars/' . auth()->id() . '/avatar.' . $ext);
+
+        return back();
     }
 
     /**

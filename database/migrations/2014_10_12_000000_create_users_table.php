@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('avatar')->default("default.jpg");
+            $table->string('avatar')->default("avatars/default/avatar.jpg");
             $table->string('password');
             $table->string('stripe_id')->nullable();
             $table->string('stripe_plan')->nullable();

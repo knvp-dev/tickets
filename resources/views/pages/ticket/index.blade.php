@@ -10,7 +10,7 @@
 		<ul class="team-members">
 			@foreach($team->members as $member)
 			<li class="team-member">
-				<img class="member-badge" src="/images/{{ $member->avatar }}" alt="">
+				<img class="member-badge" src="{{ $member->getAvatarUrl() }}" alt="">
 			</li>
 			@endforeach
 		</ul>
@@ -114,7 +114,7 @@
 						<ul class="ticket-members">
 							@foreach($ticket->members as $member)
 							<li class="ticket-member">
-								<img class="member-badge" src="/images/{{ $member->avatar }}" alt="">
+								<img class="member-badge" src="{{ $member->getAvatarUrl() }}" alt="">
 							</li>
 							@endforeach
 						</ul>

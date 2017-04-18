@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Billing\Billable;
+use App\Invitation;
 use App\Ticket;
 use App\Message;
 use App\Todo;
@@ -23,6 +24,10 @@ class User extends Authenticatable
 
     public function tickets(){
     	return $this->belongsToMany(Ticket::class);
+    }
+
+    public function invitations(){
+        return $this->hasMany(Invitation::class);
     }
 
     public function messages(){
@@ -63,6 +68,15 @@ class User extends Authenticatable
 
     public function completedTodos(){
         return count(Todo::completedByUser($this)->get());
+    }
+
+    public function setAvatar($path){
+        $this->avatar = $path;
+        $this->save();
+    }
+
+    public function getAvatarUrl(){
+        return \Storage::disk('public')->url($this->avatar);
     }
 
 }

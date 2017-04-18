@@ -65,3 +65,5 @@ Route::delete('/subscription', 'SubscriptionsController@destroy');
 Route::get('/profile', 'ProfileController@index');
 
 Route::post('/stripe/webhook', 'WebhooksController@handle');
+
+Route::post('/avatar', 'ProfileController@store');

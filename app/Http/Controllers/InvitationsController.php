@@ -49,7 +49,7 @@ class InvitationsController extends Controller
 
         if(Invitation::whereEmail(request('email'))->where('team_id', $team->id)->exists())
         {
-            return back()->withErrors(['This email adress is already invited.']);
+            return back()->withErrors(['This email address has already been invited.']);
         }else{
             if($team->members->pluck('email')->contains(request('email'))){
                 return back()->withErrors(['This user is already part of your team.']);

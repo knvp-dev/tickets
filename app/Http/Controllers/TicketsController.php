@@ -66,11 +66,11 @@ class TicketsController extends Controller
         $team = Team::whereId(session('team_id'))->first();
         
         $new_ticket = [
-        'title' => request('title'),
-        'slug' => sluggify(request('title')),
-        'owner_id' => auth()->id(),
-        'priority_id' => request('priority_id'),
-        'category_id' => request('category_id')
+            'title' => request('title'),
+            'slug' => sluggify(request('title')),
+            'owner_id' => auth()->id(),
+            'priority_id' => request('priority_id'),
+            'category_id' => request('category_id')
         ];
         
         $ticket = $team->addticket($new_ticket);
@@ -83,7 +83,7 @@ class TicketsController extends Controller
      * @param  Request $request
      */
     public function update(){
-        Ticket::whereId($request->id)->update(request()->all());
+        Ticket::whereId(request('id'))->update(request()->all());
         return back();
     }
 

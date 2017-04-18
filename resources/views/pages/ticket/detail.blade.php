@@ -55,7 +55,7 @@
 		<ul class="team-members">
 			@foreach($ticket->members as $member)
 			<li class="team-member">
-				<img class="member-badge" src="/images/{{ $member->avatar }}" alt="">
+				<img class="member-badge" src="{{ $member->getAvatarUrl() }}" alt="">
 			</li>
 			@endforeach
 		</ul>
@@ -63,6 +63,18 @@
 		@if($user->ownsTicket($ticket))
 		<a href="{{ $ticket->path() }}/members" class="button white-button">Manage ticket members</a>
 		@endif
+	</div>
+</div>
+
+<div class="container is-flex">
+	<div class="floating-panel action-panel is-stacked">
+		<h1 class="title is-uppercase is-text-blue">Description</h1>
+		@if($user->ownsTicket($ticket))
+		<a href="/" class="button white-button">Edit description</a>
+		<br>
+		@endif
+		<p class="p10">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti obcaecati labore sapiente ratione ipsam asperiores minima laboriosam, expedita possimus quas nam dolor et doloribus, cupiditate. Explicabo mollitia, dicta sapiente quod.</p>
+
 	</div>
 </div>
 
@@ -121,7 +133,7 @@
 		<ul class="message-list mh-250">
 			@foreach($ticket->messages as $message)
 			<li class="message-item">
-				<img src="/images/{{ $message->user->avatar }}" class="member-badge" />
+				<img src="{{ $message->user->getAvatarUrl() }}" class="member-badge" />
 				<div class="message-content">
 					<div class="message-box">{{ $message->body }}
 						<span class="message-date">{{ $message->created_at->diffForHumans() }}</span>

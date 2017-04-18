@@ -17,7 +17,7 @@ class MessagesController extends Controller
      * @return Message
      */
     public function index($categoryId, Ticket $ticket){
-        return Message::where('ticket_id',$ticket->id)->with('user')->orderBy('created_at','ASC')->get();
+        return $ticket->messages();
     }
 
 	/**
