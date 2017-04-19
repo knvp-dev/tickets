@@ -304,7 +304,13 @@ ul.pagination{
     padding: 10px;
 }
 
-.team-member > .tooltip, .ticket-member > .tooltip{
+.message-item{
+    position: relative;
+    z-index:1;
+}
+
+.team-member > .tooltip, .ticket-member > .tooltip, .message-item > .tooltip{
+    z-index:1;
     opacity: 0;
     position: absolute;
     top: -15px;
@@ -317,7 +323,12 @@ ul.pagination{
     transition: opacity .5s; 
 }
 
-.team-member:hover, .ticket-member:hover{
+.message-item > .tooltip{
+    top:0px;
+    right:20px;
+}
+
+.team-member:hover, .ticket-member:hover, .message-item:hover{
     >.tooltip{
         opacity: 1;
         transition: opacity .5s; 

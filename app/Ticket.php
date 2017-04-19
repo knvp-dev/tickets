@@ -45,11 +45,11 @@ class Ticket extends Model
     }
 
     public function todos(){
-    	return $this->hasMany(Todo::class)->orderBy('created_at', 'desc');
+    	return $this->hasMany(Todo::class)->latest();
     }
 
     public function messages(){
-        return $this->hasMany(Message::class)->with('user')->orderBy('created_at', 'asc');
+        return $this->hasMany(Message::class)->with('user')->latest();
     }
 
     public function team(){

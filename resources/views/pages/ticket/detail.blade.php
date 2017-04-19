@@ -12,7 +12,7 @@
 		<a href="/ticket/{{ $ticket->slug }}/uncomplete" class="button white-button">Reopen ticket</a>
 		@endif
 		<a href="/ticket/{{ $ticket->slug }}/delete" class="button white-button">Delete ticket</a>
-		<a href="/ticket/{{ $ticket->slug }}/edit" class="button blue-button">Edit ticket</a>
+		<a href="/ticket/{{ $ticket->slug }}/edit" class="button blue-button">Edit ticket details</a>
 	</div>
 	@endif
 </div>
@@ -71,7 +71,7 @@
 <div class="container is-flex">
 	<div class="floating-panel action-panel is-stacked fill-space">
 		<h1 class="title is-uppercase is-text-blue">Description</h1>
-		<p class="p10">{{ $ticket->description }}</p>
+		<p>{{ $ticket->description }}</p>
 
 	</div>
 </div>
@@ -106,9 +106,15 @@
 				</div>
 				@if($user->isAssignedToTicket($ticket))
 				<div class="todo-controls">
+				@if(! $todo->completed)
 					<a href="/ticket/{{ $ticket->slug }}/todo/{{ $todo->id }}/complete">
 						<i class="fa fa-check rounded-icon-button is-small-icon"></i>
 					</a>
+					@else
+					<a href="/ticket/{{ $ticket->slug }}/todo/{{ $todo->id }}/uncomplete">
+						<i class="fa fa-refresh rounded-icon-button is-small-icon"></i>
+					</a>
+					@endif
 					<a href="/ticket/{{ $ticket->slug}}/todo/{{ $todo->id}}/delete">
 						<i class="fa fa-remove rounded-icon-button is-small-icon"></i>
 					</a>
@@ -131,10 +137,11 @@
 		<ul class="message-list mh-250">
 			@foreach($ticket->messages as $message)
 			<li class="message-item">
+				{{-- <span class="tooltip">{{ $member->name }}</span> --}}
 				<img src="{{ $message->user->getAvatarUrl() }}" class="member-badge" />
 				<div class="message-content">
 					<div class="message-box">{{ $message->body }}
-						<span class="message-date">{{ $message->created_at->diffForHumans() }}</span>
+						<span class="message-date">{{ $message->user->name }}, {{ $message->created_at->diffForHumans() }}</span>
 					</div>
 				</div>
 			</li>
