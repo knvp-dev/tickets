@@ -2,6 +2,13 @@
 
 @section('content')
 
+<div class="container is-flex is-head">
+	<h1 class="title">{{ $team->title }}</h1>
+	@if($team->owner->id == auth()->id())
+		<a href="{{ $team->path() }}/edit" class="button white-button">Edit Team settings</a>
+	@endif
+</div>
+
 <div class="container">
 	<div class="floating-panel action-panel">
 		<div>
@@ -10,12 +17,13 @@
 		<ul class="team-members">
 			@foreach($team->members as $member)
 			<li class="team-member">
+				<span class="tooltip">{{ $member->name }}</span>
 				<img class="member-badge" src="{{ $member->getAvatarUrl() }}" alt="">
 			</li>
 			@endforeach
 		</ul>
 		@if(auth()->id() == $team->owner->id)
-		<a href="/team/{{ $team->id }}/members" class="button white-button">Manage team members</a>
+		<a href="{{ $team->path() }}/members" class="button white-button">Manage team members</a>
 		@endif
 	</div>
 </div>
@@ -63,7 +71,7 @@
 
 		<h1 class="title is-uppercase is-text-blue">Categories</h1>
 		
-		<form action="/team/{{ $team->id }}/categories/create" method="post">
+		<form action="{{ $team->path() }}/categories/create" method="post">
 		{{ csrf_field() }}
 			<p class="control is-flex is-aligned">
 				<input class="input mr-10" type="text" name="category_name" placeholder="new category">

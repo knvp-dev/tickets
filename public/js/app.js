@@ -25886,33 +25886,25 @@ Vue.component('CheckoutForm', __webpack_require__(147));
 window.Event = new Vue({});
 
 var app = new Vue({
-  el: '#app',
-  data: function data() {
-    return {
-      AuthUser: {},
-      activeTeam: ''
-    };
-  },
-  created: function created() {
-    //  	axios.get('/user').then((response) => {
-    // this.$root.AuthUser = response.data;
-    //  	});
-
-    //      axios.get('/activeteam').then((response) => {
-    //          this.$root.activeTeam = response.data;
-    //      });
-
-    for (i = 0; i < $('.ticket-item').length; i++) {
-      var count = $('.ticket-item').eq(i).find('ul li').length;
-      for (j = 0; j < count; j++) {
-        $('.ticket-item').eq(i).find('.ticket-member').eq(j).css('left', 'calc(' + j + ' * -20px)');
-      }
+    el: '#app',
+    data: function data() {
+        return {
+            AuthUser: {},
+            activeTeam: ''
+        };
+    },
+    created: function created() {
+        for (i = 0; i < $('.ticket-item').length; i++) {
+            var count = $('.ticket-item').eq(i).find('ul li').length;
+            for (j = 0; j < count; j++) {
+                $('.ticket-item').eq(i).find('.ticket-member').eq(j).css('left', 'calc(' + j + ' * -20px)');
+            }
+        }
     }
-  }
 });
 
 Vue.directive('diff-for-humans', function (el, binding) {
-  el.innerHTML = moment(binding.value).fromNow();
+    el.innerHTML = moment(binding.value).fromNow();
 });
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 

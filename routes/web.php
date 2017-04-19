@@ -37,6 +37,8 @@ Route::group(['middleware' => 'assigned'], function(){
 	Route::get('/ticket/{ticket}/unarchive', 'TicketsController@unarchive');
 	Route::get('/ticket/{ticket}/delete', 'TicketsController@destroy')
 		->middleware('isownerofticket');
+	Route::get('/ticket/{ticket}/edit', 'TicketsController@edit');
+	Route::post('/ticket/{ticket}/update', 'TicketsController@update');
 	Route::post('/ticket/{ticket}/messages/create', 'MessagesController@store');
 	Route::post('/ticket/{ticket}/todo/save', 'TodosController@store');
 	Route::get('/ticket/{ticket}/todo/{todo}/complete', 'TodosController@complete');

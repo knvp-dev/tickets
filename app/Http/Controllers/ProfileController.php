@@ -46,14 +46,18 @@ class ProfileController extends Controller
      */
     public function store(Request $request)
     {
-        $file = request()->file('avatar');
-        $ext = $file->guessClientExtension();
+        if (request()->file('avatar')->isValid()) {
+            $file = request()->file('avatar');
+            $ext = $file->guessClientExtension();
 
-        $file->storeAs('avatars/' . auth()->id(), 'avatar.' . $ext, 'public');
+            $file->storeAs('avatars/' . auth()->id(), 'avatar.' . $ext, 'public');
 
-        auth()->user()->setAvatar('avatars/' . auth()->id() . '/avatar.' . $ext);
+            auth()->user()->setAvatar('avatars/' . auth()->id() . '/avatar.' . $ext);
 
-        return back();
+            return back();
+        }
+
+        return back()->with('message', 'There was a problem with uploading your file, please try a different file or try again.');
     }
 
     /**

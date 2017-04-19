@@ -64,6 +64,7 @@ class TeamsController extends Controller
         if( ! Team::whereTitle($request->title)->exists()){
             $team = Team::create([
                 'title' => $request->title,
+                'slug' => sluggify($request->title),
                 'owner_id' => auth()->id()
                 ]);
 

@@ -8,6 +8,7 @@ use App\Ticket;
 use App\User;
 use App\Team;
 use App\Category;
+use App\Priority;
 use Auth;
 
 class TicketsController extends Controller
@@ -78,13 +79,24 @@ class TicketsController extends Controller
         return back()->with('message', 'Ticket created successfully!');
     }
 
+    public function edit(Ticket $ticket){
+        $categories = Category::all();
+        $priorities = Priority::all();
+        return view('pages.ticket.edit', compact('ticket', 'categories', 'priorities'));
+    }
+
     /**
      * Update a ticket's information
      * @param  Request $request
      */
-    public function update(){
-        Ticket::whereId(request('id'))->update(request()->all());
-        return back();
+    public function update(Ticket $ticket){
+        $this->validate(request(), [
+            'title' => 'required',
+            'description' => 'required'
+        ]);
+
+        $ticket->update(request()->all());
+        return redirect($ticket->path());
     }
 
     /**

@@ -34,14 +34,6 @@ const app = new Vue({
     	}
     },
     created(){
-   //  	axios.get('/user').then((response) => {
-			// this.$root.AuthUser = response.data;
-   //  	});
-
-   //      axios.get('/activeteam').then((response) => {
-   //          this.$root.activeTeam = response.data;
-   //      });
-
         for(i = 0; i < $('.ticket-item').length ; i++){
             let count = $('.ticket-item').eq(i).find('ul li').length;
             for (j = 0; j < count; j++) {

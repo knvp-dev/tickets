@@ -9,10 +9,10 @@
 		<div class="user-card floating-panel">
 			<img src="{{ auth()->user()->getAvatarUrl() }}"  alt="">
 			<div class="user-card-info">
-				<form action="/avatar" method="post" enctype="multipart/form-data">
+				<form action="/avatar" method="post" enctype="multipart/form-data" id="avatar-form">
 					{{ csrf_field() }}
-					<input type="file" name="avatar"></input>
-					<button type="submit" class="button white-button">Change avatar</button>
+					<input type="file" name="avatar" onchange="form.submit()"></input>
+					<button class="button white-button">Change avatar</button>
 				</form>
 				
 				<h1>{{ $user->name }}</h1>
@@ -63,7 +63,7 @@
 				<li class="table-row is-flex is-aligned">
 					<p><i class="fa fa-users is-medium-icon mr-10"></i>{{ $team->title }}</p>
 					@if(session('team_id') != $team->id)
-					<p class="flex-aligned-right"><a href="/team/choose/{{ $team->id }}" class="button white-button">Switch to team</a></p>
+					<p class="flex-aligned-right"><a href="/team/choose/{{ $team->slug }}" class="button white-button">Switch to team</a></p>
 					@else
 					<p class="flex-aligned-right">Active team</p>
 					@endif

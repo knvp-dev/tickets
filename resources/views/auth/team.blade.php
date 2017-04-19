@@ -1,4 +1,4 @@
-@extends('layouts.fullscreen')
+@extends('layouts.app')
 
 @section('content')
 <div class="fullscreen">
@@ -32,9 +32,10 @@
             <h1 class="title has-text-centered is-uppercase is-text-blue">Select a team</h1>
             <ul class="panel-list">
             @foreach($teams as $team)
-                <li class="panel-list-item">
-                    <i class="fa fa-circle list-bullet"></i>
-                    <a class="is-uppercase" href="/team/choose/{{ $team->id }}">{{ $team->title }}</a>
+                <li class="panel-list-item is-stacked">
+                    
+                    <a class="is-uppercase" href="/team/choose/{{ $team->slug }}">{{ $team->title }}</a>
+                    <small>( owned by {{ $team->owner->name }} )</small>
                 </li>
             @endforeach
             </ul>

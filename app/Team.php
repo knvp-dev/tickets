@@ -9,7 +9,15 @@ use App\User;
 class Team extends Model
 {
 
-	protected $fillable = ['title','owner_id'];
+	protected $fillable = ['title','owner_id','slug'];
+
+    public function getRouteKeyName(){
+        return 'slug';
+    }
+
+    public function path(){
+        return "/team/" . $this->slug;
+    }
 
 	public function owner(){
 		return $this->hasOne(User::class, 'id', 'owner_id');

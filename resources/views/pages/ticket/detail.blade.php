@@ -4,7 +4,7 @@
 
 <div class="container is-flex is-head">
 	<h1 class="title">{{ $ticket->title }}</h1>
-	@if($ticket->owner->id || $ticket->team->owner->id == $user->id)
+	@if($ticket->owner->id == $user->id)
 	<div>
 		@if(!$ticket->completed)
 		<a href="/ticket/{{ $ticket->slug }}/complete" class="button white-button">Close ticket</a>
@@ -12,6 +12,7 @@
 		<a href="/ticket/{{ $ticket->slug }}/uncomplete" class="button white-button">Reopen ticket</a>
 		@endif
 		<a href="/ticket/{{ $ticket->slug }}/delete" class="button white-button">Delete ticket</a>
+		<a href="/ticket/{{ $ticket->slug }}/edit" class="button blue-button">Edit ticket</a>
 	</div>
 	@endif
 </div>
@@ -55,6 +56,7 @@
 		<ul class="team-members">
 			@foreach($ticket->members as $member)
 			<li class="team-member">
+				<span class="tooltip">{{ $member->name }}</span>
 				<img class="member-badge" src="{{ $member->getAvatarUrl() }}" alt="">
 			</li>
 			@endforeach
@@ -67,13 +69,9 @@
 </div>
 
 <div class="container is-flex">
-	<div class="floating-panel action-panel is-stacked">
+	<div class="floating-panel action-panel is-stacked fill-space">
 		<h1 class="title is-uppercase is-text-blue">Description</h1>
-		@if($user->ownsTicket($ticket))
-		<a href="/" class="button white-button">Edit description</a>
-		<br>
-		@endif
-		<p class="p10">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti obcaecati labore sapiente ratione ipsam asperiores minima laboriosam, expedita possimus quas nam dolor et doloribus, cupiditate. Explicabo mollitia, dicta sapiente quod.</p>
+		<p class="p10">{{ $ticket->description }}</p>
 
 	</div>
 </div>
