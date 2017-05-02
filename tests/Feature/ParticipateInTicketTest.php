@@ -27,6 +27,7 @@ class ParticipateInTicketTest extends TestCase
     	$this->addTeamMember();
     	$this->get('/ticket/' . $this->ticket->slug . '/assign/' . $this->new_team_member->id);
     	$this->assertCount(2, $this->ticket->members);
+        $this->assertDatabaseHas('ticket_user', ['user_id' => $this->new_team_member->id]);
     }
 
     /** @test */
@@ -39,16 +40,18 @@ class ParticipateInTicketTest extends TestCase
     /** @test */
     function a_ticket_owner_can_delete_a_ticket(){
     	$this->loginAsOwner();
-        create('App\Ticket', ['owner_id' => $this->owner->id]);
-    	$this->get('/ticket/' . $this->ticket->slug . '/delete');
-    	$this->assertCount(1, Ticket::all());
+        $ticket = create('App\Ticket', ['owner_id' => $this->owner->id]);
+        $ticket->assignMember($this->owner);
+    	$this->delete('/ticket/' . $ticket->slug . '/delete');
+        $this->assertDatabaseMissing('tickets', ['id' => $ticket->id]);
     }
 
     /** @test */
     function a_ticket_member_can_not_delete_a_ticket(){
     	$this->expectException('\Exception');
     	$this->loginAsMember();
-    	$response = $this->get('/ticket/' . $this->ticket->slug . '/delete');
+    	$this->delete('/ticket/' . $this->ticket->slug . '/delete');
+        $this->assertDatabaseHas('tickets', ['id' => $this->ticket->id]);
     }
 
     /** @test */

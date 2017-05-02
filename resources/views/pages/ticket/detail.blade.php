@@ -5,13 +5,19 @@
 <div class="container is-flex is-head">
 	<h1 class="title">{{ $ticket->title }}</h1>
 	@if($ticket->owner->id == $user->id)
-	<div>
+	<div class="is-flex is-stacked">
+	<div class="is-flex is-aligned">
 		@if(!$ticket->completed)
 		<a href="/ticket/{{ $ticket->slug }}/complete" class="button white-button">Close ticket</a>
 		@else
 		<a href="/ticket/{{ $ticket->slug }}/uncomplete" class="button white-button">Reopen ticket</a>
 		@endif
-		<a href="/ticket/{{ $ticket->slug }}/delete" class="button white-button">Delete ticket</a>
+		<form action="/ticket/{{ $ticket->slug }}/delete" method="post">
+			{{ csrf_field() }}
+			{{ method_field('DELETE') }}
+			<button type="submit" class="button white-button">Delete ticket</button>
+		</form>
+		</div>
 		<a href="/ticket/{{ $ticket->slug }}/edit" class="button blue-button">Edit ticket details</a>
 	</div>
 	@endif

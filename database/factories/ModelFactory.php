@@ -99,6 +99,7 @@ $factory->define(App\Message::class, function(Faker\Generator $faker){
 $factory->define(App\Team::class, function(Faker\Generator $faker){
     return [
         'title' => $faker->word,
+        'slug' => $faker->word,
         'owner_id' => function() {
             return factory('App\User')->create()->id;
         }

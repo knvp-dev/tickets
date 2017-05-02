@@ -138,6 +138,8 @@ class TicketsController extends Controller
      * @param  Ticket $ticket
      */
     public function destroy(Ticket $ticket){
+        $ticket->messages()->delete();
+        $ticket->todos()->delete();
         $ticket->delete();
         return redirect('/tickets');
     }

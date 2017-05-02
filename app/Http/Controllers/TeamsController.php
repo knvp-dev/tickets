@@ -39,15 +39,6 @@ class TeamsController extends Controller
         return $team->members;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -81,17 +72,6 @@ class TeamsController extends Controller
         }
 
         return redirect()->back()->withErrors(['A team with this name already exists.']);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**

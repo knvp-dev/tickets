@@ -103,8 +103,7 @@
 		<div class="tickets">
 			<div class="tickets-list">
 				<ul>
-					@if(count($tickets))
-					@foreach($tickets as $ticket)
+					@forelse($tickets as $ticket)
 					<li class="ticket-item">
 						<div class="ticket-info">
 							@if($ticket->completed)
@@ -132,11 +131,10 @@
 							</a>
 						</span>
 					</li>
-					@endforeach
-					{{ $tickets->links() }}
-					@else
+					@empty
 					<p class="has-text-centered">There are no tickets</p>
-					@endif
+					@endforelse
+					{{ $tickets->links() }}
 				</ul>
 			</div>
 		</div>

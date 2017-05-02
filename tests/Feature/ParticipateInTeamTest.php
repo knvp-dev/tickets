@@ -31,7 +31,7 @@ class ParticipateInTeamTest extends TestCase
     function a_team_owner_can_assign_new_members_to_his_team(){
     	$this->loginAsOwner();
     	$new_member = create('App\User');
-    	$this->post('/team/' . $this->team->id . '/members/add', ['member' => $new_member]);
+    	$this->post($this->team->path() . '/members/add', ['member' => $new_member]);
     	$this->assertCount(2, $this->team->members);
     }
 
@@ -47,7 +47,7 @@ class ParticipateInTeamTest extends TestCase
         $this->team->addMember($user2);
 
         $invitation = make('App\Invitation', ['team_id' => $this->team->id]);
-        $this->post('/team/' . $this->team->id . '/invitation/create', $invitation->toArray());
+        $this->post($this->team->path() . '/invitation/create', $invitation->toArray());
 
         $this->assertCount(0, $this->team->invitations);
     }
@@ -57,7 +57,7 @@ class ParticipateInTeamTest extends TestCase
         $this->loginAsOwner();
         $user = $this->newUser();
         $this->team->addMember($user);
-        $this->get('/team/' . $this->team->id . '/members/' . $user->id . '/remove');
+        $this->get($this->team->path() . '/members/' . $user->id . '/remove');
         $this->assertCount(1, $this->team->members);
     }
 
@@ -65,7 +65,7 @@ class ParticipateInTeamTest extends TestCase
     function a_team_member_can_not_assign_new_members_to_the_team(){
     	$this->loginAsMember();
     	$new_member = create('App\User');
-    	$this->post('/team/' . $this->team->id . '/members/add', ['member' => $new_member]);
+    	$this->post($this->team->path() . '/members/add', ['member' => $new_member]);
     	$this->assertCount(2, $this->team->members);
     }
 
@@ -74,7 +74,7 @@ class ParticipateInTeamTest extends TestCase
         $this->expectException('Swift_TransportException');
         $this->loginAsOwner();
         $invitation = make('App\Invitation');
-        $this->post('/team/' . $this->team->id .'/invitation/create', $invitation->toArray());
+        $this->post($this->team->path() .'/invitation/create', $invitation->toArray());
         $this->assertCount(1, $this->team->invitations);
     }
 
@@ -82,7 +82,7 @@ class ParticipateInTeamTest extends TestCase
     function a_team_owner_can_cancel_an_invitation(){
         $this->loginAsOwner();
         $invitation = create('App\Invitation', ['team_id' => $this->team->id]);
-        $this->get('/team/'. $this->team->id .'/invitation/' . $invitation->id . '/cancel');
+        $this->get($this->team->path() .'/invitation/' . $invitation->id . '/cancel');
         $this->assertCount(0, $this->team->invitations);
     }
 
@@ -100,7 +100,7 @@ class ParticipateInTeamTest extends TestCase
 
         $category = ['category_name' => 'new category'];
 
-        $this->post('/team/' . $this->team->id . '/categories/create', $category);
+        $this->post($this->team->path() . '/categories/create', $category);
 
         $this->assertCount(1, $this->team->categories);
     }
