@@ -54,7 +54,7 @@
 				@else
 				<p class="has-text-centered">There are no open invitations</p>
 				@endif
-			</div>
+			</div>	
 		</div>
 	</div>
 	@endsection

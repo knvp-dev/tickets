@@ -52,7 +52,7 @@ class TodosController extends Controller
      */
     public function destroy(Ticket $ticket, Todo $todo){
     	event(new TodoDeleted($todo));
-    	$ticket->todos()->find($todo)->delete();
+    	$ticket->todos()->find($todo)->first()->delete();
         return back();
     }
 

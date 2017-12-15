@@ -176,7 +176,7 @@
             },
             methods:{
                 fetchTickets(){
-                    axios.get('/api/tickets').then( (response) => {
+                    axios.get('/tickets').then( (response) => {
                         // populate tickets array
                         this.tickets = response.data;
 

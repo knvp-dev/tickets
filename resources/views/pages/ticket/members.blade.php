@@ -38,7 +38,7 @@
 		</ul>
 		@else
 			<p class="has-text-centered">All team members have been assigned to this ticket.</p>
-			<a class="button blue-button button-centered" href="/team/{{ $ticket->team->id }}/members">Invite more people to your team!</a>
+			<a class="button blue-button button-centered" href="/team/{{ $ticket->team->slug }}/members">Invite more people to your team!</a>
 		@endif
 	</div>
 </div>
